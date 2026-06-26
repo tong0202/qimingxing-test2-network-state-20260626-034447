@@ -1,0 +1,20 @@
+{
+  "stage": "E1-network-state-trigger-gate",
+  "schema_version": "QMX-E1-GATE-0.1",
+  "created_at": "2026-06-26T17:20:12.326521+00:00",
+  "run_id": "nsl-e1-20260626171906",
+  "source_path": "states/e1-network-trigger-source.json",
+  "source_hash": "dc88e3289143794e",
+  "trigger_condition": [
+    "branch_raw_read_ok",
+    "source_hash_matches_expected",
+    "source_hash_changed_from_previous_or_first_release",
+    "post_release_stable_samples"
+  ],
+  "trigger_fired": true,
+  "release_after_seconds": 62.32,
+  "stable_after_release": true,
+  "effect": "allow E1 state advance after observed network-state release",
+  "gate_hash": "2e333835bd016d4f",
+  "truth_boundary": "The gate is fired by observed network-state release, but the interpretation and writeback still use CPU. This is trigger-like network behavior, not CPU-free autonomous execution."
+}
