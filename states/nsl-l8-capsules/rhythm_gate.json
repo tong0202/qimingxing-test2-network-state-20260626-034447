@@ -1,0 +1,85 @@
+{
+  "stage": "L8-multi-capsule-network-language-extension",
+  "schema_version": "NSL-L8-CAPSULE-0.1",
+  "created_at": "2026-06-26T15:36:15.574031+00:00",
+  "generation": 1,
+  "state_signature": "l8cap-rhythm_gate-dc901b4423665484",
+  "capsule_id": "l8cap-rhythm_gate-dc901b4423665484",
+  "role": "rhythm_gate",
+  "kind": "timing",
+  "path": "states/nsl-l8-capsules/rhythm_gate.json",
+  "receiver": {
+    "name": "github_branch_raw_main",
+    "kind": "mutable_branch_raw_cdn_path",
+    "receiver_score": 1.0,
+    "raw_branch_url": "https://raw.githubusercontent.com/tong0202/qimingxing-test2-network-state-20260626-034447/main/states/nsl-l8-capsules/rhythm_gate.json"
+  },
+  "source": {
+    "l2_run_id": "nsl-l2-20260626112025",
+    "l2_sentence": "STATE_ID -> SHADOW -> RESIDUAL -> RELEASE -> RHYTHM_SLOW_STABLE",
+    "l2_intent": "ADVANCE_AFTER_RELEASE",
+    "l2_rule": "WHEN STATE_ID AND SHADOW AND RESIDUAL THEN WAIT RELEASE; WHEN RELEASE THEN CLASSIFY RHYTHM AND ADVANCE",
+    "l3_run_id": "nsl-l3-20260626113648",
+    "l3_receiver": "github_branch_raw_main"
+  },
+  "language": {
+    "family": "NSL",
+    "extension": "NSL-L8-MULTI-CAPSULE-0.1",
+    "symbols_in": [
+      "RELEASE",
+      "RHYTHM",
+      "MEMORY_TRACE_READY"
+    ],
+    "signals_out": [
+      "RELEASE_WINDOW_OPEN"
+    ],
+    "rule": "WHEN RELEASE AND RHYTHM ARE OBSERVED AFTER MEMORY_TRACE_READY THEN OPEN RELEASE WINDOW",
+    "meaning": "把释放和节律变成胶囊网络的低频推进门。",
+    "base_sentence": "STATE_ID -> SHADOW -> RESIDUAL -> RELEASE -> RHYTHM_SLOW_STABLE",
+    "base_intent": "ADVANCE_AFTER_RELEASE"
+  },
+  "links": {
+    "upstream": {
+      "role": "memory_index",
+      "capsule_id": "l8cap-memory_index-0fa98f11bc067183"
+    },
+    "downstream": {
+      "role": "intent_router",
+      "capsule_id": "l8cap-intent_router-429500a4d4177727"
+    }
+  },
+  "allowed_action": {
+    "type": "gate_on_release_rhythm",
+    "allowed": true,
+    "writes": [
+      "capsule_signal"
+    ]
+  },
+  "safety": {
+    "allowlist": [
+      "emit_network_language_pulse",
+      "gate_on_release_rhythm",
+      "index_memory_shadow",
+      "observe_state_identity",
+      "route_after_release",
+      "update_capsule_network_state",
+      "verify_capsule_graph"
+    ],
+    "forbidden_program_keys": [
+      "cmd",
+      "code",
+      "command",
+      "eval",
+      "exec",
+      "javascript",
+      "powershell",
+      "python",
+      "shell"
+    ],
+    "executor_contract": "Executor may validate and route declarative capsule signals only. It must not execute arbitrary capsule body code.",
+    "direct_body_execution": false,
+    "shell_execution": false
+  },
+  "capsule_hash": "f93e6878b125e648",
+  "truth_boundary": "L8 capsule is a network-resident declarative language node. It extends NSL into a multi-capsule graph, but interpretation and writes still require a controlled executor."
+}
