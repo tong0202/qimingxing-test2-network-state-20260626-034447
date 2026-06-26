@@ -1,0 +1,33 @@
+name: N6 External Ghost Runner
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17,47 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: n6-external-ghost-runner
+  cancel-in-progress: false
+
+jobs:
+  external-cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout riverbed repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run external ghost cycle
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          N6_DURATION_SECONDS: "600"
+          N6_INTERVAL_SECONDS: "15"
+        run: python scripts/n6_external_runner.py
