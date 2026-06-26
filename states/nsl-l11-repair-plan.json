@@ -1,0 +1,50 @@
+{
+  "stage": "L11-repair-plan",
+  "schema_version": "NSL-L11-REPAIR-PLAN-0.1",
+  "created_at": "2026-06-26T16:15:34.430588+00:00",
+  "ok": true,
+  "memory_hash": "1e56fb5464c57191",
+  "self_check_hash": "cb0a8f6eb4c6ddb2",
+  "allowed_actions": [
+    "continue_schedule_observation",
+    "no_op_verified",
+    "prepare_repair_patch_for_review",
+    "refresh_memory_selection",
+    "rerun_external_takeover_diagnostic"
+  ],
+  "actions": [
+    {
+      "action": "no_op_verified",
+      "target_check": "all_blocking_checks",
+      "risk": "low",
+      "auto_execute": true,
+      "reason": "L11 未发现阻塞性损坏，只记录健康状态。"
+    },
+    {
+      "action": "refresh_memory_selection",
+      "target_check": "next_l11_cycle",
+      "risk": "low",
+      "auto_execute": true,
+      "reason": "下一轮 L11 可重新选择最新 L8-L10 记忆证据。"
+    }
+  ],
+  "auto_executed_actions": [
+    {
+      "action": "no_op_verified",
+      "target_check": "all_blocking_checks",
+      "risk": "low",
+      "auto_execute": true,
+      "reason": "L11 未发现阻塞性损坏，只记录健康状态。"
+    },
+    {
+      "action": "refresh_memory_selection",
+      "target_check": "next_l11_cycle",
+      "risk": "low",
+      "auto_execute": true,
+      "reason": "下一轮 L11 可重新选择最新 L8-L10 记忆证据。"
+    }
+  ],
+  "requires_review": [],
+  "repair_hash": "4915bfe624b7749e",
+  "truth_boundary": "L11 repair plan can propose or record low-risk maintenance actions only. It does not mutate core capsules automatically."
+}
