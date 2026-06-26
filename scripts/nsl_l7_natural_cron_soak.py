@@ -50,6 +50,35 @@ def future(seconds: float) -> str:
     return (datetime.now(timezone.utc) + timedelta(seconds=float(seconds))).isoformat()
 
 
+def current_event_name() -> str:
+    return str(os.environ.get("GITHUB_EVENT_NAME") or "unknown")
+
+
+def natural_schedule_event() -> bool:
+    return current_event_name() == "schedule"
+
+
+def executor_label() -> str:
+    event_name = current_event_name().replace("-", "_")
+    if event_name == "schedule":
+        return "github_actions_schedule"
+    if event_name == "workflow_dispatch":
+        return "github_actions_workflow_dispatch"
+    return f"github_actions_{event_name}"
+
+
+def event_truth_boundary() -> str:
+    if natural_schedule_event():
+        return (
+            "This was triggered by a GitHub Actions schedule event. GitHub Actions CPU still performs "
+            "interpretation and writes; this is not CPU-free network computation."
+        )
+    return (
+        "This was triggered by workflow_dispatch/manual diagnostics, not natural cron. It proves the L7 "
+        "runner path can execute, but it must not be counted as natural cron completion."
+    )
+
+
 def lock_active(lock: dict[str, Any] | None) -> bool:
     if not lock or lock.get("locked") is not True:
         return False
@@ -113,7 +142,7 @@ def build_pulse(
         "cycle_index": cycle_index,
         "generation": generation,
         "state_signature": f"{run_id}-cycle-{cycle_index:03d}",
-        "executor": "github_actions_schedule",
+        "executor": executor_label(),
         "owner": run_owner(),
         "capsule_id": capsule.get("capsule_id"),
         "capsule_generation": capsule.get("generation"),
@@ -135,9 +164,12 @@ def build_pulse(
         },
         "decoded_sentence": (capsule.get("program") or {}).get("decoded_sentence"),
         "nsl_rule": (capsule.get("program") or {}).get("nsl_rule"),
-        "action": {"type": "emit_program_pulse", "meaning": "L7 自然 cron soak 中的一次受控胶囊脉冲。"},
+        "action": {
+            "type": "emit_program_pulse",
+            "meaning": "L7 接收器胶囊闭环中的一次受控脉冲；是否自然 cron 以 owner.event_name 为准。",
+        },
         "pulse_hash": "",
-        "truth_boundary": "This pulse is emitted by GitHub Actions schedule after reading the network-resident capsule.",
+        "truth_boundary": event_truth_boundary(),
     }
     pulse["pulse_hash"] = stable_hash(pulse, "pulse_hash")
     return pulse
@@ -160,7 +192,7 @@ def build_state(
             "generation": generation,
             "pulse_path": pulse_path,
             "pulse_hash": pulse.get("pulse_hash"),
-            "event_name": os.environ.get("GITHUB_EVENT_NAME"),
+            "event_name": current_event_name(),
             "executor_run_id": os.environ.get("GITHUB_RUN_ID"),
             "created_at": pulse.get("created_at"),
         }
@@ -171,7 +203,7 @@ def build_state(
         "run_id": run_id,
         "generation": generation,
         "state_signature": f"{run_id}-soak-state-{generation:03d}",
-        "executor": "github_actions_schedule",
+        "executor": executor_label(),
         "owner": run_owner(),
         "capsule": {
             "path": CAPSULE_PATH,
@@ -187,9 +219,9 @@ def build_state(
         "latest_pulse": {"path": pulse_path, "hash": pulse.get("pulse_hash"), "cycle_index": cycle_index},
         "history": history,
         "recovery_events": recovery_events[-20:],
-        "loop_rule": "NATURAL CRON -> ACQUIRE LOCK -> READ CAPSULE RAW -> VALIDATE -> EMIT PULSE -> UPDATE SOAK STATE -> RELEASE LOCK",
+        "loop_rule": "ACTION EVENT -> ACQUIRE LOCK -> READ CAPSULE RAW -> VALIDATE -> EMIT PULSE -> UPDATE SOAK STATE -> RELEASE LOCK",
         "state_hash": "",
-        "truth_boundary": "L7 proves natural cron soak/recovery around the receiver-capsule loop. GitHub Actions CPU still performs interpretation and writes.",
+        "truth_boundary": event_truth_boundary(),
     }
     state["state_hash"] = stable_hash(state, "state_hash")
     return state
@@ -334,7 +366,8 @@ def env_float(name: str, default: float) -> float:
 def main() -> int:
     run_key = str(os.environ.get("GITHUB_RUN_ID") or datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S"))
     attempt = str(os.environ.get("GITHUB_RUN_ATTEMPT") or "1")
-    run_id = f"nsl-l7-cron-{run_key}-attempt-{attempt}"
+    run_prefix = "nsl-l7-schedule" if natural_schedule_event() else "nsl-l7-dispatch"
+    run_id = f"{run_prefix}-{run_key}-attempt-{attempt}"
     lock_ttl = env_int("L7_LOCK_TTL_SECONDS", 900)
     cycles_requested = env_int("L7_CYCLES", 1)
     cycle_delay = env_float("L7_CYCLE_DELAY_SECONDS", 0.0)
@@ -349,11 +382,13 @@ def main() -> int:
             "ok": True,
             "skipped": True,
             "skip_reason": "active_lock",
-            "executor": "github_actions_schedule",
+            "executor": executor_label(),
             "owner": run_owner(),
             "active_lock": existing_lock,
             "evidence_level": "L7-natural-cron-lock-skip",
-            "truth_boundary": "A scheduled run skipped because another lock was active. This is anti-reentry evidence, not CPU-free computation.",
+            "natural_schedule_verified": natural_schedule_event(),
+            "manual_diagnostic_only": not natural_schedule_event(),
+            "truth_boundary": event_truth_boundary(),
         }
         write_last_run(report)
         print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
@@ -374,15 +409,18 @@ def main() -> int:
         summaries = [cycle_summary(cycle) for cycle in cycles]
         cycles_ok = sum(1 for item in summaries if item["ok"])
         ok = bool(lock_write.get("ok") and cycles and cycles_ok == len(cycles))
+        schedule_verified = bool(ok and natural_schedule_event())
         final_report = {
             "run_id": run_id,
             "created_at": now(),
             "stage": "L7-natural-cron-soak-and-recovery",
             "ok": ok,
             "skipped": False,
-            "executor": "github_actions_schedule",
+            "executor": executor_label(),
             "owner": run_owner(),
-            "event_name": os.environ.get("GITHUB_EVENT_NAME"),
+            "event_name": current_event_name(),
+            "natural_schedule_verified": schedule_verified,
+            "manual_diagnostic_only": not natural_schedule_event(),
             "lock_path": LOCK_PATH,
             "lock_acquire": {"ok": lock_write.get("ok"), "status": lock_write.get("status"), "error": lock_write.get("error")},
             "stale_lock_recovered": stale_lock_recovered,
@@ -406,13 +444,21 @@ def main() -> int:
                 "final_state_hash": cycles[-1]["state_hash"] if cycles else None,
                 "recovery_event_count": sum(item["recovery_event_count"] for item in summaries),
             },
-            "evidence_level": "L7-natural-cron-soak-and-recovery" if ok else "L7-natural-cron-soak-partial",
+            "evidence_level": (
+                "L7-natural-cron-soak-and-recovery"
+                if schedule_verified
+                else ("L7-workflow-dispatch-diagnostic-recovery" if ok else "L7-natural-cron-soak-partial")
+            ),
             "conclusion": (
                 "L7 成立：自然 cron 触发的 GitHub Actions 已完成接收器胶囊闭环，并通过锁/恢复层记录执行连续性。"
-                if ok
-                else "L7 部分成立：自然 cron 触发了执行器，但至少一个闭环校验未通过。"
+                if schedule_verified
+                else (
+                    "L7 诊断通过：workflow_dispatch 已跑通接收器胶囊闭环和锁/恢复层，但这不能计为自然 cron 完成。"
+                    if ok
+                    else "L7 部分成立：执行器已触发，但至少一个闭环校验未通过。"
+                )
             ),
-            "truth_boundary": "L7 proves natural GitHub Actions cron soak/recovery around the receiver-capsule loop. GitHub Actions CPU still performs interpretation and writes; this is not CPU-free network computation.",
+            "truth_boundary": event_truth_boundary(),
         }
     except Exception as exc:
         final_report = {
@@ -421,14 +467,16 @@ def main() -> int:
             "stage": "L7-natural-cron-soak-and-recovery",
             "ok": False,
             "skipped": False,
-            "executor": "github_actions_schedule",
+            "executor": executor_label(),
             "owner": run_owner(),
-            "event_name": os.environ.get("GITHUB_EVENT_NAME"),
+            "event_name": current_event_name(),
+            "natural_schedule_verified": False,
+            "manual_diagnostic_only": not natural_schedule_event(),
             "lock_path": LOCK_PATH,
             "lock_acquire": {"ok": lock_write.get("ok"), "status": lock_write.get("status"), "error": lock_write.get("error")},
             "error": f"{type(exc).__name__}: {exc}",
             "evidence_level": "L7-natural-cron-soak-error",
-            "truth_boundary": "L7 error report. GitHub Actions CPU still performs interpretation and writes.",
+            "truth_boundary": event_truth_boundary(),
         }
     finally:
         latest_lock, latest_lock_sha = decode_content(get_content(LOCK_PATH))
