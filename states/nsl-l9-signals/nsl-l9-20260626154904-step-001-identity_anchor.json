@@ -1,0 +1,57 @@
+{
+  "stage": "L9-multi-capsule-loop-signal",
+  "schema_version": "NSL-L9-SIGNAL-0.1",
+  "created_at": "2026-06-26T15:49:15.067310+00:00",
+  "run_id": "nsl-l9-20260626154904",
+  "step_index": 1,
+  "role": "identity_anchor",
+  "capsule_id": "l8cap-identity_anchor-1e50303a64b2254e",
+  "capsule_hash": "7ddcd46a1ae9ab4a",
+  "network_id": "l8net-935aa73f3dbeafd7",
+  "network_hash": "e2b0f7037648ec33",
+  "inputs_required": [
+    "STATE_ID"
+  ],
+  "signals_before": [
+    "ADVANCE_AFTER_RELEASE",
+    "RELEASE",
+    "RESIDUAL",
+    "RHYTHM",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "signals_out": [
+    "IDENTITY_CONFIRMED"
+  ],
+  "signals_after": [
+    "ADVANCE_AFTER_RELEASE",
+    "IDENTITY_CONFIRMED",
+    "RELEASE",
+    "RESIDUAL",
+    "RHYTHM",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "decision": {
+    "ok": true,
+    "checks": {
+      "role_known": true,
+      "capsule_hash_ok": true,
+      "action_allowlisted": true,
+      "no_forbidden_keys": true,
+      "inputs_available": true,
+      "graph_validation_available": true
+    },
+    "missing_inputs": [],
+    "action": "observe_state_identity"
+  },
+  "graph_validation_ok": true,
+  "interpreted_action": {
+    "type": "observe_state_identity",
+    "executed": true,
+    "effect": "emit declarative signal only; no arbitrary body execution"
+  },
+  "signal_hash": "1ef4c8849af32633",
+  "truth_boundary": "This signal is emitted by a controlled L9 interpreter after validating a network-resident capsule. It is not autonomous network self-execution.",
+  "path": "states/nsl-l9-signals/nsl-l9-20260626154904-step-001-identity_anchor.json"
+}
