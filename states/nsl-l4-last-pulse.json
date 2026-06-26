@@ -1,0 +1,35 @@
+{
+  "stage": "L4-network-receiver-program-pulse",
+  "created_at": "2026-06-26T11:47:38.787322+00:00",
+  "capsule_id": "l4cap-d55c135c8ba80efe",
+  "capsule_generation": 1,
+  "source_capsule_path": "states/nsl-l4-receiver-capsule.json",
+  "trigger_source": "branch_raw_capsule_read",
+  "trigger_read": {
+    "ok": true,
+    "status": 200,
+    "elapsed_ms": 592.52,
+    "headers": {
+      "cache-control": "max-age=300",
+      "etag": "\"51ddba207534ec375e997840d2a772d33e37fe7f2d389d0d43dc070f9c34f68c\"",
+      "x-cache": "MISS",
+      "x-served-by": "cache-sin-wsat1880021-SIN",
+      "via": "1.1 varnish",
+      "expires": "Fri, 26 Jun 2026 11:52:38 GMT"
+    },
+    "generation": 1,
+    "state_signature": "l4cap-d55c135c8ba80efe"
+  },
+  "decoded_sentence": "STATE_ID -> SHADOW -> RESIDUAL -> RELEASE -> RHYTHM_SLOW_STABLE",
+  "nsl_rule": "WHEN STATE_ID AND SHADOW AND RESIDUAL THEN WAIT RELEASE; WHEN RELEASE THEN CLASSIFY RHYTHM AND ADVANCE",
+  "action": {
+    "type": "emit_program_pulse",
+    "pulse_path": "states/nsl-l4-last-pulse.json",
+    "body": {
+      "pulse": "ADVANCE_AFTER_RELEASE",
+      "meaning": "网络态句子稳定且接收器候选成立后，发出一次可审计程序脉冲。"
+    }
+  },
+  "pulse_hash": "022c42eae871b612",
+  "truth_boundary": "This pulse is emitted by an allowlisted interpreter after reading a network-resident capsule. CPU still performs the interpretation and write."
+}
