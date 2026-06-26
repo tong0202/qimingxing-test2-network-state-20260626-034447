@@ -1,0 +1,43 @@
+name: L7 Natural Cron Soak
+
+on:
+  workflow_dispatch:
+    inputs:
+      cycles:
+        description: "How many controlled L7 cycles to run"
+        required: false
+        default: "1"
+      cycle_delay:
+        description: "Seconds to wait between cycles"
+        required: false
+        default: "0"
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: l7-natural-cron-soak
+  cancel-in-progress: false
+
+jobs:
+  natural-cron-soak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout receiver repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run L7 natural cron soak
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          L7_CYCLES: ${{ github.event.inputs.cycles || '1' }}
+          L7_CYCLE_DELAY_SECONDS: ${{ github.event.inputs.cycle_delay || '0' }}
+          L7_LOCK_TTL_SECONDS: "900"
+        run: python scripts/nsl_l7_natural_cron_soak.py
