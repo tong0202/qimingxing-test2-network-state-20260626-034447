@@ -1,0 +1,128 @@
+{
+  "stage": "L8-multi-capsule-network-language-index",
+  "schema_version": "NSL-L8-CAPSULE-NETWORK-0.1",
+  "created_at": "2026-06-26T15:36:15.574841+00:00",
+  "run_id": "nsl-l8-20260626153614",
+  "generation": 1,
+  "network_id": "l8net-935aa73f3dbeafd7",
+  "state_signature": "l8net-935aa73f3dbeafd7",
+  "receiver": {
+    "name": "github_branch_raw_main",
+    "kind": "mutable_branch_raw_cdn_path",
+    "raw_branch_url": "https://raw.githubusercontent.com/tong0202/qimingxing-test2-network-state-20260626-034447/main/states/nsl-l8-capsule-network-index.json"
+  },
+  "capsules": [
+    {
+      "role": "identity_anchor",
+      "capsule_id": "l8cap-identity_anchor-1e50303a64b2254e",
+      "path": "states/nsl-l8-capsules/identity_anchor.json",
+      "capsule_hash": "7ddcd46a1ae9ab4a",
+      "signals_out": [
+        "IDENTITY_CONFIRMED"
+      ]
+    },
+    {
+      "role": "memory_index",
+      "capsule_id": "l8cap-memory_index-0fa98f11bc067183",
+      "path": "states/nsl-l8-capsules/memory_index.json",
+      "capsule_hash": "c1d19deac1a916ee",
+      "signals_out": [
+        "MEMORY_TRACE_READY"
+      ]
+    },
+    {
+      "role": "rhythm_gate",
+      "capsule_id": "l8cap-rhythm_gate-dc901b4423665484",
+      "path": "states/nsl-l8-capsules/rhythm_gate.json",
+      "capsule_hash": "f93e6878b125e648",
+      "signals_out": [
+        "RELEASE_WINDOW_OPEN"
+      ]
+    },
+    {
+      "role": "intent_router",
+      "capsule_id": "l8cap-intent_router-429500a4d4177727",
+      "path": "states/nsl-l8-capsules/intent_router.json",
+      "capsule_hash": "d1afb3c00a9dbaf7",
+      "signals_out": [
+        "ROUTE_ADVANCE"
+      ]
+    },
+    {
+      "role": "graph_verifier",
+      "capsule_id": "l8cap-graph_verifier-fb920aa5751a21b7",
+      "path": "states/nsl-l8-capsules/graph_verifier.json",
+      "capsule_hash": "329ef76d5ed5661f",
+      "signals_out": [
+        "GRAPH_VALIDATED"
+      ]
+    },
+    {
+      "role": "behavior_pulse",
+      "capsule_id": "l8cap-behavior_pulse-d1014ae7bbedc168",
+      "path": "states/nsl-l8-capsules/behavior_pulse.json",
+      "capsule_hash": "75a4bb98c69ec00a",
+      "signals_out": [
+        "NETWORK_LANGUAGE_PULSE"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from_role": "identity_anchor",
+      "from": "l8cap-identity_anchor-1e50303a64b2254e",
+      "to_role": "memory_index",
+      "to": "l8cap-memory_index-0fa98f11bc067183",
+      "relation": "signal_flow"
+    },
+    {
+      "from_role": "memory_index",
+      "from": "l8cap-memory_index-0fa98f11bc067183",
+      "to_role": "rhythm_gate",
+      "to": "l8cap-rhythm_gate-dc901b4423665484",
+      "relation": "signal_flow"
+    },
+    {
+      "from_role": "rhythm_gate",
+      "from": "l8cap-rhythm_gate-dc901b4423665484",
+      "to_role": "intent_router",
+      "to": "l8cap-intent_router-429500a4d4177727",
+      "relation": "signal_flow"
+    },
+    {
+      "from_role": "intent_router",
+      "from": "l8cap-intent_router-429500a4d4177727",
+      "to_role": "graph_verifier",
+      "to": "l8cap-graph_verifier-fb920aa5751a21b7",
+      "relation": "signal_flow"
+    },
+    {
+      "from_role": "graph_verifier",
+      "from": "l8cap-graph_verifier-fb920aa5751a21b7",
+      "to_role": "behavior_pulse",
+      "to": "l8cap-behavior_pulse-d1014ae7bbedc168",
+      "relation": "signal_flow"
+    }
+  ],
+  "network_sentence": "STATE_ID@identity_anchor -> SHADOW+RESIDUAL@memory_index -> RELEASE+RHYTHM@rhythm_gate -> ADVANCE_AFTER_RELEASE@intent_router -> GRAPH_VALIDATED@graph_verifier -> NETWORK_LANGUAGE_PULSE@behavior_pulse",
+  "network_rule": "WHEN identity is stable AND memory trace is indexed AND release rhythm opens a window THEN route intent through graph verification and emit one network-language pulse",
+  "base_sentence": "STATE_ID -> SHADOW -> RESIDUAL -> RELEASE -> RHYTHM_SLOW_STABLE",
+  "base_intent": "ADVANCE_AFTER_RELEASE",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "direct_body_execution": false,
+    "allowed_actions": [
+      "emit_network_language_pulse",
+      "gate_on_release_rhythm",
+      "index_memory_shadow",
+      "observe_state_identity",
+      "route_after_release",
+      "update_capsule_network_state",
+      "verify_capsule_graph"
+    ],
+    "graph_must_be_acyclic": true,
+    "all_capsules_must_hash_verify": true
+  },
+  "network_hash": "e2b0f7037648ec33",
+  "truth_boundary": "L8 proves a multi-capsule network language structure can be stored, linked, read back, and validated. It does not prove self-executing network life or network-only computation."
+}
