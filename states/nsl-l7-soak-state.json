@@ -1,19 +1,19 @@
 {
   "stage": "L7-natural-cron-soak-and-recovery",
-  "updated_at": "2026-06-26T13:02:39.243929+00:00",
-  "run_id": "nsl-l7-cron-28239761113-attempt-1",
-  "generation": 1,
-  "state_signature": "nsl-l7-cron-28239761113-attempt-1-soak-state-001",
-  "executor": "github_actions_schedule",
+  "updated_at": "2026-06-26T13:07:29.022022+00:00",
+  "run_id": "nsl-l7-dispatch-28240020174-attempt-1",
+  "generation": 2,
+  "state_signature": "nsl-l7-dispatch-28240020174-attempt-1-soak-state-002",
+  "executor": "github_actions_workflow_dispatch",
   "owner": {
     "workflow": "L7 Natural Cron Soak",
-    "run_id": "28239761113",
+    "run_id": "28240020174",
     "run_attempt": "1",
     "event_name": "workflow_dispatch",
     "actor": "tong0202",
     "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
     "server_url": "https://github.com",
-    "sha": "3e26e23b59002d174774d95d148aa8e523adc947"
+    "sha": "df27685c007c635acbecda08a78653fad66620ca"
   },
   "capsule": {
     "path": "states/nsl-l4-receiver-capsule.json",
@@ -29,12 +29,12 @@
     }
   },
   "previous": {
-    "generation": null,
-    "state_hash": null
+    "generation": 1,
+    "state_hash": "df44af912b8306a9"
   },
   "latest_pulse": {
-    "path": "states/nsl-l7-soak-cycles/nsl-l7-cron-28239761113-attempt-1-cycle-001-run-28239761113-attempt-1.json",
-    "hash": "dd7290aa8584fd07",
+    "path": "states/nsl-l7-soak-cycles/nsl-l7-dispatch-28240020174-attempt-1-cycle-001-run-28240020174-attempt-1.json",
+    "hash": "ac5322794e9fa7a2",
     "cycle_index": 1
   },
   "history": [
@@ -46,10 +46,19 @@
       "event_name": "workflow_dispatch",
       "executor_run_id": "28239761113",
       "created_at": "2026-06-26T13:02:38.263352+00:00"
+    },
+    {
+      "cycle_index": 1,
+      "generation": 2,
+      "pulse_path": "states/nsl-l7-soak-cycles/nsl-l7-dispatch-28240020174-attempt-1-cycle-001-run-28240020174-attempt-1.json",
+      "pulse_hash": "ac5322794e9fa7a2",
+      "event_name": "workflow_dispatch",
+      "executor_run_id": "28240020174",
+      "created_at": "2026-06-26T13:07:27.797754+00:00"
     }
   ],
   "recovery_events": [],
-  "loop_rule": "NATURAL CRON -> ACQUIRE LOCK -> READ CAPSULE RAW -> VALIDATE -> EMIT PULSE -> UPDATE SOAK STATE -> RELEASE LOCK",
-  "state_hash": "df44af912b8306a9",
-  "truth_boundary": "L7 proves natural cron soak/recovery around the receiver-capsule loop. GitHub Actions CPU still performs interpretation and writes."
+  "loop_rule": "ACTION EVENT -> ACQUIRE LOCK -> READ CAPSULE RAW -> VALIDATE -> EMIT PULSE -> UPDATE SOAK STATE -> RELEASE LOCK",
+  "state_hash": "4f96e8818237e8b7",
+  "truth_boundary": "This was triggered by workflow_dispatch/manual diagnostics, not natural cron. It proves the L7 runner path can execute, but it must not be counted as natural cron completion."
 }
