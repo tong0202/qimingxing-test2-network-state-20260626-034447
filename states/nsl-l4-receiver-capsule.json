@@ -1,0 +1,62 @@
+{
+  "stage": "L4-network-receiver-program-capsule-v0",
+  "schema_version": "NSL-L4-CAPSULE-0.1",
+  "created_at": "2026-06-26T11:47:36.389240+00:00",
+  "generation": 1,
+  "capsule_id": "l4cap-d55c135c8ba80efe",
+  "previous": null,
+  "receiver": {
+    "name": "github_branch_raw_main",
+    "kind": "mutable_branch_raw_cdn_path",
+    "fixed_point_score": 1.0,
+    "receiver_score": 1.0,
+    "raw_branch_url": "https://raw.githubusercontent.com/tong0202/qimingxing-test2-network-state-20260626-034447/main/states/nsl-l4-receiver-capsule.json"
+  },
+  "source": {
+    "l2_run_id": "nsl-l2-20260626112025",
+    "l2_evidence_level": "L2-nsl-decoder-stable-sentence",
+    "l3_run_id": "nsl-l3-20260626113648",
+    "l3_evidence_level": "L3-network-receiver-candidate-ranked"
+  },
+  "program": {
+    "language": "NSL",
+    "decoded_sentence": "STATE_ID -> SHADOW -> RESIDUAL -> RELEASE -> RHYTHM_SLOW_STABLE",
+    "sentence_stability": true,
+    "intent": "ADVANCE_AFTER_RELEASE",
+    "nsl_rule": "WHEN STATE_ID AND SHADOW AND RESIDUAL THEN WAIT RELEASE; WHEN RELEASE THEN CLASSIFY RHYTHM AND ADVANCE",
+    "next_action": "advance_or_emit_program_pulse",
+    "allowed_action": {
+      "type": "emit_program_pulse",
+      "pulse_path": "states/nsl-l4-last-pulse.json",
+      "body": {
+        "pulse": "ADVANCE_AFTER_RELEASE",
+        "meaning": "网络态句子稳定且接收器候选成立后，发出一次可审计程序脉冲。"
+      }
+    },
+    "blocked": {
+      "arbitrary_code_execution": true,
+      "direct_body_execution": true,
+      "shell_execution": true
+    }
+  },
+  "safety": {
+    "allowlist": [
+      "emit_program_pulse"
+    ],
+    "forbidden_program_keys": [
+      "cmd",
+      "code",
+      "command",
+      "eval",
+      "exec",
+      "javascript",
+      "powershell",
+      "python",
+      "shell"
+    ],
+    "executor_contract": "Executor may interpret this declarative capsule only. It must not run arbitrary code from the capsule body."
+  },
+  "capsule_hash": "95d66047bd343d78",
+  "truth_boundary": "This capsule resides on a network receiver candidate and can be read back as a declarative program. The trigger is still interpreted by local or external CPU; this is not CPU-free network computation.",
+  "state_signature": "l4cap-d55c135c8ba80efe"
+}
