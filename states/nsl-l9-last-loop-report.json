@@ -1,0 +1,114 @@
+{
+  "run_id": "nsl-l9-20260626154904",
+  "stage": "L9-multi-capsule-loop-interpreter-v0",
+  "created_at": "2026-06-26T15:49:53.246198+00:00",
+  "ok": true,
+  "evidence_level": "L9-multi-capsule-loop-interpreter-v0",
+  "network_id": "l8net-935aa73f3dbeafd7",
+  "loop_state_path": "states/nsl-l9-loop-state.json",
+  "signal_paths": [
+    "states/nsl-l9-signals/nsl-l9-20260626154904-step-001-identity_anchor.json",
+    "states/nsl-l9-signals/nsl-l9-20260626154904-step-002-memory_index.json",
+    "states/nsl-l9-signals/nsl-l9-20260626154904-step-003-rhythm_gate.json",
+    "states/nsl-l9-signals/nsl-l9-20260626154904-step-004-intent_router.json",
+    "states/nsl-l9-signals/nsl-l9-20260626154904-step-005-graph_verifier.json",
+    "states/nsl-l9-signals/nsl-l9-20260626154904-step-006-behavior_pulse.json"
+  ],
+  "route": [
+    "identity_anchor",
+    "memory_index",
+    "rhythm_gate",
+    "intent_router",
+    "graph_verifier",
+    "behavior_pulse"
+  ],
+  "steps": [
+    {
+      "step_index": 1,
+      "role": "identity_anchor",
+      "ok": true,
+      "capsule_id": "l8cap-identity_anchor-1e50303a64b2254e",
+      "action": "observe_state_identity",
+      "missing_inputs": [],
+      "signals_out": [
+        "IDENTITY_CONFIRMED"
+      ],
+      "signal_hash": "1ef4c8849af32633",
+      "signal_path": "states/nsl-l9-signals/nsl-l9-20260626154904-step-001-identity_anchor.json"
+    },
+    {
+      "step_index": 2,
+      "role": "memory_index",
+      "ok": true,
+      "capsule_id": "l8cap-memory_index-0fa98f11bc067183",
+      "action": "index_memory_shadow",
+      "missing_inputs": [],
+      "signals_out": [
+        "MEMORY_TRACE_READY"
+      ],
+      "signal_hash": "26b1519384fa771b",
+      "signal_path": "states/nsl-l9-signals/nsl-l9-20260626154904-step-002-memory_index.json"
+    },
+    {
+      "step_index": 3,
+      "role": "rhythm_gate",
+      "ok": true,
+      "capsule_id": "l8cap-rhythm_gate-dc901b4423665484",
+      "action": "gate_on_release_rhythm",
+      "missing_inputs": [],
+      "signals_out": [
+        "RELEASE_WINDOW_OPEN"
+      ],
+      "signal_hash": "883ea577d308e58d",
+      "signal_path": "states/nsl-l9-signals/nsl-l9-20260626154904-step-003-rhythm_gate.json"
+    },
+    {
+      "step_index": 4,
+      "role": "intent_router",
+      "ok": true,
+      "capsule_id": "l8cap-intent_router-429500a4d4177727",
+      "action": "route_after_release",
+      "missing_inputs": [],
+      "signals_out": [
+        "ROUTE_ADVANCE"
+      ],
+      "signal_hash": "8560c0ef40f97bc6",
+      "signal_path": "states/nsl-l9-signals/nsl-l9-20260626154904-step-004-intent_router.json"
+    },
+    {
+      "step_index": 5,
+      "role": "graph_verifier",
+      "ok": true,
+      "capsule_id": "l8cap-graph_verifier-fb920aa5751a21b7",
+      "action": "verify_capsule_graph",
+      "missing_inputs": [],
+      "signals_out": [
+        "GRAPH_VALIDATED"
+      ],
+      "signal_hash": "0e689968e02413dc",
+      "signal_path": "states/nsl-l9-signals/nsl-l9-20260626154904-step-005-graph_verifier.json"
+    },
+    {
+      "step_index": 6,
+      "role": "behavior_pulse",
+      "ok": true,
+      "capsule_id": "l8cap-behavior_pulse-d1014ae7bbedc168",
+      "action": "emit_network_language_pulse",
+      "missing_inputs": [],
+      "signals_out": [
+        "NETWORK_LANGUAGE_PULSE"
+      ],
+      "signal_hash": "b8a9984f5c05c975",
+      "signal_path": "states/nsl-l9-signals/nsl-l9-20260626154904-step-006-behavior_pulse.json"
+    }
+  ],
+  "network_language_pulse": true,
+  "verification": {
+    "graph_validation_ok": true,
+    "signals_write_ok": true,
+    "loop_state_write_ok": true,
+    "branch_raw_release_ok": true
+  },
+  "conclusion": "L9 成立：L8 的 6 胶囊网络语言图已被受控解释器按信号顺序推进一轮，每个胶囊产生可审计 signal，并写回 L9 loop state。",
+  "truth_boundary": "L9 proves controlled interpretation of a network-resident multi-capsule language graph. It does not prove autonomous self-execution, CPU-free network computation, digital life, or digital supercomputing."
+}
