@@ -1,0 +1,63 @@
+{
+  "stage": "L9-multi-capsule-loop-signal",
+  "schema_version": "NSL-L9-SIGNAL-0.1",
+  "created_at": "2026-06-26T15:49:15.068654+00:00",
+  "run_id": "nsl-l9-20260626154904",
+  "step_index": 3,
+  "role": "rhythm_gate",
+  "capsule_id": "l8cap-rhythm_gate-dc901b4423665484",
+  "capsule_hash": "f93e6878b125e648",
+  "network_id": "l8net-935aa73f3dbeafd7",
+  "network_hash": "e2b0f7037648ec33",
+  "inputs_required": [
+    "RELEASE",
+    "RHYTHM",
+    "MEMORY_TRACE_READY"
+  ],
+  "signals_before": [
+    "ADVANCE_AFTER_RELEASE",
+    "IDENTITY_CONFIRMED",
+    "MEMORY_TRACE_READY",
+    "RELEASE",
+    "RESIDUAL",
+    "RHYTHM",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "signals_out": [
+    "RELEASE_WINDOW_OPEN"
+  ],
+  "signals_after": [
+    "ADVANCE_AFTER_RELEASE",
+    "IDENTITY_CONFIRMED",
+    "MEMORY_TRACE_READY",
+    "RELEASE",
+    "RELEASE_WINDOW_OPEN",
+    "RESIDUAL",
+    "RHYTHM",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "decision": {
+    "ok": true,
+    "checks": {
+      "role_known": true,
+      "capsule_hash_ok": true,
+      "action_allowlisted": true,
+      "no_forbidden_keys": true,
+      "inputs_available": true,
+      "graph_validation_available": true
+    },
+    "missing_inputs": [],
+    "action": "gate_on_release_rhythm"
+  },
+  "graph_validation_ok": true,
+  "interpreted_action": {
+    "type": "gate_on_release_rhythm",
+    "executed": true,
+    "effect": "emit declarative signal only; no arbitrary body execution"
+  },
+  "signal_hash": "883ea577d308e58d",
+  "truth_boundary": "This signal is emitted by a controlled L9 interpreter after validating a network-resident capsule. It is not autonomous network self-execution.",
+  "path": "states/nsl-l9-signals/nsl-l9-20260626154904-step-003-rhythm_gate.json"
+}
