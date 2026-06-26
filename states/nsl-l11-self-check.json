@@ -1,0 +1,63 @@
+{
+  "stage": "L11-self-check",
+  "schema_version": "NSL-L11-SELF-CHECK-0.1",
+  "created_at": "2026-06-26T16:23:32.017246+00:00",
+  "ok": true,
+  "blocking_count": 0,
+  "warning_count": 0,
+  "checks": [
+    {
+      "id": "memory_sources_readable",
+      "ok": true,
+      "severity": "high",
+      "meaning": "所有 L11 选中的远端记忆都能读取。"
+    },
+    {
+      "id": "hashed_memories_verify",
+      "ok": true,
+      "severity": "high",
+      "meaning": "带 hash 的记忆文件未发现损坏。"
+    },
+    {
+      "id": "l8_graph_available",
+      "ok": true,
+      "severity": "high",
+      "meaning": "L8 多胶囊语言图可用。"
+    },
+    {
+      "id": "l9_interpreter_pulse_available",
+      "ok": true,
+      "severity": "medium",
+      "meaning": "L9 解释器上一轮产生了 NETWORK_LANGUAGE_PULSE。"
+    },
+    {
+      "id": "l10_external_loop_available",
+      "ok": true,
+      "severity": "medium",
+      "meaning": "L10 最新 loop state 来自外层接管且 cycle 完整。"
+    },
+    {
+      "id": "l10_external_report_ok",
+      "ok": true,
+      "severity": "medium",
+      "meaning": "L10 外层接管报告为通过。"
+    },
+    {
+      "id": "l7_natural_schedule_still_unproven",
+      "ok": true,
+      "severity": "low",
+      "meaning": "自然 schedule 是否已被观察到；失败表示仍是已知缺口，不阻塞 L11。",
+      "known_gap": true
+    },
+    {
+      "id": "status_drift_guard_present",
+      "ok": true,
+      "severity": "medium",
+      "meaning": "STATUS.json 已记录 L10 低频循环证据，防止压缩漂移。"
+    }
+  ],
+  "blocking": [],
+  "warnings": [],
+  "self_check_hash": "61efd5d715f925d6",
+  "truth_boundary": "L11 self-check verifies project-state continuity and known gaps. It is not autonomous cognition."
+}
