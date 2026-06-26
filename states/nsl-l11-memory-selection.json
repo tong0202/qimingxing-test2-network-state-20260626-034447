@@ -1,0 +1,196 @@
+{
+  "stage": "L11-memory-selection",
+  "schema_version": "NSL-L11-MEMORY-SELECTION-0.1",
+  "created_at": "2026-06-26T16:15:34.430095+00:00",
+  "selection_rule": "Select current structural, interpreter, loop, external takeover, and schedule-gap memories by priority.",
+  "selected_count": 5,
+  "selected": [
+    {
+      "id": "l8_network_language_graph",
+      "path": "states/nsl-l8-capsule-network-index.json",
+      "priority": 100,
+      "meaning": "多胶囊网络语言图，是 L9/L10 的结构源。",
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 669.18,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "network_hash",
+        "observed": "e2b0f7037648ec33",
+        "expected": "e2b0f7037648ec33"
+      },
+      "summary": {
+        "network_id": "l8net-935aa73f3dbeafd7",
+        "generation": 1,
+        "capsule_count": 6,
+        "edge_count": 5,
+        "network_hash": "e2b0f7037648ec33"
+      },
+      "headers": {
+        "cache-control": "max-age=300",
+        "etag": "\"9e510b31ff6d8fbe99447807129f88a375217d341b807130d3a9a78e1805ef51\"",
+        "x-cache": "HIT",
+        "x-served-by": "cache-sin-wsss1830087-SIN",
+        "via": "1.1 varnish",
+        "expires": "Fri, 26 Jun 2026 16:20:29 GMT"
+      },
+      "error": ""
+    },
+    {
+      "id": "l9_interpreter_loop_state",
+      "path": "states/nsl-l9-loop-state.json",
+      "priority": 95,
+      "meaning": "多胶囊闭环解释器的一轮解释状态。",
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 1267.56,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "state_hash",
+        "observed": "a329e471fab6bb63",
+        "expected": "a329e471fab6bb63"
+      },
+      "summary": {
+        "run_id": "nsl-l9-20260626154904",
+        "generation": 1,
+        "network_language_pulse": true,
+        "step_count": 6,
+        "state_hash": "a329e471fab6bb63"
+      },
+      "headers": {
+        "cache-control": "max-age=300",
+        "etag": "\"d68a5561695a51abd8f31a25cccb536593215c3282edab46a8602980dcebf9eb\"",
+        "x-cache": "HIT",
+        "x-served-by": "cache-sin-wsat1880068-SIN",
+        "via": "1.1 varnish",
+        "expires": "Fri, 26 Jun 2026 16:20:30 GMT"
+      },
+      "error": ""
+    },
+    {
+      "id": "l10_low_frequency_loop_state",
+      "path": "states/nsl-l10-loop-state.json",
+      "priority": 90,
+      "meaning": "多胶囊低频自循环与外层接管后的最新状态。",
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 1770.12,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "state_hash",
+        "observed": "259d974d95881fb6",
+        "expected": "259d974d95881fb6"
+      },
+      "summary": {
+        "run_id": "nsl-l10-external-28250001219",
+        "generation": 3,
+        "mode": "external",
+        "cycle_count": 1,
+        "cycles_ok": 1,
+        "state_hash": "259d974d95881fb6"
+      },
+      "headers": {
+        "cache-control": "max-age=300",
+        "etag": "\"543b4caf9042cf0b4df215babc4191e8466b03f6a388202be4aa2c58af98419d\"",
+        "x-cache": "MISS",
+        "x-served-by": "cache-sin-wsss1830068-SIN",
+        "via": "1.1 varnish",
+        "expires": "Fri, 26 Jun 2026 16:20:32 GMT"
+      },
+      "error": ""
+    },
+    {
+      "id": "l10_external_takeover_report",
+      "path": "states/nsl-l10-last-self-loop-report.json",
+      "priority": 85,
+      "meaning": "外层接管验收报告，证明 workflow_dispatch 外部执行已跑通。",
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 618.32,
+      "hash_verify": {
+        "required": false,
+        "ok": true,
+        "field": "",
+        "observed": null,
+        "expected": null
+      },
+      "summary": {
+        "run_id": "nsl-l10-external-28250001219",
+        "ok": true,
+        "mode": "external",
+        "external_takeover": true,
+        "cycles_ok": 1,
+        "cycle_count": 1
+      },
+      "headers": {
+        "cache-control": "max-age=300",
+        "etag": "\"0dd4a5d00377b9828f32117c57bc5f782690b3cc4d9c1c1cc647dadbcc6031da\"",
+        "x-cache": "MISS",
+        "x-served-by": "cache-sin-wsat1880052-SIN",
+        "via": "1.1 varnish",
+        "expires": "Fri, 26 Jun 2026 16:20:33 GMT"
+      },
+      "error": ""
+    },
+    {
+      "id": "l7_natural_cron_report",
+      "path": "states/nsl-l7-last-run.json",
+      "priority": 60,
+      "meaning": "自然 cron/诊断状态，用来识别常驻缺口。",
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 1191.85,
+      "hash_verify": {
+        "required": false,
+        "ok": true,
+        "field": "",
+        "observed": null,
+        "expected": null
+      },
+      "summary": {
+        "run_id": "nsl-l7-schedule-28246820010-attempt-1",
+        "ok": true,
+        "event_name": "schedule",
+        "natural_schedule_verified": true,
+        "manual_diagnostic_only": false
+      },
+      "headers": {
+        "cache-control": "max-age=300",
+        "etag": "\"6b677067e44efa7119fee2b55594a0962ac171ea96823cebbb101859e74d62a2\"",
+        "x-cache": "MISS",
+        "x-served-by": "cache-sin-wsat1880075-SIN",
+        "via": "1.1 varnish",
+        "expires": "Fri, 26 Jun 2026 16:20:34 GMT"
+      },
+      "error": ""
+    }
+  ],
+  "local_status_summary": {
+    "current_layer": "network_state_riverbed_plus_multi_capsule_low_frequency_self_loop_layer",
+    "completed_mainline": "L10-multi-capsule-low-frequency-self-loop-and-external-takeover-v0",
+    "recommended_next_mainline": "L11-multi-capsule-memory-selection-self-check-and-repair-loop",
+    "proved_tail": [
+      "l7_natural_cron_soak_workflow_is_deployed_and_active",
+      "l7_workflow_dispatch_diagnostic_recovery_path_runs_successfully",
+      "l8_multi_capsule_network_language_graph_is_stored_readback_and_validated",
+      "l9_multi_capsule_language_graph_can_be_interpreted_as_one_controlled_loop",
+      "l10_multi_capsule_interpreter_can_run_low_frequency_multi_cycle_loop",
+      "l10_github_actions_external_takeover_can_run_one_controlled_loop"
+    ],
+    "not_proved_tail": [
+      "github_actions_as_network_field_compute",
+      "l7_natural_cron_schedule_event_observed",
+      "l8_multi_capsule_graph_self_executes_without_controlled_interpreter",
+      "multi_capsule_graph_as_digital_supercomputer",
+      "l9_interpreter_runs_as_natural_external_autonomous_loop",
+      "multi_capsule_loop_self_generates_new_capsules",
+      "l10_natural_schedule_event_observed",
+      "l10_external_takeover_as_cpu_free_execution"
+    ]
+  },
+  "memory_hash": "1e56fb5464c57191",
+  "truth_boundary": "L11 memory selection chooses auditable project-state memories. It is not general intelligence or autonomous recall."
+}
