@@ -1,0 +1,42 @@
+{
+  "run_id": "nsl-l8-20260626153614",
+  "stage": "L8-multi-capsule-network-language-extension",
+  "created_at": "2026-06-26T15:37:08.249021+00:00",
+  "ok": true,
+  "evidence_level": "L8-multi-capsule-network-language-extension",
+  "network_index_path": "states/nsl-l8-capsule-network-index.json",
+  "network_state_path": "states/nsl-l8-capsule-network-state.json",
+  "capsule_paths": [
+    "states/nsl-l8-capsules/identity_anchor.json",
+    "states/nsl-l8-capsules/memory_index.json",
+    "states/nsl-l8-capsules/rhythm_gate.json",
+    "states/nsl-l8-capsules/intent_router.json",
+    "states/nsl-l8-capsules/graph_verifier.json",
+    "states/nsl-l8-capsules/behavior_pulse.json"
+  ],
+  "network_sentence": "STATE_ID@identity_anchor -> SHADOW+RESIDUAL@memory_index -> RELEASE+RHYTHM@rhythm_gate -> ADVANCE_AFTER_RELEASE@intent_router -> GRAPH_VALIDATED@graph_verifier -> NETWORK_LANGUAGE_PULSE@behavior_pulse",
+  "aggregate": {
+    "capsule_count": 6,
+    "edge_count": 5,
+    "roles": [
+      "identity_anchor",
+      "memory_index",
+      "rhythm_gate",
+      "intent_router",
+      "graph_verifier",
+      "behavior_pulse"
+    ],
+    "all_writes_ok": true,
+    "all_commit_raw_ok": true,
+    "index_validation_ok": true,
+    "branch_raw_release_ok": true,
+    "state_api_ok": true
+  },
+  "verification": {
+    "index_validation_ok": true,
+    "branch_raw_release_ok": true,
+    "state_write_ok": true
+  },
+  "conclusion": "L8 成立：最小网络状态语言已从单胶囊扩展为 6 个网络驻留胶囊组成的语言图，并完成写入、Raw 读回、哈希校验、路由校验和状态记录。",
+  "truth_boundary": "L8 proves a multi-capsule network language structure: identity, memory, rhythm, intent routing, verification, and behavior pulse. It is still a declarative network-resident language graph interpreted by controlled executors; it is not proof of self-executing network life, network-only computation, or digital supercomputing."
+}
