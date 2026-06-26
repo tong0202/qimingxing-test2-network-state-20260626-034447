@@ -1,60 +1,46 @@
 {
-  "run_id": "nsl-l10-local-20260626155702",
+  "run_id": "nsl-l10-external-28249733469",
   "stage": "L10-multi-capsule-low-frequency-self-loop",
-  "created_at": "2026-06-26T15:59:12.475074+00:00",
-  "ok": true,
-  "evidence_level": "L10-multi-capsule-low-frequency-self-loop",
-  "mode": "local",
+  "created_at": "2026-06-26T16:02:37.914727+00:00",
+  "ok": false,
+  "evidence_level": "L10-multi-capsule-self-loop-partial",
+  "mode": "external",
   "owner": {
-    "mode": "local",
-    "workflow": null,
-    "run_id": null,
-    "run_attempt": null,
-    "event_name": null,
-    "actor": null,
-    "repository": null,
-    "sha": null,
-    "local": true
+    "mode": "external",
+    "workflow": "L10 Multi Capsule Self Loop",
+    "run_id": "28249733469",
+    "run_attempt": "1",
+    "event_name": "workflow_dispatch",
+    "actor": "tong0202",
+    "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
+    "sha": "487d2d95af7b101939e63b329f452a3eedc989f9",
+    "local": false
   },
-  "external_takeover": false,
+  "external_takeover": true,
   "loop_state_path": "states/nsl-l10-loop-state.json",
   "cycles": [
     {
       "cycle_index": 1,
       "ok": true,
       "network_language_pulse": true,
-      "cycle_state_path": "states/nsl-l10-cycles/nsl-l10-local-20260626155702-cycle-001.json",
+      "cycle_state_path": "states/nsl-l10-cycles/nsl-l10-external-28249733469-cycle-001.json",
       "signal_paths": [
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-001-step-001-identity_anchor.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-001-step-002-memory_index.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-001-step-003-rhythm_gate.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-001-step-004-intent_router.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-001-step-005-graph_verifier.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-001-step-006-behavior_pulse.json"
-      ]
-    },
-    {
-      "cycle_index": 2,
-      "ok": true,
-      "network_language_pulse": true,
-      "cycle_state_path": "states/nsl-l10-cycles/nsl-l10-local-20260626155702-cycle-002.json",
-      "signal_paths": [
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-002-step-001-identity_anchor.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-002-step-002-memory_index.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-002-step-003-rhythm_gate.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-002-step-004-intent_router.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-002-step-005-graph_verifier.json",
-        "states/nsl-l10-signals/nsl-l10-local-20260626155702-cycle-002-step-006-behavior_pulse.json"
+        "states/nsl-l10-signals/nsl-l10-external-28249733469-cycle-001-step-001-identity_anchor.json",
+        "states/nsl-l10-signals/nsl-l10-external-28249733469-cycle-001-step-002-memory_index.json",
+        "states/nsl-l10-signals/nsl-l10-external-28249733469-cycle-001-step-003-rhythm_gate.json",
+        "states/nsl-l10-signals/nsl-l10-external-28249733469-cycle-001-step-004-intent_router.json",
+        "states/nsl-l10-signals/nsl-l10-external-28249733469-cycle-001-step-005-graph_verifier.json",
+        "states/nsl-l10-signals/nsl-l10-external-28249733469-cycle-001-step-006-behavior_pulse.json"
       ]
     }
   ],
   "aggregate": {
-    "cycle_count": 2,
-    "cycles_ok": 2,
+    "cycle_count": 1,
+    "cycles_ok": 1,
     "all_cycles_ok": true,
     "all_pulses": true,
     "all_branch_raw_release_ok": true
   },
-  "conclusion": "L10 成立：L9 多胶囊解释器已经被推进为多轮低频自循环，并写回可恢复 loop state。",
+  "conclusion": "L10 部分成立：多胶囊低频循环已尝试运行，但至少一个 cycle、状态写回或 Raw 释放校验未通过。",
   "truth_boundary": "L10 proves controlled low-frequency looping and, in external mode, external runner takeover of the multi-capsule interpreter. It does not prove CPU-free network computation, autonomous digital life, or digital supercomputing."
 }
