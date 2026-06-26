@@ -1,0 +1,83 @@
+{
+  "run_id": "nsl-l2-20260626112025",
+  "created_at": "2026-06-26T11:20:25.228026+00:00",
+  "stage": "L2-network-state-language-decoder-v0",
+  "ok": true,
+  "source_run_id": "nsl-l1-20260626105647",
+  "grammar_version": "NSL-L2-0.1",
+  "decoder_version": "nsl_l2_decoder.py/0.1",
+  "aggregate": {
+    "symbols": {
+      "STATE_ID": {
+        "decoded_count": 2,
+        "cycle_count": 2,
+        "decoded_each_cycle": [
+          true,
+          true
+        ],
+        "reproduced": true,
+        "mean_confidence": 1.0
+      },
+      "SHADOW": {
+        "decoded_count": 2,
+        "cycle_count": 2,
+        "decoded_each_cycle": [
+          true,
+          true
+        ],
+        "reproduced": true,
+        "mean_confidence": 1.0
+      },
+      "RESIDUAL": {
+        "decoded_count": 2,
+        "cycle_count": 2,
+        "decoded_each_cycle": [
+          true,
+          true
+        ],
+        "reproduced": true,
+        "mean_confidence": 1.0
+      },
+      "RELEASE": {
+        "decoded_count": 2,
+        "cycle_count": 2,
+        "decoded_each_cycle": [
+          true,
+          true
+        ],
+        "reproduced": true,
+        "mean_confidence": 1.0
+      },
+      "RHYTHM": {
+        "decoded_count": 2,
+        "cycle_count": 2,
+        "decoded_each_cycle": [
+          true,
+          true
+        ],
+        "reproduced": true,
+        "mean_confidence": 1.0
+      }
+    },
+    "decoded_sentences": [
+      "STATE_ID -> SHADOW -> RESIDUAL -> RELEASE -> RHYTHM_SLOW_STABLE",
+      "STATE_ID -> SHADOW -> RESIDUAL -> RELEASE -> RHYTHM_SLOW_STABLE"
+    ],
+    "sentence_stability": {
+      "count": 2,
+      "unique": [
+        "STATE_ID -> SHADOW -> RESIDUAL -> RELEASE -> RHYTHM_SLOW_STABLE"
+      ],
+      "stable": true
+    },
+    "release_times": [
+      292.2,
+      292.12
+    ],
+    "release_mean_seconds": 292.16,
+    "release_median_seconds": 292.16,
+    "decoder_ok": true
+  },
+  "conclusion": "L2 成立：解码器可以从 L1 原始观测中稳定输出同一条网络态句子，并给出可执行的网络态意图。",
+  "truth_boundary": "L2 is a decoder for network-state-language observations. It turns observed network state, residual, release, and rhythm into symbols and an NSL sentence. It does not prove CPU-free computation."
+}
