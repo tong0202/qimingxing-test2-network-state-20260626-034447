@@ -1,0 +1,51 @@
+name: L10 Multi Capsule Self Loop
+
+on:
+  workflow_dispatch:
+    inputs:
+      cycles:
+        description: "How many L10 controlled cycles to run"
+        required: false
+        default: "1"
+      cycle_delay:
+        description: "Seconds to wait between cycles"
+        required: false
+        default: "2"
+      raw_timeout:
+        description: "Seconds to wait for Raw release"
+        required: false
+        default: "180"
+  schedule:
+    - cron: "41 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: l10-multi-capsule-self-loop
+  cancel-in-progress: false
+
+jobs:
+  l10-self-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout receiver repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run L10 multi-capsule self loop
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python scripts/nsl_l10_multi_capsule_self_loop.py
+          --mode external
+          --cycles "${{ github.event.inputs.cycles || '1' }}"
+          --cycle-delay "${{ github.event.inputs.cycle_delay || '2' }}"
+          --raw-timeout "${{ github.event.inputs.raw_timeout || '180' }}"
+          --raw-interval "6"
