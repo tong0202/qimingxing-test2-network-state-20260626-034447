@@ -1,27 +1,34 @@
 {
-  "stage": "N1-N4-network-ghost-state-machine",
-  "created_at": "2026-06-26T08:31:15.554682+00:00",
-  "generation": 20,
-  "cycle_index": 12,
+  "stage": "N6-externalized-ghost-state-machine",
+  "created_at": "2026-06-26T09:21:29.491751+00:00",
+  "generation": 21,
+  "cycle_index": 13,
   "phase": "quiet",
   "event": "normal_release",
-  "decision_reason": "network shadow released with a slow but usable rhythm",
+  "decision_reason": "previous branch shadow released slowly but within budget",
   "previous": {
-    "generation": 19,
+    "generation": 20,
     "phase": "quiet",
-    "state_signature": "cf356f949ca2c95d"
+    "state_signature": "3733a72e3b795404"
   },
   "release_memory": {
     "count": 19,
     "latest_seconds": 308.34,
-    "mean_seconds": 282.207
+    "mean_seconds": 282.207,
+    "pending_current_release": true
+  },
+  "executor": {
+    "layer": "github_actions",
+    "workflow": "N6 External Ghost Runner",
+    "run_id": "28229178392",
+    "run_attempt": "1",
+    "actor": "tong0202",
+    "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
+    "server_url": "https://github.com"
   },
   "network_role": {
-    "N1": "branch Raw shadow/release drives the next state phase",
-    "N2": "this JSON state is written back to the external riverbed repo",
-    "N3": "cycles run without user input after start",
-    "N4": "local mirror and commit Raw are compared after each write"
+    "N6": "GitHub Actions reads, decides, writes back, waits for Raw release, and records the release from outside the local machine"
   },
-  "state_signature": "3733a72e3b795404",
-  "truth_boundary": "This is a low-frequency network-state machine. Local CPU still observes, hashes, commits, and pushes; public Raw/CDN supplies external state, shadow, and release timing."
+  "state_signature": "101b557391401141",
+  "truth_boundary": "N6 is externalized execution on GitHub Actions. It is still physical cloud CPU, not network-only computation."
 }
