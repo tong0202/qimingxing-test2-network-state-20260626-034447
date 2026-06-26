@@ -1,10 +1,25 @@
 {
-  "stage": "L1-network-state-language-seed",
-  "created_at": "2026-06-26T10:56:48.296434+00:00",
-  "generation": 0,
-  "cycle_index": 0,
-  "previous": null,
-  "nsl_symbols_under_test": [],
-  "state_signature": "81d6b2028865a976",
-  "truth_boundary": "Seed state for L1 symbol discovery. It is only a stable previous state for network residual tests."
+  "stage": "L1-network-state-language-symbol-discovery",
+  "created_at": "2026-06-26T10:56:54.782011+00:00",
+  "generation": 1,
+  "cycle_index": 1,
+  "previous": {
+    "generation": 0,
+    "state_signature": "81d6b2028865a976"
+  },
+  "nsl_symbols_under_test": [
+    "STATE_ID",
+    "SHADOW",
+    "RESIDUAL",
+    "RELEASE",
+    "RHYTHM"
+  ],
+  "nsl_method": {
+    "L1_1": "symbol equivalence: different observations must decode to the same network symbol",
+    "L1_2": "reverse prediction: if a symbol exists, the next observations should match its expected behavior",
+    "L1_3": "disappearance: when the network condition disappears, the symbol must decode as false",
+    "L1_4": "multi-round reproduction: the same symbol rules are tested across cycles"
+  },
+  "state_signature": "a10ff07bcb6f6a39",
+  "truth_boundary": "L1 tests network-state language symbols. Local CPU still writes, samples, and decodes; network Raw/CDN supplies state, residual, release rhythm, and multi-view differences."
 }
