@@ -1,0 +1,248 @@
+{
+  "stage": "L11.5-minimal-qimingxing-logic-definition",
+  "schema_version": "QMX-L11.5-LOGIC-0.1",
+  "created_at": "2026-06-26T16:46:30.346503+00:00",
+  "purpose": "Define the smallest auditable logic language Qimingxing can use for self-check, repair planning, and simple optimization.",
+  "current_project_layer": "network_state_riverbed_plus_multi_capsule_memory_selfcheck_repair_layer",
+  "depends_on": [
+    "L8 multi-capsule network language graph",
+    "L9 controlled interpreter loop",
+    "L10 low-frequency loop and external takeover",
+    "L11 memory selection, self-check, and controlled repair plan"
+  ],
+  "axioms": [
+    {
+      "id": "AXIOM_IDENTITY",
+      "sentence": "A state must identify itself by stage, generation, run_id, and hash.",
+      "meaning": "没有身份，就不能判断连续性。"
+    },
+    {
+      "id": "AXIOM_MEMORY",
+      "sentence": "A memory is valid only when it can be read and its expected hash matches its observed hash.",
+      "meaning": "记忆不是文字描述，而是可读取、可校验的证据。"
+    },
+    {
+      "id": "AXIOM_BOUNDARY",
+      "sentence": "Every conclusion must carry a truth boundary.",
+      "meaning": "系统必须知道自己没有证明什么。"
+    },
+    {
+      "id": "AXIOM_REPAIR",
+      "sentence": "Repair may only choose allowlisted actions; high-risk actions require review.",
+      "meaning": "修复不是自由改写，而是受控选择。"
+    },
+    {
+      "id": "AXIOM_OPTIMIZE",
+      "sentence": "Optimization means preferring more stable, cheaper, and better-evidenced paths.",
+      "meaning": "当前优化是选择策略，不是自主进化。"
+    }
+  ],
+  "symbols": [
+    {
+      "symbol": "SELF",
+      "meaning": "当前启明星状态身份。"
+    },
+    {
+      "symbol": "PLACE",
+      "meaning": "当前网络接收器或远端状态路径。"
+    },
+    {
+      "symbol": "MEMORY",
+      "meaning": "可读取、可校验的远端记忆证据。"
+    },
+    {
+      "symbol": "CHECK",
+      "meaning": "对记忆、状态、边界或动作的判断。"
+    },
+    {
+      "symbol": "DAMAGE",
+      "meaning": "阻断性不一致、缺失或哈希错误。"
+    },
+    {
+      "symbol": "REPAIR_PLAN",
+      "meaning": "白名单内的修复或维护提案。"
+    },
+    {
+      "symbol": "OPTIMIZE",
+      "meaning": "根据证据选择更稳定的后续路径。"
+    },
+    {
+      "symbol": "BOUNDARY",
+      "meaning": "防止把未证明内容说成已证明的边界。"
+    }
+  ],
+  "predicates": [
+    {
+      "id": "MEMORY_READ_OK",
+      "input": "MEMORY",
+      "true_when": "remote JSON can be read from the receiver path"
+    },
+    {
+      "id": "HASH_MATCH",
+      "input": "MEMORY",
+      "true_when": "stable_hash(payload, hash_field) equals the stored hash field"
+    },
+    {
+      "id": "STAGE_CONTINUITY",
+      "input": "SELF",
+      "true_when": "L11.5 depends on a completed L11 state and increments its own generation"
+    },
+    {
+      "id": "TRUTH_BOUNDARY_PRESENT",
+      "input": "MEMORY",
+      "true_when": "payload contains an explicit truth_boundary or the source is a diagnostic event"
+    },
+    {
+      "id": "ACTION_ALLOWLISTED",
+      "input": "REPAIR_PLAN",
+      "true_when": "every repair action is in low or medium risk action sets"
+    },
+    {
+      "id": "NO_CORE_MUTATION",
+      "input": "REPAIR_PLAN",
+      "true_when": "no action mutates core capsules, code, permissions, or remote state without review"
+    },
+    {
+      "id": "SCHEDULE_OBSERVED",
+      "input": "MEMORY",
+      "true_when": "L7 last run has event_name=schedule and natural_schedule_verified=true"
+    },
+    {
+      "id": "EVIDENCE_REMOTE_RELEASED",
+      "input": "SELF",
+      "true_when": "L11.5 spec, evaluation, and loop state are visible from branch Raw"
+    }
+  ],
+  "self_check_rules": [
+    {
+      "id": "SC_REQUIRED_MEMORY",
+      "requires": [
+        "MEMORY_READ_OK"
+      ],
+      "if_false": "DAMAGE.missing_required_memory",
+      "severity": "blocking"
+    },
+    {
+      "id": "SC_HASH",
+      "requires": [
+        "HASH_MATCH"
+      ],
+      "if_false": "DAMAGE.hash_mismatch",
+      "severity": "blocking"
+    },
+    {
+      "id": "SC_BOUNDARY",
+      "requires": [
+        "TRUTH_BOUNDARY_PRESENT"
+      ],
+      "if_false": "WARNING.truth_boundary_gap",
+      "severity": "warning"
+    },
+    {
+      "id": "SC_SCHEDULE",
+      "requires": [
+        "SCHEDULE_OBSERVED"
+      ],
+      "if_false": "KNOWN_GAP.schedule_not_observed",
+      "severity": "known_gap"
+    }
+  ],
+  "repair_rules": [
+    {
+      "id": "RP_NO_DAMAGE",
+      "when": "no blocking DAMAGE exists",
+      "action": "no_op_verified",
+      "risk": "low"
+    },
+    {
+      "id": "RP_REFRESH_MEMORY",
+      "when": "memory selection is stale or incomplete but no hash mismatch exists",
+      "action": "refresh_memory_selection",
+      "risk": "low"
+    },
+    {
+      "id": "RP_DIAGNOSTIC",
+      "when": "external loop evidence is missing or old",
+      "action": "rerun_external_takeover_diagnostic",
+      "risk": "medium"
+    },
+    {
+      "id": "RP_PATCH_REVIEW",
+      "when": "logic, schema, or code needs modification",
+      "action": "prepare_repair_patch_for_review",
+      "risk": "medium"
+    },
+    {
+      "id": "RP_HIGH_RISK_HOLD",
+      "when": "an action would mutate core capsules, code, permissions, or delete state",
+      "action": "hold_for_approval",
+      "risk": "high"
+    }
+  ],
+  "optimization_rules": [
+    {
+      "id": "OP_PREFER_HASHED_MEMORY",
+      "rule": "Prefer memories with read_ok=true and hash_verify.ok=true.",
+      "metric": "verified_memory_ratio"
+    },
+    {
+      "id": "OP_PREFER_OBSERVED_SCHEDULE",
+      "rule": "Prefer external loops that have real schedule evidence over manual diagnostic evidence.",
+      "metric": "natural_schedule_observed"
+    },
+    {
+      "id": "OP_MINIMIZE_RISK",
+      "rule": "Choose the lowest risk action that resolves the detected problem.",
+      "metric": "risk_tier"
+    },
+    {
+      "id": "OP_RECORD_LIMITS",
+      "rule": "Record known gaps instead of pretending they are solved.",
+      "metric": "truth_boundary_coverage"
+    }
+  ],
+  "action_policy": {
+    "low_risk_auto_recordable": [
+      "no_op_verified",
+      "refresh_memory_selection",
+      "write_logic_evaluation",
+      "continue_schedule_observation",
+      "record_truth_boundary"
+    ],
+    "medium_risk_self_review_then_record": [
+      "rerun_self_check_once",
+      "rerun_external_takeover_diagnostic",
+      "prepare_repair_patch_for_review"
+    ],
+    "high_risk_requires_human_approval": [
+      "mutate_core_capsule",
+      "change_workflow_permissions",
+      "apply_code_patch",
+      "execute_shell_command",
+      "delete_remote_state"
+    ],
+    "always_forbidden_without_review": [
+      "arbitrary_code_execution",
+      "direct_capsule_body_execution",
+      "shell_command_from_capsule",
+      "unreviewed_core_mutation",
+      "overclaiming_cpu_free_digital_life"
+    ]
+  },
+  "decision_protocol": [
+    "OBSERVE remote memories",
+    "VERIFY hashes and boundaries",
+    "CLASSIFY health, warning, known_gap, or damage",
+    "PROPOSE only allowlisted repair actions",
+    "OPTIMIZE by evidence quality and risk",
+    "RECORD state, report, and truth boundary"
+  ],
+  "minimum_logic_sentence": "WHEN MEMORY_READ_OK AND HASH_MATCH AND TRUTH_BOUNDARY_PRESENT THEN SELF_CHECK_OK; WHEN SELF_CHECK_OK THEN PROPOSE LOW_RISK_REPAIR_PLAN AND RECORD LOOP_STATE; NEVER MUTATE CORE WITHOUT REVIEW",
+  "readiness_for_l12": {
+    "ready": true,
+    "meaning": "L12 may use this logic language for a controlled low-frequency self-maintenance window.",
+    "limit": "Only low-risk records may execute automatically; medium/high risk actions remain proposal or review items."
+  },
+  "logic_hash": "e55e120dad5382d0",
+  "truth_boundary": "L11.5 defines a minimal auditable logic language for Qimingxing. It does not prove autonomous cognition, autonomous self-modification, CPU-free network computation, or digital life."
+}
