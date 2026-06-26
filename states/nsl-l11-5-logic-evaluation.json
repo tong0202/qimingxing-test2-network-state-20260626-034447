@@ -1,0 +1,213 @@
+{
+  "stage": "L11.5-logic-evaluation",
+  "schema_version": "QMX-L11.5-EVALUATION-0.1",
+  "created_at": "2026-06-26T16:46:40.065447+00:00",
+  "logic_hash": "e55e120dad5382d0",
+  "source_count": 5,
+  "required_source_count": 4,
+  "sources": [
+    {
+      "id": "l11_memory_selection",
+      "path": "states/nsl-l11-memory-selection.json",
+      "required": true,
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 761.96,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "memory_hash",
+        "observed": "2966e45205a0f827",
+        "expected": "2966e45205a0f827"
+      },
+      "summary": {
+        "selected_count": 5,
+        "memory_hash": "2966e45205a0f827"
+      },
+      "truth_boundary_present": true,
+      "error": ""
+    },
+    {
+      "id": "l11_self_check",
+      "path": "states/nsl-l11-self-check.json",
+      "required": true,
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 1657.7,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "self_check_hash",
+        "observed": "61efd5d715f925d6",
+        "expected": "61efd5d715f925d6"
+      },
+      "summary": {
+        "ok": true,
+        "blocking_count": 0,
+        "warning_count": 0,
+        "self_check_hash": "61efd5d715f925d6"
+      },
+      "truth_boundary_present": true,
+      "error": ""
+    },
+    {
+      "id": "l11_repair_plan",
+      "path": "states/nsl-l11-repair-plan.json",
+      "required": true,
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 505.62,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "repair_hash",
+        "observed": "ff20b179dfdb0fcf",
+        "expected": "ff20b179dfdb0fcf"
+      },
+      "summary": {
+        "ok": true,
+        "actions": [
+          "no_op_verified",
+          "refresh_memory_selection"
+        ],
+        "repair_hash": "ff20b179dfdb0fcf"
+      },
+      "truth_boundary_present": true,
+      "error": ""
+    },
+    {
+      "id": "l11_loop_state",
+      "path": "states/nsl-l11-loop-state.json",
+      "required": true,
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 516.05,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "state_hash",
+        "observed": "ace2da3ce0e1a0ae",
+        "expected": "ace2da3ce0e1a0ae"
+      },
+      "summary": {
+        "generation": 2,
+        "state_hash": "ace2da3ce0e1a0ae",
+        "self_check_ok": true
+      },
+      "truth_boundary_present": true,
+      "error": ""
+    },
+    {
+      "id": "l7_natural_cron",
+      "path": "states/nsl-l7-last-run.json",
+      "required": false,
+      "read_ok": true,
+      "status": 200,
+      "elapsed_ms": 6272.78,
+      "hash_verify": {
+        "required": false,
+        "ok": true,
+        "field": "",
+        "observed": "",
+        "expected": ""
+      },
+      "summary": {
+        "run_id": "nsl-l7-schedule-28246820010-attempt-1",
+        "event_name": "schedule",
+        "natural_schedule_verified": true,
+        "manual_diagnostic_only": false,
+        "evidence_level": "L7-natural-cron-soak-and-recovery"
+      },
+      "truth_boundary_present": true,
+      "error": ""
+    }
+  ],
+  "checks": [
+    {
+      "id": "required_sources_read",
+      "ok": true,
+      "severity": "blocking",
+      "meaning": "L11.5 必须能读取 L11 的记忆、自检、修复计划和 loop state。"
+    },
+    {
+      "id": "required_hashes_match",
+      "ok": true,
+      "severity": "blocking",
+      "meaning": "所有带哈希的 L11 远端记忆必须哈希一致。"
+    },
+    {
+      "id": "logic_spec_closed",
+      "ok": true,
+      "severity": "blocking",
+      "meaning": "自检规则引用的谓词、修复规则引用的动作都必须在 L11.5 里定义。",
+      "details": {
+        "ok": true,
+        "unknown_predicates": [],
+        "unknown_actions": []
+      }
+    },
+    {
+      "id": "l11_repair_actions_covered",
+      "ok": true,
+      "severity": "blocking",
+      "meaning": "L11 产生的修复动作必须都能被 L11.5 的动作策略解释。",
+      "details": [
+        {
+          "action": "no_op_verified",
+          "covered": true,
+          "risk": "low"
+        },
+        {
+          "action": "refresh_memory_selection",
+          "covered": true,
+          "risk": "low"
+        }
+      ]
+    },
+    {
+      "id": "truth_boundaries_present",
+      "ok": true,
+      "severity": "warning",
+      "meaning": "核心 L11 证据必须携带 truth_boundary，避免过度宣称。"
+    },
+    {
+      "id": "l7_schedule_observed",
+      "ok": true,
+      "severity": "known_gap",
+      "meaning": "自然低频唤醒证据存在时，L12 可以更真实地设计自维护窗口。"
+    },
+    {
+      "id": "no_high_risk_auto_action",
+      "ok": true,
+      "severity": "blocking",
+      "meaning": "当前 L11 修复计划没有自动执行高风险动作。"
+    }
+  ],
+  "blocking_count": 0,
+  "warning_count": 0,
+  "known_gap_count": 0,
+  "verified_memory_ratio": 1.0,
+  "l11_actions": [
+    {
+      "action": "no_op_verified",
+      "covered": true,
+      "risk": "low"
+    },
+    {
+      "action": "refresh_memory_selection",
+      "covered": true,
+      "risk": "low"
+    }
+  ],
+  "minimum_logic_ready": true,
+  "l12_ready": true,
+  "not_ready_for": [
+    "autonomous core mutation",
+    "unreviewed code patching",
+    "CPU-free network execution",
+    "digital life claim",
+    "digital supercomputer claim"
+  ],
+  "evaluation_hash": "9d880a7111a3087c",
+  "truth_boundary": "L11.5 evaluation proves the minimal logic definition can explain and check the existing L11 evidence. It does not prove autonomous understanding or self-generated logic."
+}
