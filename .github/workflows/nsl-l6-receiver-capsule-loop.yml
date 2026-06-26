@@ -1,0 +1,42 @@
+name: L6 Scheduled Receiver Capsule Loop
+
+on:
+  workflow_dispatch:
+    inputs:
+      cycles:
+        description: "How many controlled L6 cycles to run"
+        required: false
+        default: "1"
+      cycle_delay:
+        description: "Seconds to wait between cycles"
+        required: false
+        default: "0"
+  schedule:
+    - cron: "23 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: l6-scheduled-receiver-capsule-loop
+  cancel-in-progress: false
+
+jobs:
+  receiver-capsule-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout receiver repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run L6 scheduled receiver capsule loop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          L6_CYCLES: ${{ github.event.inputs.cycles || '1' }}
+          L6_CYCLE_DELAY_SECONDS: ${{ github.event.inputs.cycle_delay || '0' }}
+        run: python scripts/nsl_l6_scheduled_receiver_loop.py
