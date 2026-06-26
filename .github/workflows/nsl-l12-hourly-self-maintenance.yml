@@ -1,0 +1,32 @@
+name: L12 Hourly Self Maintenance
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: l12-hourly-self-maintenance
+  cancel-in-progress: false
+
+jobs:
+  hourly-window:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run L12 hourly controlled self-maintenance window
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_l12_hourly_self_maintenance.py --mode external --raw-timeout 240 --raw-interval 8
