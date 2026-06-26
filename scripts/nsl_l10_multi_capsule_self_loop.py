@@ -318,6 +318,36 @@ def run_cycle(owner: str, repo: str, token: str, run_id: str, mode: str, cycle_i
     }
 
 
+def verify_content_hash(
+    owner: str,
+    repo: str,
+    token: str,
+    path: str,
+    hash_field: str,
+    expected_hash: str,
+    retries: int = 6,
+    delay_seconds: float = 2.0,
+) -> dict[str, Any]:
+    last: dict[str, Any] = {}
+    for attempt in range(1, retries + 1):
+        payload, _, response = content_get(owner, repo, path, token)
+        observed = payload.get(hash_field) if payload else None
+        ok = bool(response.get("ok") and payload and observed == expected_hash and stable_hash(payload, hash_field) == expected_hash)
+        last = {
+            "ok": ok,
+            "attempt": attempt,
+            "status": response.get("status"),
+            "observed_hash": observed,
+            "expected_hash": expected_hash,
+            "error": response.get("error"),
+        }
+        if ok:
+            return last
+        if attempt < retries:
+            time.sleep(delay_seconds)
+    return last
+
+
 def write_report(run_dir: Path, result: dict[str, Any]) -> None:
     lines = [
         "# L10：多胶囊低频自循环与外层接管",
@@ -439,13 +469,15 @@ def main() -> int:
         generation = int((previous_state or {}).get("generation") or 0) + 1
         loop_state = build_loop_state(run_id, args.mode, generation, cycles, previous_state, args.cycle_delay)
         loop_state_write = put_content(args.owner, args.repo, LOOP_STATE_PATH, loop_state, f"L10 loop state {run_id}", token, state_sha)
-        loop_state_api, _, loop_state_api_response = content_get(args.owner, args.repo, LOOP_STATE_PATH, token)
-        loop_state_api_ok = bool(
-            loop_state_api_response.get("ok")
-            and loop_state_api
-            and loop_state_api.get("state_hash") == loop_state["state_hash"]
-            and stable_hash(loop_state_api, "state_hash") == loop_state["state_hash"]
+        loop_state_api_verify = verify_content_hash(
+            args.owner,
+            args.repo,
+            token,
+            LOOP_STATE_PATH,
+            "state_hash",
+            loop_state["state_hash"],
         )
+        loop_state_api_ok = bool(loop_state_api_verify.get("ok"))
         final_release = wait_for_branch_release(
             args.owner,
             args.repo,
@@ -473,6 +505,7 @@ def main() -> int:
                 "cycles_ok": cycles_ok,
                 "loop_state_write_ok": loop_state_write.get("ok"),
                 "loop_state_api_ok": loop_state_api_ok,
+                "loop_state_api_verify": loop_state_api_verify,
                 "loop_state_branch_raw_release_ok": final_release.get("ok"),
             },
             "aggregate": {
