@@ -1,0 +1,61 @@
+{
+  "stage": "L9-multi-capsule-loop-signal",
+  "schema_version": "NSL-L9-SIGNAL-0.1",
+  "created_at": "2026-06-26T15:49:15.067993+00:00",
+  "run_id": "nsl-l9-20260626154904",
+  "step_index": 2,
+  "role": "memory_index",
+  "capsule_id": "l8cap-memory_index-0fa98f11bc067183",
+  "capsule_hash": "c1d19deac1a916ee",
+  "network_id": "l8net-935aa73f3dbeafd7",
+  "network_hash": "e2b0f7037648ec33",
+  "inputs_required": [
+    "SHADOW",
+    "RESIDUAL",
+    "IDENTITY_CONFIRMED"
+  ],
+  "signals_before": [
+    "ADVANCE_AFTER_RELEASE",
+    "IDENTITY_CONFIRMED",
+    "RELEASE",
+    "RESIDUAL",
+    "RHYTHM",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "signals_out": [
+    "MEMORY_TRACE_READY"
+  ],
+  "signals_after": [
+    "ADVANCE_AFTER_RELEASE",
+    "IDENTITY_CONFIRMED",
+    "MEMORY_TRACE_READY",
+    "RELEASE",
+    "RESIDUAL",
+    "RHYTHM",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "decision": {
+    "ok": true,
+    "checks": {
+      "role_known": true,
+      "capsule_hash_ok": true,
+      "action_allowlisted": true,
+      "no_forbidden_keys": true,
+      "inputs_available": true,
+      "graph_validation_available": true
+    },
+    "missing_inputs": [],
+    "action": "index_memory_shadow"
+  },
+  "graph_validation_ok": true,
+  "interpreted_action": {
+    "type": "index_memory_shadow",
+    "executed": true,
+    "effect": "emit declarative signal only; no arbitrary body execution"
+  },
+  "signal_hash": "26b1519384fa771b",
+  "truth_boundary": "This signal is emitted by a controlled L9 interpreter after validating a network-resident capsule. It is not autonomous network self-execution.",
+  "path": "states/nsl-l9-signals/nsl-l9-20260626154904-step-002-memory_index.json"
+}
