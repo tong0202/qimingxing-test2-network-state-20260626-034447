@@ -22,7 +22,10 @@ DEFAULT_OWNER = "tong0202"
 DEFAULT_REPO = "qimingxing-test2-network-state-20260626-034447"
 USER_AGENT = "qimingxing-test2-nsl-l12-hourly-self-maintenance/0.1"
 
-SCHEDULE_CRON = "17 * * * *"
+SCHEDULE_CRON = "17,37,57 * * * *"
+CANONICAL_SLOT_MINUTE = 17
+MISSED_WINDOW_THRESHOLD_MINUTES = 90
+MAX_CATCHUP_WINDOWS = 3
 LOGIC_SPEC_PATH = "states/nsl-l11-5-minimal-logic-spec.json"
 LOGIC_EVALUATION_PATH = "states/nsl-l11-5-logic-evaluation.json"
 LOGIC_LOOP_STATE_PATH = "states/nsl-l11-5-loop-state.json"
@@ -30,9 +33,11 @@ L11_MEMORY_PATH = "states/nsl-l11-memory-selection.json"
 L11_SELF_CHECK_PATH = "states/nsl-l11-self-check.json"
 L11_REPAIR_PATH = "states/nsl-l11-repair-plan.json"
 L12_LOCK_PATH = "states/nsl-l12-hourly-self-maintenance-lock.json"
+GLOBAL_LOCK_PATH = "states/qmx-global-runtime-lock.json"
 L12_STATE_PATH = "states/nsl-l12-hourly-self-maintenance-state.json"
 L12_LAST_RUN_PATH = "states/nsl-l12-last-run.json"
 L12_RUN_PREFIX = "states/nsl-l12-hourly-runs"
+L12_SLOT_LEDGER_PATH = "states/nsl-l12-hourly-slot-ledger.json"
 
 SOURCE_PATHS = [
     {"id": "l11_5_logic_spec", "path": LOGIC_SPEC_PATH, "hash_field": "logic_hash", "required": True},
@@ -61,6 +66,76 @@ def parse_time(value: Any) -> datetime | None:
 
 def future(seconds: float) -> str:
     return (datetime.now(timezone.utc) + timedelta(seconds=float(seconds))).isoformat()
+
+
+def hour_slot_start(value: datetime | None = None) -> datetime:
+    dt = (value or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    return dt.replace(minute=0, second=0, microsecond=0)
+
+
+def slot_id(value: datetime | None = None) -> str:
+    return hour_slot_start(value).isoformat().replace("+00:00", "Z")
+
+
+def last_success_time(last_run: dict[str, Any] | None) -> datetime | None:
+    if not last_run or last_run.get("window_ok") is not True:
+        return None
+    return parse_time(last_run.get("created_at"))
+
+
+def missed_slots_between(last_time: datetime | None, current_slot: datetime, max_count: int) -> tuple[list[str], int]:
+    if not last_time:
+        return [], 0
+    last_slot = hour_slot_start(last_time)
+    probe = last_slot + timedelta(hours=1)
+    all_missed: list[str] = []
+    while probe < current_slot:
+        all_missed.append(slot_id(probe))
+        probe += timedelta(hours=1)
+    return all_missed[:max_count], len(all_missed)
+
+
+def build_slot_plan(event: str, last_run: dict[str, Any] | None, allow_duplicate_slot: bool) -> dict[str, Any]:
+    current_time = datetime.now(timezone.utc)
+    current_slot = hour_slot_start(current_time)
+    last_time = last_success_time(last_run)
+    last_slot = str((last_run or {}).get("slot_id") or (slot_id(last_time) if last_time else ""))
+    current_slot_id = slot_id(current_slot)
+    duplicate_slot = bool(
+        event == "schedule"
+        and not allow_duplicate_slot
+        and (last_run or {}).get("window_ok") is True
+        and last_slot == current_slot_id
+    )
+    elapsed_minutes = round((current_time - last_time).total_seconds() / 60, 3) if last_time else None
+    missed, missed_total = missed_slots_between(last_time, current_slot, MAX_CATCHUP_WINDOWS)
+    gap_exceeded = bool(elapsed_minutes is not None and elapsed_minutes > MISSED_WINDOW_THRESHOLD_MINUTES)
+    plan = {
+        "stage": "L12.2-slot-plan",
+        "schema_version": "QMX-L12-SLOT-PLAN-0.1",
+        "created_at": now(),
+        "event_name": event,
+        "schedule_cron": SCHEDULE_CRON,
+        "canonical_slot_minute": CANONICAL_SLOT_MINUTE,
+        "current_slot_id": current_slot_id,
+        "current_time": current_time.isoformat(),
+        "last_success_at": last_time.isoformat() if last_time else "",
+        "last_success_slot_id": last_slot,
+        "elapsed_minutes_since_success": elapsed_minutes,
+        "duplicate_slot": duplicate_slot,
+        "allow_duplicate_slot": allow_duplicate_slot,
+        "gap_exceeded": gap_exceeded,
+        "missed_window_threshold_minutes": MISSED_WINDOW_THRESHOLD_MINUTES,
+        "missed_slots_total_estimate": missed_total if gap_exceeded else 0,
+        "catchup_slots_recorded": missed if gap_exceeded else [],
+        "max_catchup_windows": MAX_CATCHUP_WINDOWS,
+        "slot_plan_hash": "",
+        "truth_boundary": (
+            "L12.2 slot planning reduces GitHub schedule misses with duplicate suppression and finite catch-up records. "
+            "It cannot make GitHub cron a hard real-time scheduler."
+        ),
+    }
+    return seal(plan, "slot_plan_hash")
 
 
 def canonical_hash(value: Any) -> str:
@@ -300,6 +375,61 @@ def run_owner(mode: str) -> dict[str, Any]:
     }
 
 
+def global_lock_active(lock: dict[str, Any] | None) -> bool:
+    if not lock or lock.get("locked") is not True:
+        return False
+    expires_at = parse_time(lock.get("expires_at"))
+    return bool(expires_at and datetime.now(timezone.utc) < expires_at)
+
+
+def acquire_global_lock(owner: str, repo: str, token: str, run_id: str, mode: str, ttl_seconds: int) -> dict[str, Any]:
+    previous, sha, _ = content_get(owner, repo, GLOBAL_LOCK_PATH, token)
+    if global_lock_active(previous):
+        return {"ok": False, "skipped": True, "active_lock": previous, "write": {}}
+    lock = {
+        "stage": "QMX-global-runtime-lock",
+        "schema_version": "QMX-GLOBAL-LOCK-0.1",
+        "locked": True,
+        "checkpoint": "running",
+        "runtime_owner": "L12.2-anti-missed-schedule-layer",
+        "run_id": run_id,
+        "owner": run_owner(mode),
+        "created_at": now(),
+        "updated_at": now(),
+        "expires_at": future(ttl_seconds),
+        "ttl_seconds": ttl_seconds,
+        "previous_lock_recovered": bool(previous and previous.get("locked") is True),
+        "lock_hash": "",
+        "truth_boundary": (
+            "This global runtime lock prevents controlled maintenance windows from overlapping with future E5/E-series loops. "
+            "It is an engineering guard, not autonomous network self-execution."
+        ),
+    }
+    lock = seal(lock, "lock_hash")
+    write = put_content(owner, repo, GLOBAL_LOCK_PATH, lock, f"QMX global lock acquire {run_id}", token, sha)
+    return {"ok": bool(write.get("ok")), "skipped": False, "lock": lock, "write": write}
+
+
+def release_global_lock(owner: str, repo: str, token: str, run_id: str, ok: bool) -> dict[str, Any]:
+    lock, sha, _ = content_get(owner, repo, GLOBAL_LOCK_PATH, token)
+    if not lock or lock.get("run_id") != run_id:
+        return {"ok": False, "reason": "global_lock_not_owned"}
+    released = dict(lock)
+    released.update(
+        {
+            "locked": False,
+            "checkpoint": "completed" if ok else "failed",
+            "updated_at": now(),
+            "released_at": now(),
+            "release_ok": ok,
+            "lock_hash": "",
+        }
+    )
+    released = seal(released, "lock_hash")
+    write = put_content(owner, repo, GLOBAL_LOCK_PATH, released, f"QMX global lock release {run_id}", token, sha)
+    return {"ok": bool(write.get("ok")), "status": write.get("status"), "error": write.get("error")}
+
+
 def lock_active(lock: dict[str, Any] | None) -> bool:
     if not lock or lock.get("locked") is not True:
         return False
@@ -360,7 +490,7 @@ def action_policy_from_spec(spec: dict[str, Any]) -> dict[str, set[str]]:
     }
 
 
-def evaluate_window(owner: str, repo: str) -> dict[str, Any]:
+def evaluate_window(owner: str, repo: str, slot_plan: dict[str, Any] | None = None) -> dict[str, Any]:
     sources = [sample_remote(owner, repo, item) for item in SOURCE_PATHS]
     payload_by_id = {item["id"]: item.get("payload") for item in sources if isinstance(item.get("payload"), dict)}
     spec = payload_by_id.get("l11_5_logic_spec") or {}
@@ -437,6 +567,14 @@ def evaluate_window(owner: str, repo: str) -> dict[str, Any]:
             "meaning": "L12 不自动执行高风险动作。",
         },
     ]
+    checks.append(
+        {
+            "id": "l12_2_slot_plan_present",
+            "ok": bool(slot_plan and slot_plan.get("slot_plan_hash")),
+            "severity": "warning",
+            "meaning": "L12.2 records the current hourly slot, duplicate suppression, and missed-window catch-up metadata.",
+        }
+    )
     blocking_count = sum(1 for item in checks if item["severity"] == "blocking" and not item["ok"])
     warning_count = sum(1 for item in checks if item["severity"] == "warning" and not item["ok"])
     window = {
@@ -451,6 +589,9 @@ def evaluate_window(owner: str, repo: str) -> dict[str, Any]:
         "planned_actions": planned_action_records,
         "l11_repair_actions_observed": l11_action_records,
         "low_risk_actions_recorded": [item["action"] for item in planned_action_records if item["allowed_by_l11_5"]],
+        "l12_2_slot_plan": slot_plan or {},
+        "catchup_slots_recorded": (slot_plan or {}).get("catchup_slots_recorded") or [],
+        "duplicate_slot": bool((slot_plan or {}).get("duplicate_slot")),
         "window_ok": blocking_count == 0,
         "window_hash": "",
         "truth_boundary": (
@@ -481,6 +622,9 @@ def build_state(run_id: str, mode: str, generation: int, window: dict[str, Any],
         "generation": generation,
         "owner": run_owner(mode),
         "schedule_cron": SCHEDULE_CRON,
+        "slot_id": (window.get("l12_2_slot_plan") or {}).get("current_slot_id"),
+        "slot_plan_hash": (window.get("l12_2_slot_plan") or {}).get("slot_plan_hash"),
+        "catchup_slots_recorded": window.get("catchup_slots_recorded") or [],
         "window_hash": window["window_hash"],
         "window_ok": window["window_ok"],
         "blocking_count": window["blocking_count"],
@@ -495,6 +639,62 @@ def build_state(run_id: str, mode: str, generation: int, window: dict[str, Any],
         "truth_boundary": "L12 records controlled hourly self-maintenance state. It is not autonomous cognition or CPU-free network computation.",
     }
     return seal(state, "state_hash")
+
+
+def build_slot_ledger(
+    run_id: str,
+    mode: str,
+    slot_plan: dict[str, Any],
+    window: dict[str, Any],
+    state: dict[str, Any],
+    previous_ledger: dict[str, Any] | None,
+) -> dict[str, Any]:
+    history = list((previous_ledger or {}).get("history") or [])[-80:]
+    current_slot_id = str(slot_plan.get("current_slot_id") or "")
+    if current_slot_id:
+        history.append(
+            {
+                "slot_id": current_slot_id,
+                "run_id": run_id,
+                "status": "completed" if window.get("window_ok") else "partial",
+                "event_name": (run_owner(mode) or {}).get("event_name") or "local",
+                "state_hash": state.get("state_hash"),
+                "window_hash": window.get("window_hash"),
+                "created_at": now(),
+            }
+        )
+    for missed in slot_plan.get("catchup_slots_recorded") or []:
+        history.append(
+            {
+                "slot_id": missed,
+                "run_id": run_id,
+                "status": "missed_recorded",
+                "state_hash": state.get("state_hash"),
+                "created_at": now(),
+            }
+        )
+    ledger = {
+        "stage": "L12.2-anti-missed-schedule-slot-ledger",
+        "schema_version": "QMX-L12-SLOT-LEDGER-0.1",
+        "updated_at": now(),
+        "run_id": run_id,
+        "owner": run_owner(mode),
+        "schedule_cron": SCHEDULE_CRON,
+        "current_slot_id": current_slot_id,
+        "slot_plan_hash": slot_plan.get("slot_plan_hash"),
+        "duplicate_slot": slot_plan.get("duplicate_slot"),
+        "gap_exceeded": slot_plan.get("gap_exceeded"),
+        "missed_slots_total_estimate": slot_plan.get("missed_slots_total_estimate"),
+        "catchup_slots_recorded": slot_plan.get("catchup_slots_recorded") or [],
+        "last_state_hash": state.get("state_hash"),
+        "history": history[-100:],
+        "ledger_hash": "",
+        "truth_boundary": (
+            "L12.2 slot ledger records dedupe and missed-window evidence. "
+            "It improves schedule reliability but does not make GitHub cron hard real-time."
+        ),
+    }
+    return seal(ledger, "ledger_hash")
 
 
 def put_and_verify(owner: str, repo: str, token: str, path: str, value: dict[str, Any], hash_field: str, message: str) -> dict[str, Any]:
@@ -569,6 +769,8 @@ def write_local_outputs(run_dir: Path, result: dict[str, Any]) -> None:
         f"- mode: `{result['mode']}`",
         f"- event_name: `{result['owner'].get('event_name')}`",
         f"- schedule_cron: `{SCHEDULE_CRON}`",
+        f"- slot_id: `{((result.get('window') or {}).get('l12_2_slot_plan') or {}).get('current_slot_id')}`",
+        f"- catchup_slots_recorded: `{((result.get('window') or {}).get('catchup_slots_recorded') or [])}`",
         f"- generation: `{result['generation']}`",
         f"- window_hash: `{result['window']['window_hash']}`",
         f"- state_hash: `{result['state']['state_hash']}`",
@@ -592,6 +794,8 @@ def main() -> int:
     parser.add_argument("--repo", default=DEFAULT_REPO)
     parser.add_argument("--mode", default="local")
     parser.add_argument("--lock-ttl-seconds", type=int, default=2700)
+    parser.add_argument("--global-lock-ttl-seconds", type=int, default=2700)
+    parser.add_argument("--allow-duplicate-slot", action="store_true")
     parser.add_argument("--raw-timeout", type=int, default=240)
     parser.add_argument("--raw-interval", type=float, default=8.0)
     args = parser.parse_args()
@@ -605,25 +809,117 @@ def main() -> int:
         run_id = "nsl-l12-local-" + datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
     run_dir = RUNS / run_id
     token = gh_token()
-    lock = acquire_lock(args.owner, args.repo, token, run_id, args.mode, args.lock_ttl_seconds)
-    if lock.get("skipped"):
+
+    previous_last_run, _, _ = content_get(args.owner, args.repo, L12_LAST_RUN_PATH, token)
+    slot_plan = build_slot_plan(event, previous_last_run, args.allow_duplicate_slot)
+    if slot_plan.get("duplicate_slot"):
         result = {
             "run_id": run_id,
             "created_at": now(),
-            "stage": "L12-hourly-self-maintenance-window",
+            "stage": "L12.2-anti-missed-schedule-layer",
+            "ok": True,
+            "skipped": True,
+            "reason": "duplicate_hourly_slot",
+            "mode": args.mode,
+            "owner": run_owner(args.mode),
+            "generation": int((previous_last_run or {}).get("generation") or 0),
+            "schedule_cron": SCHEDULE_CRON,
+            "slot_plan": slot_plan,
+            "truth_boundary": "L12.2 skipped a duplicate schedule tick in an already completed hourly slot.",
+        }
+        write_local_outputs(
+            run_dir,
+            result
+            | {
+                "window": {
+                    "checks": [],
+                    "blocking_count": 0,
+                    "warning_count": 0,
+                    "window_hash": "",
+                    "l12_2_slot_plan": slot_plan,
+                    "catchup_slots_recorded": [],
+                },
+                "state": {"state_hash": ""},
+            },
+        )
+        print(json.dumps(result, ensure_ascii=False, indent=2), flush=True)
+        return 0
+
+    global_lock = acquire_global_lock(args.owner, args.repo, token, run_id, args.mode, args.global_lock_ttl_seconds)
+    if global_lock.get("skipped"):
+        result = {
+            "run_id": run_id,
+            "created_at": now(),
+            "stage": "L12.2-anti-missed-schedule-layer",
+            "ok": True,
+            "skipped": True,
+            "reason": "active_global_lock",
+            "active_global_lock": global_lock.get("active_lock"),
+            "mode": args.mode,
+            "owner": run_owner(args.mode),
+            "generation": int((previous_last_run or {}).get("generation") or 0),
+            "schedule_cron": SCHEDULE_CRON,
+            "slot_plan": slot_plan,
+            "truth_boundary": "L12.2 skipped because another controlled runtime window is active.",
+        }
+        write_local_outputs(
+            run_dir,
+            result
+            | {
+                "window": {
+                    "checks": [],
+                    "blocking_count": 0,
+                    "warning_count": 0,
+                    "window_hash": "",
+                    "l12_2_slot_plan": slot_plan,
+                    "catchup_slots_recorded": [],
+                },
+                "state": {"state_hash": ""},
+            },
+        )
+        print(json.dumps(result, ensure_ascii=False, indent=2), flush=True)
+        return 0
+
+    lock = acquire_lock(args.owner, args.repo, token, run_id, args.mode, args.lock_ttl_seconds)
+    if lock.get("skipped"):
+        global_release = release_global_lock(args.owner, args.repo, token, run_id, True)
+        result = {
+            "run_id": run_id,
+            "created_at": now(),
+            "stage": "L12.2-anti-missed-schedule-layer",
             "ok": True,
             "skipped": True,
             "reason": "active_lock",
             "active_lock": lock.get("active_lock"),
+            "global_lock_release": global_release,
+            "slot_plan": slot_plan,
             "truth_boundary": "L12 skipped because another controlled window is active.",
         }
-        write_local_outputs(run_dir, result | {"mode": args.mode, "owner": run_owner(args.mode), "generation": 0, "window": {"checks": [], "blocking_count": 0, "warning_count": 0, "window_hash": ""}, "state": {"state_hash": ""}})
+        write_local_outputs(
+            run_dir,
+            result
+            | {
+                "mode": args.mode,
+                "owner": run_owner(args.mode),
+                "generation": 0,
+                "window": {
+                    "checks": [],
+                    "blocking_count": 0,
+                    "warning_count": 0,
+                    "window_hash": "",
+                    "l12_2_slot_plan": slot_plan,
+                    "catchup_slots_recorded": [],
+                },
+                "state": {"state_hash": ""},
+            },
+        )
         print(json.dumps(result, ensure_ascii=False, indent=2), flush=True)
         return 0
 
     release: dict[str, Any] = {}
+    global_release: dict[str, Any] = {}
     try:
-        window = evaluate_window(args.owner, args.repo)
+        window = evaluate_window(args.owner, args.repo, slot_plan)
         previous_state, state_sha, _ = content_get(args.owner, args.repo, L12_STATE_PATH, token)
         generation = int((previous_state or {}).get("generation") or 0) + 1
         state = build_state(run_id, args.mode, generation, window, previous_state)
@@ -635,6 +931,9 @@ def main() -> int:
             "run_id": run_id,
             "owner": run_owner(args.mode),
             "schedule_cron": SCHEDULE_CRON,
+            "slot_id": slot_plan["current_slot_id"],
+            "slot_plan": slot_plan,
+            "catchup_slots_recorded": slot_plan.get("catchup_slots_recorded") or [],
             "window": window,
             "state_hash": state["state_hash"],
             "run_hash": "",
@@ -656,6 +955,11 @@ def main() -> int:
             "run_id": run_id,
             "event_name": event,
             "schedule_cron": SCHEDULE_CRON,
+            "slot_id": slot_plan["current_slot_id"],
+            "slot_plan_hash": slot_plan["slot_plan_hash"],
+            "duplicate_slot": slot_plan["duplicate_slot"],
+            "gap_exceeded": slot_plan["gap_exceeded"],
+            "catchup_slots_recorded": slot_plan.get("catchup_slots_recorded") or [],
             "window_ok": window["window_ok"],
             "generation": generation,
             "run_path": run_path,
@@ -672,13 +976,19 @@ def main() -> int:
         last_payload = last_sample.get("payload") if isinstance(last_sample.get("payload"), dict) else {}
         last_commit_raw_ok = bool(last_sample.get("ok") and last_payload.get("last_run_hash") == last_run["last_run_hash"])
 
+        previous_ledger, _, _ = content_get(args.owner, args.repo, L12_SLOT_LEDGER_PATH, token)
+        slot_ledger = build_slot_ledger(run_id, args.mode, slot_plan, window, state, previous_ledger)
+        ledger_write = put_and_verify(args.owner, args.repo, token, L12_SLOT_LEDGER_PATH, slot_ledger, "ledger_hash", f"L12.2 slot ledger {run_id}")
+
         release = release_lock(args.owner, args.repo, token, run_id, window["window_ok"])
         expected = [
             {"path": run_path, "hash_field": "run_hash", "hash_value": maintenance_run["run_hash"]},
             {"path": L12_STATE_PATH, "hash_field": "state_hash", "hash_value": state["state_hash"]},
             {"path": L12_LAST_RUN_PATH, "hash_field": "last_run_hash", "hash_value": last_run["last_run_hash"]},
+            {"path": L12_SLOT_LEDGER_PATH, "hash_field": "ledger_hash", "hash_value": slot_ledger["ledger_hash"]},
         ]
         branch_release = wait_for_branch_release(args.owner, args.repo, expected, args.raw_timeout, args.raw_interval)
+        global_release = release_global_lock(args.owner, args.repo, token, run_id, window["window_ok"])
         ok = bool(
             window["window_ok"]
             and run_write.get("ok")
@@ -687,30 +997,38 @@ def main() -> int:
             and state_commit_raw_ok
             and last_write.get("ok")
             and last_commit_raw_ok
+            and ledger_write.get("ok")
+            and ledger_write.get("commit_raw_ok")
             and release.get("ok")
+            and global_release.get("ok")
             and branch_release.get("ok")
         )
         result = {
             "run_id": run_id,
             "created_at": now(),
-            "stage": "L12-hourly-self-maintenance-window",
+            "stage": "L12.2-anti-missed-schedule-layer",
             "ok": ok,
             "mode": args.mode,
             "owner": run_owner(args.mode),
             "generation": generation,
             "schedule_cron": SCHEDULE_CRON,
+            "slot_plan": slot_plan,
             "paths": {
                 "workflow": ".github/workflows/nsl-l12-hourly-self-maintenance.yml",
                 "runner": "scripts/nsl_l12_hourly_self_maintenance.py",
+                "global_lock": GLOBAL_LOCK_PATH,
                 "lock": L12_LOCK_PATH,
                 "state": L12_STATE_PATH,
                 "last_run": L12_LAST_RUN_PATH,
+                "slot_ledger": L12_SLOT_LEDGER_PATH,
                 "run": run_path,
             },
             "window": window,
             "state": state,
             "last_run": last_run,
+            "slot_ledger": slot_ledger,
             "writes": {
+                "global_lock_acquire": global_lock.get("write"),
                 "run": run_write,
                 "state": {
                     "ok": state_write.get("ok"),
@@ -732,21 +1050,23 @@ def main() -> int:
                     "expected_hash": last_run["last_run_hash"],
                     "observed_hash": last_payload.get("last_run_hash"),
                 },
+                "slot_ledger": ledger_write,
                 "lock_release": release,
+                "global_lock_release": global_release,
             },
             "verification": {
                 "branch_raw_release_ok": branch_release.get("ok"),
                 "branch_raw_release": branch_release,
             },
-            "evidence_level": "L12-hourly-self-maintenance-window" if ok else "L12-hourly-self-maintenance-window-partial",
+            "evidence_level": "L12.2-anti-missed-schedule-layer" if ok else "L12.2-anti-missed-schedule-layer-partial",
             "conclusion": (
                 "L12 成立：每小时自维护窗口可以读取 L11.5 逻辑，执行受控低风险记录，并写回远端状态。"
                 if ok
                 else "L12 部分成立：窗口已运行，但至少一个自检、写回、锁释放或 Raw 释放环节未通过。"
             ),
             "truth_boundary": (
-                "L12 runs on GitHub Actions cloud CPU once per hour by schedule. "
-                "It is not CPU-free network execution, autonomous cognition, or unreviewed self-modification."
+                "L12.2 improves GitHub schedule reliability with multi-cron attempts, hourly-slot dedupe, finite catch-up records, and a global runtime lock. "
+                "It is still GitHub Actions cloud CPU, not CPU-free network execution, autonomous cognition, or unreviewed self-modification."
             ),
         }
         write_local_outputs(run_dir, result)
@@ -758,6 +1078,9 @@ def main() -> int:
                     "mode": args.mode,
                     "event_name": event,
                     "schedule_cron": SCHEDULE_CRON,
+                    "slot_id": slot_plan["current_slot_id"],
+                    "duplicate_slot": slot_plan["duplicate_slot"],
+                    "catchup_slots_recorded": slot_plan.get("catchup_slots_recorded") or [],
                     "generation": generation,
                     "window_ok": window["window_ok"],
                     "blocking_count": window["blocking_count"],
@@ -773,6 +1096,7 @@ def main() -> int:
         return 0 if ok else 1
     except Exception:
         release = release_lock(args.owner, args.repo, token, run_id, False)
+        global_release = release_global_lock(args.owner, args.repo, token, run_id, False)
         raise
 
 
