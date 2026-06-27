@@ -1,0 +1,28 @@
+{
+  "stage": "E4-network-state-triggered-interpreter-loop-source",
+  "schema_version": "QMX-E4-SOURCE-0.1",
+  "created_at": "2026-06-27T13:41:23.260743+00:00",
+  "run_id": "nsl-e4-20260627134104",
+  "generation": 1,
+  "cycle_index": 2,
+  "path": "states/e4-trigger-loop-sources/nsl-e4-20260627134104-cycle-002-source.json",
+  "trigger_kind": "branch_raw_release_hash_change_to_multi_cycle_interpreter_loop",
+  "trigger_sentence": "WHEN E4_CYCLE_SOURCE_HASH APPEARS ON BRANCH_RAW THEN FIRE CYCLE_GATE; WHEN CYCLE_GATE IS OPEN THEN RUN ONE CONTROLLED NETWORK_LANGUAGE_INTERPRETER STEP; WHEN SIGNAL IS WRITTEN THEN ADVANCE E4_LOOP_STATE",
+  "previous_source_hash": "05d80811432f7217",
+  "previous_signal_hash": "eae7e57a3cfebdc4",
+  "previous_cycle_hash": "3e2efa99b5c30a56",
+  "source_e3": {
+    "run_id": "nsl-e3-20260627132832",
+    "state_hash": "c5c83fa6ae0e6e71",
+    "signal_hash": "634497d2bd50df09",
+    "network_language_pulse": true
+  },
+  "interpreter_target": {
+    "index_path": "states/nsl-l8-capsule-network-index.json",
+    "expected_network_hash": "e2b0f7037648ec33"
+  },
+  "network_role": "per-cycle trigger surface for a repeated interpreter loop",
+  "executor_role": "observer and controlled interpreter; not replaced by the network state itself",
+  "source_hash": "92de99c8f55bd6f1",
+  "truth_boundary": "E4 cycle source is a network-state trigger target. It gates one interpreter cycle after branch Raw release; it does not execute itself."
+}
