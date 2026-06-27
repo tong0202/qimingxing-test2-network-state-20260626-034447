@@ -1,0 +1,32 @@
+name: E5 External Scheduled Interpreter Loop
+
+on:
+  schedule:
+    - cron: "7 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: e5-external-scheduled-interpreter-loop
+  cancel-in-progress: false
+
+jobs:
+  external-e4-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run E5 external scheduled interpreter loop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e5_external_scheduled_interpreter_loop.py --mode external --cycles 3 --raw-timeout 240 --raw-interval 8
