@@ -1,0 +1,32 @@
+name: E6 Low Frequency Vitals Bus
+
+on:
+  schedule:
+    - cron: "37 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: e6-lowfreq-vitals-bus
+  cancel-in-progress: false
+
+jobs:
+  vitals-bus:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run E6 low frequency vitals bus
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e6_lowfreq_vitals_bus.py --mode external --raw-timeout 240 --raw-interval 8
