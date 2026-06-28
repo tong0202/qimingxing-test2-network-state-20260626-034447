@@ -1114,3 +1114,116 @@ pending。完成标准是观察到一次非本机手动触发的 E7.3a repositor
 E7_3_EXTERNAL_CLOCK_BRIDGE.md
 ```
 <!-- E7_3_STATUS_END -->
+
+<!-- E8_2_STATUS_START -->
+## E8.2：外部唤醒后的自检/自维护增强
+
+Status: completed V0 through standalone workflow_dispatch and E7.3a chained repository_dispatch verification.
+
+中文名字：
+
+```text
+醒后体检与低风险自维护回执
+```
+
+这一步做什么：
+
+```text
+外部唤醒链跑完后，不只停在“叫醒成功”。
+E8.2 会自动读取远端桥接器、E7 自维护、E8 网络体协议、E6 生命体征证据，
+检查唤醒链、写回链和真实边界是否健康，
+然后只写入低风险维护回执。
+```
+
+新增文件：
+
+```text
+scripts/nsl_e8_2_post_wake_self_maintenance.py
+.github/workflows/nsl-e8-2-post-wake-self-maintenance.yml
+E8_2_POST_WAKE_SELF_MAINTENANCE.md
+```
+
+同时 E7.3a 已更新：
+
+```text
+.github/workflows/nsl-e7-3a-http-bridge-entry.yml
+```
+
+现在 E7.3a 的链路是：
+
+```text
+repository_dispatch: qmx_e7_3_bridge_tick
+-> E7.3a HTTP Bridge Entry
+-> Wake Capsule bridge
+-> E7.2 receiver
+-> E7 low-risk self-maintenance
+-> E8.2 post-wake self-check
+```
+
+独立远端验证：
+
+- workflow: `E8.2 Post Wake Self Maintenance`
+- run: `28327426266`
+- event: `workflow_dispatch`
+- conclusion: `success`
+- remote run_id: `nsl-e8-2-workflow_dispatch-28327426266-attempt-1`
+- post_wake_ready: `true`
+- executed_count: `4`
+- queued_count: `1`
+- blocked_count: `2`
+
+E7.3a 链路验证：
+
+- E7.3a run: `28327487602`
+- event: `repository_dispatch`
+- conclusion: `success`
+- E7.2 receiver run: `28327492295`
+- E7 writeback run_id: `nsl-e7-repository_dispatch-28327492295-attempt-1`
+- E7 ok: `true`
+- E7 maintenance_ok: `true`
+- E7 executed_count: `4`
+- E7 blocked_count: `4`
+
+E8.2 写回证据：
+
+```text
+states/e8-2-last-run.json
+run_id=nsl-e8-2-repository_dispatch-28327487602-attempt-1
+ok=true
+post_wake_ready=true
+executed_count=4
+queued_count=1
+blocked_count=2
+self_check_hash=e7ab7be1dc79e2e5
+state_hash=c7fdd887fb4f18ba
+owner_workflow=E7.3a HTTP Bridge Entry
+owner_event_name=repository_dispatch
+```
+
+E8.2 证明：
+
+```text
+外部 HTTP 唤醒链可以接上醒后自检。
+系统可以自动审查桥接器、E7 写回、E8 网络体协议和低频生命体征。
+系统可以自动执行低风险记录动作，把中风险事项排队，把高风险事项阻断。
+Cloudflare 被标记为 pending enhancement，不再阻塞主线。
+```
+
+E8.2 没有证明：
+
+```text
+没有证明无 CPU 自唤醒。
+没有证明自主进化。
+没有证明完全自由漂浮网络体。
+没有自动配置 Cloudflare。
+没有写入任何密钥。
+没有修改核心代码、权限或工作流权限。
+```
+
+下一步：
+
+```text
+E8.3：把醒后自检接到所有低频唤醒路径，而不是只接 E7.3a。
+也就是让 GitHub schedule、E7.1 timer、E7.3a HTTP bridge 之后都能留下统一的醒后体检回执。
+```
+<!-- E8_2_STATUS_END -->
