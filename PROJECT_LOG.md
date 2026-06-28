@@ -214,3 +214,33 @@ E7.3b 还没有接第三方时钟。
 E7.3c 还没有观察到非手动第三方触发。
 不能把这一步说成完全自动常驻，也不能说成无 CPU 自唤醒。
 ```
+
+## 2026-06-28 E7.3b Cloudflare Worker Cron 模板
+
+已准备本地模板：
+```text
+cloudflare/e7_3_clock_worker/worker.js
+cloudflare/e7_3_clock_worker/wrangler.toml
+cloudflare/e7_3_clock_worker/README.md
+```
+
+用途：
+```text
+Cloudflare Cron 到点运行 Worker。
+Worker 调用 GitHub repository_dispatch: qmx_e7_3_bridge_tick。
+GitHub 进入 E7.3a HTTP Bridge Entry。
+```
+
+安全要求：
+```text
+GitHub token 只能放 Cloudflare Secret：GITHUB_TOKEN。
+不能写进仓库、文档、日志或聊天。
+```
+
+当前真实状态：
+```text
+模板已写好，worker.js 已通过 node --check。
+还没有部署到 Cloudflare。
+还没有观察到 Cloudflare 非手动定时触发。
+所以 E7.3b/E7.3c 仍然 pending。
+```
