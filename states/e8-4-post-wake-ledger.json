@@ -1,10 +1,10 @@
 {
   "stage": "E8.4-post-wake-ledger",
   "schema_version": "QMX-E8.4-LEDGER-0.1",
-  "created_at": "2026-06-28T16:11:27.390316+00:00",
-  "updated_by_run_id": "nsl-e8-2-workflow_dispatch-28328169814-attempt-1",
-  "entry_count": 9,
-  "ready_count": 8,
+  "created_at": "2026-06-28T16:49:17.886035+00:00",
+  "updated_by_run_id": "nsl-e8-2-schedule-28329165684-attempt-1",
+  "entry_count": 10,
+  "ready_count": 9,
   "covered_workflows": [
     "E7 Controlled Vitals Self Maintenance",
     "E7.1 External Wake Timer",
@@ -13,49 +13,50 @@
   ],
   "covered_events": [
     "repository_dispatch",
+    "schedule",
     "workflow_dispatch"
   ],
   "workflow_counts": {
     "unknown": 3,
     "E8.2 Post Wake Self Maintenance": 1,
     "E7.3a HTTP Bridge Entry": 2,
-    "E7 Controlled Vitals Self Maintenance": 1,
+    "E7 Controlled Vitals Self Maintenance": 2,
     "E7.1 External Wake Timer": 2
   },
   "latest_entry": {
     "schema_version": "QMX-E8.4-LEDGER-ENTRY-0.1",
-    "run_id": "nsl-e8-2-workflow_dispatch-28328169814-attempt-1",
-    "created_at": "2026-06-28T16:11:21.755236+00:00",
+    "run_id": "nsl-e8-2-schedule-28329165684-attempt-1",
+    "created_at": "2026-06-28T16:49:14.766673+00:00",
     "source": "current_result",
     "ok": true,
     "post_wake_ready": true,
-    "generation": 9,
+    "generation": 10,
     "owner": {
-      "workflow": "E7.1 External Wake Timer",
-      "event_name": "workflow_dispatch",
-      "run_id": "28328169814",
+      "workflow": "E7 Controlled Vitals Self Maintenance",
+      "event_name": "schedule",
+      "run_id": "28329165684",
       "run_attempt": "1",
       "actor": "tong0202",
-      "sha": "c6ea1a2145b82aaad99ae08456385bc7fddbdc54"
+      "sha": "4d8a8345b7a7942520003ca3a4e064ee7b0c8638"
     },
-    "state_hash": "a9afed726e1654f8",
-    "self_check_hash": "119f29307db1e837",
-    "plan_hash": "c063c771a171f41d",
-    "actions_hash": "d719c212e9c722f8",
-    "last_run_hash": "61c5fb64069129cf",
-    "report_hash": "2927f3b8aa0a7728",
-    "snapshot_path": "states/e8-2-post-wake-snapshots/nsl-e8-2-workflow_dispatch-28328169814-attempt-1.json",
-    "snapshot_hash": "f9483100463fb58c",
+    "state_hash": "71637501ca782cba",
+    "self_check_hash": "be90bf6122d7595b",
+    "plan_hash": "70de7b7b1e09f7ad",
+    "actions_hash": "00fa81d85360a2d9",
+    "last_run_hash": "acbc53725b5b9748",
+    "report_hash": "1dc8d1dd2506ab4a",
+    "snapshot_path": "states/e8-2-post-wake-snapshots/nsl-e8-2-schedule-28329165684-attempt-1.json",
+    "snapshot_hash": "5a4a8204758e0951",
     "health": {
       "post_wake_ready": true,
       "bridge_chain_ok": true,
       "e7_current_health_ok": true,
-      "e7_latest_event_name": "workflow_dispatch",
-      "e7_latest_overwritten_by_schedule": false,
+      "e7_latest_event_name": "schedule",
+      "e7_latest_overwritten_by_schedule": true,
       "network_body_ok": true,
       "external_clock_pending": true
     },
-    "entry_hash": "e8c11087e3c4c0d4"
+    "entry_hash": "dae3f88cb6f51b33"
   },
   "entries": [
     {
@@ -372,14 +373,49 @@
         "external_clock_pending": true
       },
       "entry_hash": "e8c11087e3c4c0d4"
+    },
+    {
+      "schema_version": "QMX-E8.4-LEDGER-ENTRY-0.1",
+      "run_id": "nsl-e8-2-schedule-28329165684-attempt-1",
+      "created_at": "2026-06-28T16:49:14.766673+00:00",
+      "source": "current_result",
+      "ok": true,
+      "post_wake_ready": true,
+      "generation": 10,
+      "owner": {
+        "workflow": "E7 Controlled Vitals Self Maintenance",
+        "event_name": "schedule",
+        "run_id": "28329165684",
+        "run_attempt": "1",
+        "actor": "tong0202",
+        "sha": "4d8a8345b7a7942520003ca3a4e064ee7b0c8638"
+      },
+      "state_hash": "71637501ca782cba",
+      "self_check_hash": "be90bf6122d7595b",
+      "plan_hash": "70de7b7b1e09f7ad",
+      "actions_hash": "00fa81d85360a2d9",
+      "last_run_hash": "acbc53725b5b9748",
+      "report_hash": "1dc8d1dd2506ab4a",
+      "snapshot_path": "states/e8-2-post-wake-snapshots/nsl-e8-2-schedule-28329165684-attempt-1.json",
+      "snapshot_hash": "5a4a8204758e0951",
+      "health": {
+        "post_wake_ready": true,
+        "bridge_chain_ok": true,
+        "e7_current_health_ok": true,
+        "e7_latest_event_name": "schedule",
+        "e7_latest_overwritten_by_schedule": true,
+        "network_body_ok": true,
+        "external_clock_pending": true
+      },
+      "entry_hash": "dae3f88cb6f51b33"
     }
   ],
   "backfill": {
     "snapshot_listing_ok": true,
-    "snapshot_count_seen": 9,
-    "snapshot_read_count": 9,
-    "existing_ledger_entry_count": 8
+    "snapshot_count_seen": 10,
+    "snapshot_read_count": 10,
+    "existing_ledger_entry_count": 9
   },
   "truth_boundary": "E8.4 is a mutable GitHub state ledger rebuilt from immutable per-run snapshots and the current result. It improves auditability but is not a tamper-proof database and does not prove CPU-free wakefulness.",
-  "ledger_hash": "34238b68d7462312"
+  "ledger_hash": "c965dc3026274696"
 }
