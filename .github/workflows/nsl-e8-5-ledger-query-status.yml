@@ -1,0 +1,32 @@
+name: E8.5 Ledger Query Status
+
+on:
+  repository_dispatch:
+    types: [qmx_e8_5_ledger_query]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: e8-5-ledger-query-status
+  cancel-in-progress: false
+
+jobs:
+  ledger-query-status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run E8.5 ledger query status
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e8_5_ledger_query_status.py --mode external --recent-limit 8
