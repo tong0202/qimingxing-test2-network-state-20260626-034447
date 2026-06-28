@@ -1035,3 +1035,33 @@ Interpretation:
 This is a weak real-network edge, not a strong advantage.
 The result supports continuing NSC experiments, but does not prove CPU-free compute or a stable network compute law.
 ```
+
+
+## 2026-06-29 NSC-1 Replication And Split Metrics
+
+NSC-1 completed a stricter multi-batch replication of NSC-0.
+
+```text
+run_id=nsc_1_replication_metrics-20260628212502
+batches=5
+rounds_per_batch=8
+verdict=nsc_1_no_stable_edge
+remote_state_hash=5b1467f8f387f858
+```
+
+Split metric summary:
+
+```text
+effective_state_work win_rate=0.2 mean_margin_rate=-0.031545
+convergence          win_rate=0.0 mean_margin_rate=-0.078309
+recovery             win_rate=0.0 mean_margin_rate=-0.074298
+coupling             win_rate=0.2 mean_margin_rate=-0.257237
+temporal_order       win_rate=0.2 mean_margin_rate=-0.028264
+```
+
+Interpretation:
+
+```text
+NSC-0's weak edge did not replicate.
+This is a useful negative result and should prevent overclaiming network compute laws from the current NSC model.
+```
