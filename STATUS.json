@@ -2,7 +2,7 @@
   "updated_at": "2026-06-29",
   "scope": "qimingxing/test2",
   "single_source_of_truth": "STATUS.md",
-  "current_layer": "self_regenerating_capsule_anchor_layer",
+  "current_layer": "capsule_lifecycle_layer",
   "proved": [
     "network_can_carry_continuous_state",
     "network_residuals_can_form_low_frequency_rhythm",
@@ -107,7 +107,13 @@
     "f0_alive_peer_capsules_vote_on_missing_capsule_identity",
     "f0_quorum_rebuild_authorization_passes",
     "f0_missing_capsule_rebuilt_with_matching_core_hash_and_capsule_hash",
-    "f0_rebuild_ledger_last_run_and_last_report_hashes_verified"
+    "f0_rebuild_ledger_last_run_and_last_report_hashes_verified",
+    "f1_remote_capsules_carry_lifecycle_state",
+    "f1_birth_sleep_wake_peer_check_repair_split_decay_retire_chain_runs",
+    "f1_repair_split_decay_and_retire_events_are_hash_verified",
+    "f1_child_capsule_reaches_retired_state_with_zero_vitality",
+    "f1_lifecycle_state_ledger_last_run_and_last_report_hashes_verified",
+    "f1_network_anchor_read_after_write_lag_handled_by_hash_waiting"
   ],
   "not_proved": [
     "network_only_computation_without_cpu",
@@ -189,7 +195,12 @@
     "f0_cpu_free_network_computation",
     "f0_tamper_proof_storage",
     "f0_self_executing_capsules_without_external_runner",
-    "f0_fully_autonomous_digital_life"
+    "f0_fully_autonomous_digital_life",
+    "f1_endpoint_free_existence",
+    "f1_cpu_free_network_computation",
+    "f1_self_executing_capsules_without_external_runner",
+    "f1_fully_autonomous_digital_life",
+    "f1_tamper_proof_storage"
   ],
   "compute_sources": {
     "local_experiments": "local_cpu",
@@ -281,7 +292,8 @@
     "E8.3": "completed_unified_post_wake_hooks_for_e7_e7_1_e7_3a_v0",
     "E8.4": "completed_unified_post_wake_ledger_v0",
     "E8.5": "completed_ledger_query_status_v0_remote_verified",
-    "F0": "completed_capsule_quorum_rebuild_v0_remote_verified"
+    "F0": "completed_capsule_quorum_rebuild_v0_remote_verified",
+    "F1": "completed_capsule_lifecycle_v0_remote_verified"
   },
   "remote_repo": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447",
   "remote_state": {
@@ -746,10 +758,10 @@
     "github_actions_expansion_label": "external_endpoint_execution_enhancement",
     "forbidden_overclaim": "network_compute_enhancement"
   },
-  "recommended_next_mainline": "F1-capsule-lifecycle-layer",
-  "completed_mainline": "F0-capsule-quorum-rebuild-v0",
+  "recommended_next_mainline": "F2-lifecycle-driven-self-scheduling",
+  "completed_mainline": "F1-capsule-lifecycle-v0",
   "engineering_branch": "N8-riverbed-program-capsule-v0",
-  "truth_boundary": "Test2 now proves network-state riverbed layers through F0: external GitHub Actions can wake, remote capsule anchors can be seeded, one capsule can disappear, alive peer capsules can quorum-vote its expected identity, and the missing capsule can be rebuilt with verified hashes. It still does not prove endpoint-free existence, CPU-free network computation, tamper-proof storage, self-executing capsules, autonomous self-generated logic, or fully autonomous digital life.",
+  "truth_boundary": "Test2 now proves network-state riverbed layers through F1: external GitHub Actions can wake, remote capsules can carry lifecycle state, one lifecycle chain can perform birth/sleep/wake/peer_check/repair/split/decay/retire, and all final state artifacts hash-verify. It still does not prove endpoint-free existence, CPU-free network computation, tamper-proof storage, self-executing capsules, autonomous self-generated logic, or fully autonomous digital life.",
   "l11_result": {
     "run_id": "nsl-l11-20260626162324",
     "ok": true,
@@ -1294,19 +1306,29 @@
     "conclusion": "L12.2 V0 is deployed and verified: multi-cron schedule, slot dedupe, finite catch-up recording, and global runtime lock work on the remote workflow.",
     "truth_boundary": "This reduces missed schedule risk but does not guarantee every hour without a second independent clock source."
   },
-  "last_remote_sync_at": "2026-06-29T02:07:50+08:00",
+  "last_remote_sync_at": "2026-06-29T02:26:19+08:00",
   "latest_remote_sync": {
-    "synced_at_local": "2026-06-29T02:07:50+08:00",
-    "source": "F0 remote capsule quorum rebuild run 28331218212",
-    "f0_completed": true,
-    "workflow_run_id": 28331218212,
-    "target_role": "rule_capsule",
-    "confirmed_missing": true,
-    "agree_count": 4,
-    "quorum_threshold": 3,
-    "rebuild_ok": true,
+    "synced_at_local": "2026-06-29T02:26:19+08:00",
+    "source": "F1 remote capsule lifecycle run 28331684924",
+    "f1_completed": true,
+    "workflow_run_id": 28331684924,
+    "event_order": [
+      "birth",
+      "sleep",
+      "wake",
+      "peer_check",
+      "repair",
+      "split",
+      "decay",
+      "retire"
+    ],
+    "repair_ok": true,
+    "split_ok": true,
+    "decay_ok": true,
+    "retire_ok": true,
+    "final_child_state": "retired",
     "hashes_verified": true,
-    "next_mainline": "F1: capsule lifecycle layer"
+    "next_mainline": "F2: lifecycle-driven self-scheduling"
   },
   "e7_result": {
     "stage": "E7-controlled-vitals-self-maintenance",
@@ -2073,5 +2095,113 @@
     },
     "conclusion": "F0 proves that a remote capsule file can disappear, be detected by alive peer capsules, pass quorum, and be rebuilt with matching core_hash and capsule_hash.",
     "truth_boundary": "F0 proves self-repair over mutable remote anchors. It does not prove endpoint-free existence, CPU-free network computation, tamper-proof storage, self-executing capsules, or fully autonomous digital life."
+  },
+  "f1_result": {
+    "stage": "F1-capsule-lifecycle",
+    "status": "completed_v0",
+    "ok": true,
+    "evidence_level": "F1-capsule-lifecycle-v0",
+    "local_control_run": {
+      "run_id": "nsl-f1-local-20260628182013",
+      "ok": true,
+      "event_order": [
+        "birth",
+        "sleep",
+        "wake",
+        "peer_check",
+        "repair",
+        "split",
+        "decay",
+        "retire"
+      ],
+      "repair_ok": true,
+      "split_ok": true,
+      "decay_ok": true,
+      "retire_ok": true,
+      "final_child_state": "retired",
+      "final_child_retired": true,
+      "final_child_vitality": 0,
+      "state_hash": "d335925a2a39f6de",
+      "ledger_hash": "54c0b3b39c7a55b8",
+      "last_run_hash": "c9837d8943c4b4f1",
+      "report_hash": "99647ff868dd0b90"
+    },
+    "failed_remote_probe": {
+      "workflow_run_id": 28331564625,
+      "conclusion": "failure",
+      "cause": "GitHub main-branch read-after-write lag caused immediate hash checks to see stale state",
+      "fix": "wait_for_hash added after critical writes before judging lifecycle events"
+    },
+    "remote_run": {
+      "workflow": "F1 Capsule Lifecycle",
+      "workflow_file": ".github/workflows/nsl-f1-capsule-lifecycle.yml",
+      "workflow_run_id": 28331684924,
+      "workflow_event": "workflow_dispatch",
+      "workflow_conclusion": "success",
+      "workflow_url": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447/actions/runs/28331684924",
+      "run_id": "nsl-f1-workflow_dispatch-28331684924-attempt-1",
+      "event_order": [
+        "birth",
+        "sleep",
+        "wake",
+        "peer_check",
+        "repair",
+        "split",
+        "decay",
+        "retire"
+      ],
+      "repair_ok": true,
+      "split_ok": true,
+      "decay_ok": true,
+      "retire_ok": true,
+      "final_child_state": "retired",
+      "final_child_retired": true,
+      "final_child_vitality": 0,
+      "state_hash": "1bace43c838cbde1",
+      "ledger_hash": "16b7dfb94e2d49ec"
+    },
+    "remote_paths": {
+      "runner": "scripts/nsl_f1_capsule_lifecycle.py",
+      "workflow": ".github/workflows/nsl-f1-capsule-lifecycle.yml",
+      "doc": "F1_CAPSULE_LIFECYCLE.md",
+      "capsules": "states/f1-capsules/<role>.json",
+      "child": "states/f1-capsules/repair_capsule_child.json",
+      "registry": "states/f1-lifecycle-registry.json",
+      "state": "states/f1-lifecycle-state.json",
+      "ledger": "states/f1-lifecycle-ledger.json",
+      "last_run": "states/f1-last-run.json",
+      "last_report": "states/f1-last-report.json"
+    },
+    "hash_verification": {
+      "last_run_hash": {
+        "value": "1cbddd4683028f85",
+        "verified": true
+      },
+      "report_hash": {
+        "value": "3b55864b657482ab",
+        "verified": true
+      },
+      "state_hash": {
+        "value": "1bace43c838cbde1",
+        "verified": true
+      },
+      "ledger_hash": {
+        "value": "16b7dfb94e2d49ec",
+        "verified": true
+      },
+      "registry_hash": {
+        "value": "d44a0ac3e0432961",
+        "verified": true
+      },
+      "retired_child_hash": {
+        "value": "2285be267c4541ad",
+        "verified": true
+      },
+      "retired_child_core_hash": {
+        "verified": true
+      }
+    },
+    "conclusion": "F1 proves a minimal remote capsule lifecycle chain: birth, sleep, wake, peer_check, repair, split, decay, and retire, with hash-verified state and ledger outputs.",
+    "truth_boundary": "F1 proves lifecycle transitions over mutable remote anchors. It does not prove endpoint-free existence, CPU-free network computation, self-executing capsules, or fully autonomous digital life."
   }
 }
