@@ -1,0 +1,42 @@
+{
+  "stage": "E7-last-report",
+  "schema_version": "QMX-E7-REPORT-0.1",
+  "created_at": "2026-06-28T06:38:13.265257+00:00",
+  "run_id": "nsl-e7-local-20260628063704",
+  "ok": true,
+  "evidence_level": "E7-controlled-low-risk-self-maintenance-v0",
+  "generation": 1,
+  "health": {
+    "required_reads_ok": true,
+    "required_hashes_ok": true,
+    "truth_boundaries_ok": true,
+    "e6_last_ok": true,
+    "e6_report_ok": true,
+    "e6_bus_state_ok": true,
+    "e6_schedule_observed": true,
+    "e5_schedule_observed": true,
+    "global_lock_released": true,
+    "logic_ready": true,
+    "maintenance_ready": true,
+    "signals": {
+      "CONTROLLED_SELF_MAINTENANCE_READY": true,
+      "E6_VITALS_HEALTHY": true,
+      "NATURAL_WAKE_CHAIN_OBSERVED": true,
+      "NO_CORE_MUTATION_ALLOWED": true,
+      "ONLY_LOW_RISK_ACTIONS_EXECUTABLE": true
+    }
+  },
+  "remote_paths": {
+    "workflow": ".github/workflows/nsl-e7-vitals-self-maintenance.yml",
+    "runner": "scripts/nsl_e7_vitals_self_maintenance.py",
+    "plan": "states/e7-maintenance-plan.json",
+    "actions": "states/e7-maintenance-actions.json",
+    "state": "states/e7-controlled-self-maintenance-state.json",
+    "snapshot": "states/e7-maintenance-snapshots/nsl-e7-local-20260628063704.json",
+    "last_run": "states/e7-last-run.json",
+    "last_report": "states/e7-last-report.json"
+  },
+  "conclusion": "E7 connected E6 low-frequency vitals to controlled low-risk self-maintenance receipts and remote writeback.",
+  "truth_boundary": "E7 is controlled low-risk self-maintenance executed by local or GitHub Actions CPU. It records health and no-op repair receipts only; it does not modify core code, workflows, permissions, or prove CPU-free network self-execution.",
+  "report_hash": "63c792f236b532b3"
+}
