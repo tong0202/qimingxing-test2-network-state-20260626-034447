@@ -1,0 +1,300 @@
+{
+  "stage": "F2-lifecycle-self-scheduler-state",
+  "schema_version": "QMX-F2-STATE-0.1",
+  "created_at": "2026-06-28T18:39:36.631767+00:00",
+  "run_id": "nsl-f2-local-20260628183914",
+  "owner": {
+    "mode": "local",
+    "workflow": null,
+    "run_id": null,
+    "run_attempt": null,
+    "event_name": null,
+    "actor": null,
+    "repository": null,
+    "sha": null,
+    "local": true
+  },
+  "source": {
+    "f1_state_path": "states/f1-lifecycle-state.json",
+    "f1_state_hash": "1bace43c838cbde1",
+    "f1_event_order": [
+      "birth",
+      "sleep",
+      "wake",
+      "peer_check",
+      "repair",
+      "split",
+      "decay",
+      "retire"
+    ]
+  },
+  "scheduler_capsule_hash": "e401adf0ec038927",
+  "scheduler_generation": 1,
+  "memory_shadow_state": "awake",
+  "child": {
+    "exists": true,
+    "state": "retired",
+    "retired": true,
+    "vitality": 0,
+    "capsule_hash": "fb0a6dbca290dffe"
+  },
+  "total_scheduler_ticks": 4,
+  "selected_actions": [
+    "split",
+    "decay",
+    "retire",
+    "peer_check"
+  ],
+  "decision_count": 4,
+  "decisions": [
+    {
+      "tick": 1,
+      "created_at": "2026-06-28T18:39:25.162660+00:00",
+      "candidates": [
+        {
+          "action": "split",
+          "score": 95,
+          "reason": "no active scheduler child exists",
+          "allowed": true
+        },
+        {
+          "action": "peer_check",
+          "score": 80,
+          "reason": "source F1 state hash has not been peer-checked by F2",
+          "allowed": true
+        },
+        {
+          "action": "sleep",
+          "score": 60,
+          "reason": "memory shadow can enter a low-risk rest state",
+          "allowed": true
+        },
+        {
+          "action": "observe",
+          "score": 10,
+          "reason": "fallback observation if no stronger lifecycle event applies",
+          "allowed": true
+        }
+      ],
+      "selected_action": "split",
+      "selected_score": 95,
+      "selected_reason": "no active scheduler child exists",
+      "execution_ok": true,
+      "execution": {
+        "ok": true,
+        "action": "split",
+        "write": {
+          "path": "states/f2-capsules/scheduler_child.json",
+          "existing_status": 404,
+          "ok": true,
+          "status": 201,
+          "error": "",
+          "commit_hash": "e84ac1afb62812a34998529633d20c7ff555b6a4",
+          "content_sha": "74a9435a1f9e6cc670023449e12ad11430bf4d9a"
+        },
+        "verify": {
+          "path": "states/f2-capsules/scheduler_child.json",
+          "ok": true,
+          "status": 200,
+          "hash_field": "capsule_hash",
+          "expected": "6cfdb9623277e28f",
+          "declared": "6cfdb9623277e28f",
+          "computed": "6cfdb9623277e28f",
+          "attempt_count": 1,
+          "observations": [
+            {
+              "status": 200,
+              "ok": true,
+              "declared": "6cfdb9623277e28f",
+              "computed": "6cfdb9623277e28f",
+              "error": ""
+            }
+          ]
+        },
+        "child_hash": "6cfdb9623277e28f"
+      },
+      "decision_hash": "650b5426959095e2"
+    },
+    {
+      "tick": 2,
+      "created_at": "2026-06-28T18:39:31.661456+00:00",
+      "candidates": [
+        {
+          "action": "decay",
+          "score": 90,
+          "reason": "active child vitality is above decay threshold",
+          "allowed": true
+        },
+        {
+          "action": "peer_check",
+          "score": 80,
+          "reason": "source F1 state hash has not been peer-checked by F2",
+          "allowed": true
+        },
+        {
+          "action": "sleep",
+          "score": 60,
+          "reason": "memory shadow can enter a low-risk rest state",
+          "allowed": true
+        },
+        {
+          "action": "observe",
+          "score": 10,
+          "reason": "fallback observation if no stronger lifecycle event applies",
+          "allowed": true
+        }
+      ],
+      "selected_action": "decay",
+      "selected_score": 90,
+      "selected_reason": "active child vitality is above decay threshold",
+      "execution_ok": true,
+      "execution": {
+        "ok": true,
+        "action": "decay",
+        "write": {
+          "path": "states/f2-capsules/scheduler_child.json",
+          "existing_status": 200,
+          "ok": true,
+          "status": 200,
+          "error": "",
+          "commit_hash": "971d545a8839f2f02973aaa45e972b4015ceda7a",
+          "content_sha": "e809349bb80cce94f5daeaeaaec88b81e05b6c80"
+        },
+        "verify": {
+          "path": "states/f2-capsules/scheduler_child.json",
+          "ok": true,
+          "status": 200,
+          "hash_field": "capsule_hash",
+          "expected": "2e9531c88b1ea23b",
+          "declared": "2e9531c88b1ea23b",
+          "computed": "2e9531c88b1ea23b",
+          "attempt_count": 2,
+          "observations": [
+            {
+              "status": 200,
+              "ok": false,
+              "declared": "6cfdb9623277e28f",
+              "computed": "6cfdb9623277e28f",
+              "error": ""
+            },
+            {
+              "status": 200,
+              "ok": true,
+              "declared": "2e9531c88b1ea23b",
+              "computed": "2e9531c88b1ea23b",
+              "error": ""
+            }
+          ]
+        },
+        "child_hash": "2e9531c88b1ea23b"
+      },
+      "decision_hash": "37776bd24e39ab92"
+    },
+    {
+      "tick": 3,
+      "created_at": "2026-06-28T18:39:34.845148+00:00",
+      "candidates": [
+        {
+          "action": "retire",
+          "score": 92,
+          "reason": "active child vitality reached retirement threshold",
+          "allowed": true
+        },
+        {
+          "action": "peer_check",
+          "score": 80,
+          "reason": "source F1 state hash has not been peer-checked by F2",
+          "allowed": true
+        },
+        {
+          "action": "sleep",
+          "score": 60,
+          "reason": "memory shadow can enter a low-risk rest state",
+          "allowed": true
+        },
+        {
+          "action": "observe",
+          "score": 10,
+          "reason": "fallback observation if no stronger lifecycle event applies",
+          "allowed": true
+        }
+      ],
+      "selected_action": "retire",
+      "selected_score": 92,
+      "selected_reason": "active child vitality reached retirement threshold",
+      "execution_ok": true,
+      "execution": {
+        "ok": true,
+        "action": "retire",
+        "write": {
+          "path": "states/f2-capsules/scheduler_child.json",
+          "existing_status": 200,
+          "ok": true,
+          "status": 200,
+          "error": "",
+          "commit_hash": "88f390af1155c3f3255d6f16a667e1f84772c2f0",
+          "content_sha": "83a6c887fb99f73dbf3a0008b620ea19aca01676"
+        },
+        "verify": {
+          "path": "states/f2-capsules/scheduler_child.json",
+          "ok": true,
+          "status": 200,
+          "hash_field": "capsule_hash",
+          "expected": "fb0a6dbca290dffe",
+          "declared": "fb0a6dbca290dffe",
+          "computed": "fb0a6dbca290dffe",
+          "attempt_count": 1,
+          "observations": [
+            {
+              "status": 200,
+              "ok": true,
+              "declared": "fb0a6dbca290dffe",
+              "computed": "fb0a6dbca290dffe",
+              "error": ""
+            }
+          ]
+        },
+        "child_hash": "fb0a6dbca290dffe"
+      },
+      "decision_hash": "29bd7582cc7d562e"
+    },
+    {
+      "tick": 4,
+      "created_at": "2026-06-28T18:39:36.631638+00:00",
+      "candidates": [
+        {
+          "action": "peer_check",
+          "score": 80,
+          "reason": "source F1 state hash has not been peer-checked by F2",
+          "allowed": true
+        },
+        {
+          "action": "sleep",
+          "score": 60,
+          "reason": "memory shadow can enter a low-risk rest state",
+          "allowed": true
+        },
+        {
+          "action": "observe",
+          "score": 10,
+          "reason": "fallback observation if no stronger lifecycle event applies",
+          "allowed": true
+        }
+      ],
+      "selected_action": "peer_check",
+      "selected_score": 80,
+      "selected_reason": "source F1 state hash has not been peer-checked by F2",
+      "execution_ok": true,
+      "execution": {
+        "ok": true,
+        "action": "peer_check",
+        "state_hash_ok": true,
+        "registry_hash_ok": true,
+        "child_hash_ok": true
+      },
+      "decision_hash": "a4dc6873e181db94"
+    }
+  ],
+  "truth_boundary": "F2 chooses low-risk lifecycle events from remote state; it is not self-executing without an external runner.",
+  "state_hash": "a279361bee5d9b56"
+}
