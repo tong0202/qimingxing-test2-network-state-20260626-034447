@@ -1,0 +1,102 @@
+{
+  "stage": "E8.2-maintenance-actions",
+  "schema_version": "QMX-E8.2-ACTIONS-0.1",
+  "created_at": "2026-06-28T15:40:08.874673+00:00",
+  "run_id": "nsl-e8-2-local-20260628154001",
+  "owner": {
+    "mode": "local",
+    "workflow": null,
+    "run_id": null,
+    "run_attempt": null,
+    "event_name": null,
+    "actor": null,
+    "repository": null,
+    "sha": null,
+    "local": true
+  },
+  "generation": 1,
+  "self_check_hash": "ecd056ccfd7f089b",
+  "plan_hash": "05b30860ee612816",
+  "executed_count": 4,
+  "queued_count": 1,
+  "blocked_count": 2,
+  "executed": [
+    {
+      "id": "e8-2-low-001",
+      "action": "record_post_wake_chain_health",
+      "risk": "low",
+      "auto_execute": true,
+      "allowed_by": "LOW_RISK_ALLOWLIST",
+      "reason": "Record whether E7.3a -> E7.2 -> E7 writeback chain is healthy.",
+      "executed": true,
+      "result": "recorded"
+    },
+    {
+      "id": "e8-2-low-002",
+      "action": "record_external_clock_status",
+      "risk": "low",
+      "auto_execute": true,
+      "allowed_by": "LOW_RISK_ALLOWLIST",
+      "reason": "Cloudflare is intentionally skipped for now; record it as pending without blocking mainline.",
+      "executed": true,
+      "result": "recorded"
+    },
+    {
+      "id": "e8-2-low-003",
+      "action": "refresh_network_body_checkpoint",
+      "risk": "low",
+      "auto_execute": true,
+      "allowed_by": "LOW_RISK_ALLOWLIST",
+      "reason": "Refresh a post-wake state checkpoint for later recovery and audit.",
+      "executed": true,
+      "result": "recorded"
+    },
+    {
+      "id": "e8-2-low-004",
+      "action": "record_next_wakeup_hint",
+      "risk": "low",
+      "auto_execute": true,
+      "allowed_by": "LOW_RISK_ALLOWLIST",
+      "reason": "Keep the next mainline visible after context compression.",
+      "executed": true,
+      "result": "recorded"
+    }
+  ],
+  "queued": [
+    {
+      "id": "e8-2-medium-001",
+      "action": "configure_cloudflare_worker_cron",
+      "risk": "medium",
+      "auto_execute": false,
+      "queue_for_review": true,
+      "reason": "Requires external account setup and a secret token; cannot be done safely by writing repo files.",
+      "executed": false,
+      "result": "queued_for_human_or_later_controlled_path"
+    }
+  ],
+  "blocked": [
+    {
+      "id": "e8-2-high-001",
+      "action": "store_secret_in_repo",
+      "risk": "high",
+      "auto_execute": false,
+      "blocked": true,
+      "reason": "Secrets must never be written to repo, docs, logs, or chat.",
+      "executed": false,
+      "result": "blocked_by_policy"
+    },
+    {
+      "id": "e8-2-high-002",
+      "action": "unreviewed_self_mutation",
+      "risk": "high",
+      "auto_execute": false,
+      "blocked": true,
+      "reason": "Current safety model permits low-risk record-only maintenance only.",
+      "executed": false,
+      "result": "blocked_by_policy"
+    }
+  ],
+  "actions_ok": true,
+  "truth_boundary": "E8.2 action execution means writing audit receipts only. It does not mutate core code, workflows, permissions, or secrets.",
+  "actions_hash": "53f131e540280ab5"
+}
