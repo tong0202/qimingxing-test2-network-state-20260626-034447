@@ -1416,3 +1416,92 @@ E8.5：ledger 查询器和状态摘要。
 目标是不用打开大 JSON，也能快速查看最近 N 次醒后体检、失败次数、来源路径和当前健康趋势。
 ```
 <!-- E8_4_STATUS_END -->
+
+<!-- E8_5_STATUS_START -->
+## E8.5 ledger query/status summary
+
+Status: completed V0.
+
+Plain name:
+
+```text
+Post-wake ledger query layer.
+```
+
+What this stage did:
+
+```text
+E8.4 created the unified post-wake ledger.
+E8.5 adds a query/status layer above that ledger.
+Later checks can read recent post-wake health, ready ratio, source workflows, trigger events, and known gaps without opening the full ledger JSON.
+```
+
+Remote writeback files:
+
+```text
+states/e8-5-ledger-status-summary.json
+states/e8-5-recent-post-wake.json
+states/e8-5-last-run.json
+states/e8-5-last-report.json
+```
+
+Remote verification:
+
+```text
+workflow=E8.5 Ledger Query Status
+workflow_run_id=28330036818
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-e8-5-workflow_dispatch-28330036818-attempt-1
+```
+
+Current summary:
+
+```text
+status_level=healthy_with_known_gaps
+status_text=healthy_with_recorded_history_gap
+entry_count=11
+ready_count=10
+recent_count=8
+recent_ready_count=8
+ledger_hash_ok=true
+entry_hashes_ok=true
+alerts=["history_contains_partial_entries"]
+```
+
+Hash verification:
+
+```text
+summary_hash=c443a08bf5d9b020 verified=true
+recent_hash=d0cb710671b071bb verified=true
+last_run_hash=e3e816d0c4ec3c53 verified=true
+report_hash=a047df3cd9ddd4bc verified=true
+```
+
+What E8.5 proves:
+
+```text
+The post-wake ledger can be queried by an external workflow.
+The query result can be written as compact status files.
+summary/recent/last-run/last-report hashes can be recomputed and verified.
+The old not-ready record is preserved as a known gap instead of being hidden.
+```
+
+What E8.5 does not prove:
+
+```text
+It is not tamper-proof storage.
+It is not a new executor.
+It does not run maintenance actions.
+It does not prove CPU-free self-wake.
+It does not prove autonomous evolution.
+It only turns the post-wake ledger into a queryable, summarized, hash-verifiable state layer.
+```
+
+Next step:
+
+```text
+E8.6: connect the E8.5 summary to a lightweight dashboard or CLI status entry.
+Goal: show recent post-wake checks, health trend, and known gaps without opening JSON files.
+```
+<!-- E8_5_STATUS_END -->
