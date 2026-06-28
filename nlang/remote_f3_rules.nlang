@@ -1,0 +1,6 @@
+WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count < f3.lifecycle_cycle_count THEN peer_check
+WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count >= f3.lifecycle_cycle_count THEN split
+WHEN f3.child.exists == false THEN split
+WHEN f3.child.retired == false AND f3.child.vitality > 35 THEN decay
+WHEN f3.child.retired == false AND f3.child.vitality <= 35 THEN retire
+
