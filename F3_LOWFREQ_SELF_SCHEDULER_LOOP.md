@@ -1,5 +1,15 @@
 # F3 low-frequency multi-run self-scheduler loop
 
+## Status
+
+```text
+completed V0
+local control runs verified
+multiple remote wake windows verified
+F is recorded as mainline
+L/E are recorded as auxiliary infrastructure
+```
+
 ## Goal
 
 F3 makes F the mainline.
@@ -88,4 +98,75 @@ It does not prove self-executing capsules without an external runner.
 It does not prove fully autonomous digital life.
 It does not prove unreviewed high-risk self-mutation.
 It is still a controlled low-frequency loop over mutable remote anchors.
+```
+
+## Completion evidence
+
+Local control run:
+
+```text
+run_id=nsl-f3-local-20260628190050
+ok=true
+selected_actions=split,decay,retire,peer_check
+window_count=4
+lifecycle_cycle_count=1
+f3_state_hash=bcf610f70b42bbe3
+f3_ledger_hash=443b1d709a3f6a63
+```
+
+Remote wake windows:
+
+```text
+28332753245 -> split      window_count=5  lifecycle_cycle_count=1
+28332772614 -> decay      window_count=6  lifecycle_cycle_count=1
+28332794329 -> retire     window_count=7  lifecycle_cycle_count=2
+28332816490 -> split      window_count=8  lifecycle_cycle_count=2
+28332895658 -> retire     window_count=10 lifecycle_cycle_count=3
+28332909221 -> peer_check window_count=11 lifecycle_cycle_count=3 last_peer_check_cycle_count=3
+```
+
+Final remote state:
+
+```text
+latest_run_id=nsl-f3-workflow_dispatch-28332909221-attempt-1
+workflow_run_id=28332909221
+workflow_conclusion=success
+selected_actions=peer_check
+window_count=11
+lifecycle_cycle_count=3
+last_peer_check_cycle_count=3
+f3_state_hash=5deb8244675edcf6
+f3_ledger_hash=ac724939ff7593ad
+```
+
+Hash verification:
+
+```text
+last_run_hash=1f41f72f190ec76a verified=true
+report_hash=ea0a66731e6b0399 verified=true
+f3_state_hash=5deb8244675edcf6 verified=true
+f3_ledger_hash=ac724939ff7593ad verified=true
+f3_capsule_hash=6b1137757b7f05f6 verified=true
+f3_capsule_core_hash=1fe4708dc7e0233b verified=true
+f2_state_hash=f009d59fa0932b1f verified=true
+f2_ledger_hash=fac5d6cb37a6f76a verified=true
+f2_child_hash=8f2584b54ec860b7 verified=true
+```
+
+Engineering correction:
+
+```text
+The first four remote wake windows proved continuity, but window 8 selected split
+because F3 only checked whether the F1 state hash had already been peer-checked.
+The policy was tightened with last_peer_check_cycle_count so every completed
+lifecycle cycle needs its own peer_check before the next clean cycle.
+The corrected policy was verified by retire -> peer_check across two remote runs.
+```
+
+Next recommended stage:
+
+```text
+F4: controlled capsule self-maintenance and regeneration loop.
+Goal: let the F mainline choose low-risk repair/regeneration tasks from F3 ledger evidence,
+while keeping medium/high-risk changes behind review gates.
 ```
