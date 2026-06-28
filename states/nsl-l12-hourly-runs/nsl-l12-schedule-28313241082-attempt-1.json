@@ -1,0 +1,353 @@
+{
+  "stage": "L12-hourly-self-maintenance-run",
+  "schema_version": "QMX-L12-RUN-0.1",
+  "created_at": "2026-06-28T06:01:51.278116+00:00",
+  "run_id": "nsl-l12-schedule-28313241082-attempt-1",
+  "owner": {
+    "mode": "external",
+    "workflow": "L12 Hourly Self Maintenance",
+    "run_id": "28313241082",
+    "run_attempt": "1",
+    "event_name": "schedule",
+    "actor": "tong0202",
+    "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
+    "sha": "b6db55f7a0720193792a3605ae0e82ac84cc67d2",
+    "local": false
+  },
+  "schedule_cron": "17,37,57 * * * *",
+  "slot_id": "2026-06-28T06:00:00Z",
+  "slot_plan": {
+    "stage": "L12.2-slot-plan",
+    "schema_version": "QMX-L12-SLOT-PLAN-0.1",
+    "created_at": "2026-06-28T06:01:47.861922+00:00",
+    "event_name": "schedule",
+    "schedule_cron": "17,37,57 * * * *",
+    "canonical_slot_minute": 17,
+    "current_slot_id": "2026-06-28T06:00:00Z",
+    "current_time": "2026-06-28T06:01:47.861867+00:00",
+    "last_success_at": "2026-06-28T01:37:04.097370+00:00",
+    "last_success_slot_id": "2026-06-28T01:00:00Z",
+    "elapsed_minutes_since_success": 264.729,
+    "duplicate_slot": false,
+    "allow_duplicate_slot": false,
+    "gap_exceeded": true,
+    "missed_window_threshold_minutes": 90,
+    "missed_slots_total_estimate": 4,
+    "catchup_slots_recorded": [
+      "2026-06-28T02:00:00Z",
+      "2026-06-28T03:00:00Z",
+      "2026-06-28T04:00:00Z"
+    ],
+    "max_catchup_windows": 3,
+    "slot_plan_hash": "cdad5cee7c9c5950",
+    "truth_boundary": "L12.2 slot planning reduces GitHub schedule misses with duplicate suppression and finite catch-up records. It cannot make GitHub cron a hard real-time scheduler."
+  },
+  "catchup_slots_recorded": [
+    "2026-06-28T02:00:00Z",
+    "2026-06-28T03:00:00Z",
+    "2026-06-28T04:00:00Z"
+  ],
+  "window": {
+    "stage": "L12-hourly-self-maintenance-window",
+    "schema_version": "QMX-L12-WINDOW-0.1",
+    "created_at": "2026-06-28T06:01:51.067226+00:00",
+    "schedule_cron": "17,37,57 * * * *",
+    "sources": [
+      {
+        "id": "l11_5_logic_spec",
+        "path": "states/nsl-l11-5-minimal-logic-spec.json",
+        "required": true,
+        "read_ok": true,
+        "status": 200,
+        "elapsed_ms": 165.77,
+        "hash_verify": {
+          "required": true,
+          "ok": true,
+          "field": "logic_hash",
+          "observed": "e55e120dad5382d0",
+          "expected": "e55e120dad5382d0"
+        },
+        "truth_boundary_present": true,
+        "summary": {
+          "logic_hash": "e55e120dad5382d0",
+          "minimum_logic_sentence": "WHEN MEMORY_READ_OK AND HASH_MATCH AND TRUTH_BOUNDARY_PRESENT THEN SELF_CHECK_OK; WHEN SELF_CHECK_OK THEN PROPOSE LOW_RISK_REPAIR_PLAN AND RECORD LOOP_STATE; NEVER MUTATE CORE WITHOUT REVIEW",
+          "low_risk_actions": [
+            "no_op_verified",
+            "refresh_memory_selection",
+            "write_logic_evaluation",
+            "continue_schedule_observation",
+            "record_truth_boundary"
+          ]
+        },
+        "error": ""
+      },
+      {
+        "id": "l11_5_logic_evaluation",
+        "path": "states/nsl-l11-5-logic-evaluation.json",
+        "required": true,
+        "read_ok": true,
+        "status": 200,
+        "elapsed_ms": 134.72,
+        "hash_verify": {
+          "required": true,
+          "ok": true,
+          "field": "evaluation_hash",
+          "observed": "9d880a7111a3087c",
+          "expected": "9d880a7111a3087c"
+        },
+        "truth_boundary_present": true,
+        "summary": {
+          "evaluation_hash": "9d880a7111a3087c",
+          "minimum_logic_ready": true,
+          "l12_ready": true,
+          "blocking_count": 0
+        },
+        "error": ""
+      },
+      {
+        "id": "l11_5_loop_state",
+        "path": "states/nsl-l11-5-loop-state.json",
+        "required": true,
+        "read_ok": true,
+        "status": 200,
+        "elapsed_ms": 255.67,
+        "hash_verify": {
+          "required": true,
+          "ok": true,
+          "field": "state_hash",
+          "observed": "662a198863502dd5",
+          "expected": "662a198863502dd5"
+        },
+        "truth_boundary_present": true,
+        "summary": {
+          "generation": 1,
+          "state_hash": "662a198863502dd5",
+          "l12_ready": true
+        },
+        "error": ""
+      },
+      {
+        "id": "l11_memory_selection",
+        "path": "states/nsl-l11-memory-selection.json",
+        "required": true,
+        "read_ok": true,
+        "status": 200,
+        "elapsed_ms": 261.36,
+        "hash_verify": {
+          "required": true,
+          "ok": true,
+          "field": "memory_hash",
+          "observed": "2966e45205a0f827",
+          "expected": "2966e45205a0f827"
+        },
+        "truth_boundary_present": true,
+        "summary": {
+          "selected_count": 5,
+          "memory_hash": "2966e45205a0f827"
+        },
+        "error": ""
+      },
+      {
+        "id": "l11_self_check",
+        "path": "states/nsl-l11-self-check.json",
+        "required": true,
+        "read_ok": true,
+        "status": 200,
+        "elapsed_ms": 147.94,
+        "hash_verify": {
+          "required": true,
+          "ok": true,
+          "field": "self_check_hash",
+          "observed": "61efd5d715f925d6",
+          "expected": "61efd5d715f925d6"
+        },
+        "truth_boundary_present": true,
+        "summary": {
+          "ok": true,
+          "blocking_count": 0,
+          "warning_count": 0,
+          "self_check_hash": "61efd5d715f925d6"
+        },
+        "error": ""
+      },
+      {
+        "id": "l11_repair_plan",
+        "path": "states/nsl-l11-repair-plan.json",
+        "required": true,
+        "read_ok": true,
+        "status": 200,
+        "elapsed_ms": 139.97,
+        "hash_verify": {
+          "required": true,
+          "ok": true,
+          "field": "repair_hash",
+          "observed": "ff20b179dfdb0fcf",
+          "expected": "ff20b179dfdb0fcf"
+        },
+        "truth_boundary_present": true,
+        "summary": {
+          "ok": true,
+          "actions": [
+            "no_op_verified",
+            "refresh_memory_selection"
+          ],
+          "repair_hash": "ff20b179dfdb0fcf"
+        },
+        "error": ""
+      }
+    ],
+    "checks": [
+      {
+        "id": "required_sources_read",
+        "ok": true,
+        "severity": "blocking",
+        "meaning": "L12 必须能读取 L11.5 逻辑、L11.5 评估、L11 状态证据。"
+      },
+      {
+        "id": "required_hashes_match",
+        "ok": true,
+        "severity": "blocking",
+        "meaning": "所有带哈希的远端证据必须一致。"
+      },
+      {
+        "id": "l11_5_logic_ready",
+        "ok": true,
+        "severity": "blocking",
+        "meaning": "L12 只能基于已经通过的 L11.5 最小逻辑运行。"
+      },
+      {
+        "id": "planned_actions_low_risk",
+        "ok": true,
+        "severity": "blocking",
+        "meaning": "L12 当前窗口只允许自动记录低风险动作。",
+        "details": [
+          {
+            "action": "no_op_verified",
+            "risk": "low",
+            "reason": "required memories are readable and hash-verified",
+            "allowed_by_l11_5": true
+          },
+          {
+            "action": "record_truth_boundary",
+            "risk": "low",
+            "reason": "keep proof boundaries visible in every L12 window",
+            "allowed_by_l11_5": true
+          },
+          {
+            "action": "continue_schedule_observation",
+            "risk": "low",
+            "reason": "hourly window records external wakeup continuity",
+            "allowed_by_l11_5": true
+          }
+        ]
+      },
+      {
+        "id": "l11_actions_covered",
+        "ok": true,
+        "severity": "warning",
+        "meaning": "L11 旧修复计划必须能被 L11.5 动作策略解释。",
+        "details": [
+          {
+            "action": "no_op_verified",
+            "risk": "low",
+            "covered": true
+          },
+          {
+            "action": "refresh_memory_selection",
+            "risk": "low",
+            "covered": true
+          }
+        ]
+      },
+      {
+        "id": "no_high_risk_auto_action",
+        "ok": true,
+        "severity": "blocking",
+        "meaning": "L12 不自动执行高风险动作。"
+      },
+      {
+        "id": "l12_2_slot_plan_present",
+        "ok": true,
+        "severity": "warning",
+        "meaning": "L12.2 records the current hourly slot, duplicate suppression, and missed-window catch-up metadata."
+      }
+    ],
+    "blocking_count": 0,
+    "warning_count": 0,
+    "planned_actions": [
+      {
+        "action": "no_op_verified",
+        "risk": "low",
+        "reason": "required memories are readable and hash-verified",
+        "allowed_by_l11_5": true
+      },
+      {
+        "action": "record_truth_boundary",
+        "risk": "low",
+        "reason": "keep proof boundaries visible in every L12 window",
+        "allowed_by_l11_5": true
+      },
+      {
+        "action": "continue_schedule_observation",
+        "risk": "low",
+        "reason": "hourly window records external wakeup continuity",
+        "allowed_by_l11_5": true
+      }
+    ],
+    "l11_repair_actions_observed": [
+      {
+        "action": "no_op_verified",
+        "risk": "low",
+        "covered": true
+      },
+      {
+        "action": "refresh_memory_selection",
+        "risk": "low",
+        "covered": true
+      }
+    ],
+    "low_risk_actions_recorded": [
+      "no_op_verified",
+      "record_truth_boundary",
+      "continue_schedule_observation"
+    ],
+    "l12_2_slot_plan": {
+      "stage": "L12.2-slot-plan",
+      "schema_version": "QMX-L12-SLOT-PLAN-0.1",
+      "created_at": "2026-06-28T06:01:47.861922+00:00",
+      "event_name": "schedule",
+      "schedule_cron": "17,37,57 * * * *",
+      "canonical_slot_minute": 17,
+      "current_slot_id": "2026-06-28T06:00:00Z",
+      "current_time": "2026-06-28T06:01:47.861867+00:00",
+      "last_success_at": "2026-06-28T01:37:04.097370+00:00",
+      "last_success_slot_id": "2026-06-28T01:00:00Z",
+      "elapsed_minutes_since_success": 264.729,
+      "duplicate_slot": false,
+      "allow_duplicate_slot": false,
+      "gap_exceeded": true,
+      "missed_window_threshold_minutes": 90,
+      "missed_slots_total_estimate": 4,
+      "catchup_slots_recorded": [
+        "2026-06-28T02:00:00Z",
+        "2026-06-28T03:00:00Z",
+        "2026-06-28T04:00:00Z"
+      ],
+      "max_catchup_windows": 3,
+      "slot_plan_hash": "cdad5cee7c9c5950",
+      "truth_boundary": "L12.2 slot planning reduces GitHub schedule misses with duplicate suppression and finite catch-up records. It cannot make GitHub cron a hard real-time scheduler."
+    },
+    "catchup_slots_recorded": [
+      "2026-06-28T02:00:00Z",
+      "2026-06-28T03:00:00Z",
+      "2026-06-28T04:00:00Z"
+    ],
+    "duplicate_slot": false,
+    "window_ok": true,
+    "window_hash": "f244aa5bf6da672e",
+    "truth_boundary": "L12 is an hourly controlled self-maintenance window. It records low-risk maintenance only; it does not autonomously mutate core capsules, code, permissions, or prove CPU-free network life."
+  },
+  "state_hash": "74afa3da956d19f7",
+  "run_hash": "7fdeb378b598dcfd",
+  "truth_boundary": "L12 is an hourly controlled self-maintenance window. It records low-risk maintenance only; it does not autonomously mutate core capsules, code, permissions, or prove CPU-free network life."
+}
