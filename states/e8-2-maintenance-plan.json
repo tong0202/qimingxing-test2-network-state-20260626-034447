@@ -1,0 +1,103 @@
+{
+  "stage": "E8.2-maintenance-plan",
+  "schema_version": "QMX-E8.2-PLAN-0.1",
+  "created_at": "2026-06-28T15:40:08.874179+00:00",
+  "run_id": "nsl-e8-2-local-20260628154001",
+  "owner": {
+    "mode": "local",
+    "workflow": null,
+    "run_id": null,
+    "run_attempt": null,
+    "event_name": null,
+    "actor": null,
+    "repository": null,
+    "sha": null,
+    "local": true
+  },
+  "generation": 1,
+  "post_wake_ready": false,
+  "allowed_low_risk_actions": [
+    "record_external_clock_status",
+    "record_next_wakeup_hint",
+    "record_post_wake_chain_health",
+    "refresh_network_body_checkpoint"
+  ],
+  "queued_medium_risk_actions": [
+    "add_second_clock_source",
+    "configure_cloudflare_worker_cron",
+    "increase_schedule_observation_window"
+  ],
+  "blocked_high_risk_actions": [
+    "change_workflow_permissions",
+    "delete_remote_state",
+    "modify_core_code",
+    "store_secret_in_repo",
+    "unreviewed_self_mutation"
+  ],
+  "actions": [
+    {
+      "id": "e8-2-low-001",
+      "action": "record_post_wake_chain_health",
+      "risk": "low",
+      "auto_execute": true,
+      "allowed_by": "LOW_RISK_ALLOWLIST",
+      "reason": "Record whether E7.3a -> E7.2 -> E7 writeback chain is healthy."
+    },
+    {
+      "id": "e8-2-low-002",
+      "action": "record_external_clock_status",
+      "risk": "low",
+      "auto_execute": true,
+      "allowed_by": "LOW_RISK_ALLOWLIST",
+      "reason": "Cloudflare is intentionally skipped for now; record it as pending without blocking mainline."
+    },
+    {
+      "id": "e8-2-low-003",
+      "action": "refresh_network_body_checkpoint",
+      "risk": "low",
+      "auto_execute": true,
+      "allowed_by": "LOW_RISK_ALLOWLIST",
+      "reason": "Refresh a post-wake state checkpoint for later recovery and audit."
+    },
+    {
+      "id": "e8-2-low-004",
+      "action": "record_next_wakeup_hint",
+      "risk": "low",
+      "auto_execute": true,
+      "allowed_by": "LOW_RISK_ALLOWLIST",
+      "reason": "Keep the next mainline visible after context compression."
+    },
+    {
+      "id": "e8-2-medium-001",
+      "action": "configure_cloudflare_worker_cron",
+      "risk": "medium",
+      "auto_execute": false,
+      "queue_for_review": true,
+      "reason": "Requires external account setup and a secret token; cannot be done safely by writing repo files."
+    },
+    {
+      "id": "e8-2-high-001",
+      "action": "store_secret_in_repo",
+      "risk": "high",
+      "auto_execute": false,
+      "blocked": true,
+      "reason": "Secrets must never be written to repo, docs, logs, or chat."
+    },
+    {
+      "id": "e8-2-high-002",
+      "action": "unreviewed_self_mutation",
+      "risk": "high",
+      "auto_execute": false,
+      "blocked": true,
+      "reason": "Current safety model permits low-risk record-only maintenance only."
+    }
+  ],
+  "completion_standard": [
+    "Bridge chain evidence is readable and hash verified.",
+    "E7 repository_dispatch writeback is ok=true.",
+    "Only low-risk record actions are auto-executed.",
+    "Cloudflare remains a pending enhancement, not a blocker."
+  ],
+  "truth_boundary": "This plan can record and classify post-wake maintenance evidence. It cannot configure external accounts or modify high-risk core behavior without review.",
+  "plan_hash": "05b30860ee612816"
+}
