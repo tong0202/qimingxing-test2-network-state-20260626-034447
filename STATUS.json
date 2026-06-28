@@ -2,7 +2,7 @@
   "updated_at": "2026-06-28",
   "scope": "qimingxing/test2",
   "single_source_of_truth": "STATUS.md",
-  "current_layer": "post_wake_self_maintenance_layer",
+  "current_layer": "unified_post_wake_hooks_layer",
   "proved": [
     "network_can_carry_continuous_state",
     "network_residuals_can_form_low_frequency_rhythm",
@@ -87,7 +87,11 @@
     "e8_2_post_wake_self_check_reads_remote_wake_chain_evidence",
     "e8_2_post_wake_low_risk_maintenance_receipts_written",
     "e7_3a_http_bridge_runs_e8_2_post_wake_check",
-    "e8_2_remote_github_actions_workflow_dispatch_runs_successfully"
+    "e8_2_remote_github_actions_workflow_dispatch_runs_successfully",
+    "e8_3_post_wake_check_attached_to_e7_controlled_self_maintenance",
+    "e8_3_post_wake_check_attached_to_e7_1_external_wake_timer",
+    "e8_3_post_wake_check_attached_to_e7_3a_http_bridge",
+    "e8_3_three_low_frequency_wake_paths_write_e8_2_receipts"
   ],
   "not_proved": [
     "network_only_computation_without_cpu",
@@ -151,7 +155,11 @@
     "e8_2_cpu_free_wakefulness",
     "e8_2_autonomous_evolution",
     "e8_2_unreviewed_core_self_modification",
-    "e7_3b_cloudflare_external_clock_deployed"
+    "e7_3b_cloudflare_external_clock_deployed",
+    "e8_3_all_historical_l_and_e_workflows_have_post_wake_hooks",
+    "e8_3_third_party_cloudflare_clock_connected",
+    "e8_3_cpu_free_self_wake",
+    "e8_3_autonomous_evolution"
   ],
   "compute_sources": {
     "local_experiments": "local_cpu",
@@ -235,11 +243,12 @@
     "E8.1": "pending_natural_network_body_refresh_and_e7_1_schedule_observation",
     "E7.1_timer": "deployed_dispatch_verified_schedule_pending",
     "E7.2": "completed_wake_capsule_reverse_github_dispatch_v0",
-    "E7.3": "partial_e7_3a_completed_with_e8_2_chain_e7_3b_e7_3c_pending",
+    "E7.3": "partial_e7_3a_completed_with_e8_2_and_e8_3_hooks_e7_3b_e7_3c_pending",
     "E7.3a": "completed_http_entry_bridge_and_post_wake_e8_2_verified",
     "E7.3b": "template_prepared_pending_cloudflare_deploy_skipped_for_now",
     "E7.3c": "pending_non_manual_third_party_clock_observation",
-    "E8.2": "completed_post_wake_self_maintenance_v0_dispatch_and_e7_3a_chain_verified"
+    "E8.2": "completed_post_wake_self_maintenance_v0_dispatch_and_e7_3a_chain_verified",
+    "E8.3": "completed_unified_post_wake_hooks_for_e7_e7_1_e7_3a_v0"
   },
   "remote_repo": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447",
   "remote_state": {
@@ -1252,15 +1261,17 @@
     "conclusion": "L12.2 V0 is deployed and verified: multi-cron schedule, slot dedupe, finite catch-up recording, and global runtime lock work on the remote workflow.",
     "truth_boundary": "This reduces missed schedule risk but does not guarantee every hour without a second independent clock source."
   },
-  "last_remote_sync_at": "2026-06-28T23:46:30+08:00",
+  "last_remote_sync_at": "2026-06-28T23:58:00+08:00",
   "latest_remote_sync": {
-    "synced_at_local": "2026-06-28T23:46:30+08:00",
-    "source": "E8.2 standalone workflow_dispatch run 28327426266 and E7.3a chained run 28327487602 with E8.2 post-wake writeback",
-    "e8_2_completed": true,
-    "e7_3a_post_wake_chain_completed": true,
-    "e7_3b_completed": false,
-    "e7_3c_completed": false,
-    "next_mainline": "E8.3: make post-wake self-check run automatically after every low-frequency wake path; Cloudflare remains optional hardening"
+    "synced_at_local": "2026-06-28T23:58:00+08:00",
+    "source": "E8.3 verification runs: E7 28327664693, E7.1 28327721521, E7.3a 28327754547, E7.2 receiver 28327784647",
+    "e8_3_completed": true,
+    "covered_low_frequency_paths": [
+      "E7 Controlled Vitals Self Maintenance",
+      "E7.1 External Wake Timer",
+      "E7.3a HTTP Bridge Entry"
+    ],
+    "next_mainline": "E8.4: append-only post-wake ledger so evidence is not dependent on latest files"
   },
   "e7_result": {
     "stage": "E7-controlled-vitals-self-maintenance",
@@ -1742,5 +1753,62 @@
     },
     "conclusion": "E8.2 proves the external wake path can be followed by an auditable post-wake self-check and low-risk maintenance receipt. E7.3a now runs E8.2 after the Wake Capsule bridge.",
     "truth_boundary": "E8.2 is executed by local or GitHub Actions CPU. It strengthens post-wake self-check and controlled maintenance records; it does not prove CPU-free wakefulness, autonomous evolution, or unrestricted self-modification."
+  },
+  "e8_3_result": {
+    "stage": "E8.3-unified-post-wake-hooks",
+    "status": "completed_v0",
+    "ok": true,
+    "evidence_level": "E8.3-unified-post-wake-hooks-v0",
+    "covered_paths": [
+      {
+        "path_id": "e7_controlled_self_maintenance",
+        "workflow": "E7 Controlled Vitals Self Maintenance",
+        "workflow_file": ".github/workflows/nsl-e7-vitals-self-maintenance.yml",
+        "workflow_run_id": 28327664693,
+        "workflow_event": "workflow_dispatch",
+        "workflow_conclusion": "success",
+        "e8_2_run_id": "nsl-e8-2-workflow_dispatch-28327664693-attempt-1",
+        "e8_2_snapshot": "states/e8-2-post-wake-snapshots/nsl-e8-2-workflow_dispatch-28327664693-attempt-1.json",
+        "post_wake_ready": true,
+        "state_hash": "e4c3eb20ea08e0f4",
+        "snapshot_hash": "658af50947688928"
+      },
+      {
+        "path_id": "e7_1_external_wake_timer",
+        "workflow": "E7.1 External Wake Timer",
+        "workflow_file": ".github/workflows/nsl-e7-1-external-wake-timer.yml",
+        "workflow_run_id": 28327721521,
+        "workflow_event": "workflow_dispatch",
+        "workflow_conclusion": "success",
+        "e8_2_run_id": "nsl-e8-2-workflow_dispatch-28327721521-attempt-1",
+        "e8_2_snapshot": "states/e8-2-post-wake-snapshots/nsl-e8-2-workflow_dispatch-28327721521-attempt-1.json",
+        "post_wake_ready": true,
+        "state_hash": "c293b5613b1a9f75",
+        "snapshot_hash": "25a5775649c2e3a7"
+      },
+      {
+        "path_id": "e7_3a_http_bridge",
+        "workflow": "E7.3a HTTP Bridge Entry",
+        "workflow_file": ".github/workflows/nsl-e7-3a-http-bridge-entry.yml",
+        "workflow_run_id": 28327754547,
+        "workflow_event": "repository_dispatch",
+        "workflow_conclusion": "success",
+        "e7_2_receiver_run_id": 28327784647,
+        "e8_2_run_id": "nsl-e8-2-repository_dispatch-28327754547-attempt-1",
+        "e8_2_snapshot": "states/e8-2-post-wake-snapshots/nsl-e8-2-repository_dispatch-28327754547-attempt-1.json",
+        "post_wake_ready": true,
+        "state_hash": "da70d0c97a6276e9",
+        "snapshot_hash": "fc4a698e8cdded1f"
+      }
+    ],
+    "remote_paths": {
+      "e7_workflow": ".github/workflows/nsl-e7-vitals-self-maintenance.yml",
+      "e7_1_workflow": ".github/workflows/nsl-e7-1-external-wake-timer.yml",
+      "e7_3a_workflow": ".github/workflows/nsl-e7-3a-http-bridge-entry.yml",
+      "e8_2_runner": "scripts/nsl_e8_2_post_wake_self_maintenance.py",
+      "doc": "E8_3_UNIFIED_POST_WAKE_HOOKS.md"
+    },
+    "conclusion": "E8.3 attaches the E8.2 post-wake self-check to the main low-frequency wake paths: E7 schedule/workflow dispatch, E7.1 timer, and E7.3a HTTP bridge. Each verified path wrote an ok=true post_wake_ready=true E8.2 snapshot.",
+    "truth_boundary": "E8.3 covers the current main low-frequency wake paths only. It does not prove third-party Cloudflare clock deployment, CPU-free self-wake, autonomous evolution, or that every historical L/E workflow has a post-wake hook."
   }
 }
