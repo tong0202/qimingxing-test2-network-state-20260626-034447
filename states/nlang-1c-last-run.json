@@ -1,0 +1,157 @@
+{
+  "stage": "NLANG-1C-materialize-action-plan",
+  "ok": true,
+  "run_id": "nlang_1c_remote_external-20260628204412",
+  "remote_f3_state_hash_before": "853eac1c8ae2b1dc",
+  "remote_f3_state_hash_ok": true,
+  "compiled_selected_action": "decay",
+  "compiled_selected_rule": {
+    "index": 3,
+    "source": "WHEN f3.child.retired == false AND f3.child.vitality > 35 THEN decay",
+    "action": "decay",
+    "matched": true,
+    "risk_level": "low",
+    "predicates": [
+      {
+        "ok": true,
+        "left": "f3.child.retired",
+        "op": "==",
+        "right": false,
+        "right_source": "literal",
+        "observed": false,
+        "error": ""
+      },
+      {
+        "ok": true,
+        "left": "f3.child.vitality",
+        "op": ">",
+        "right": 35,
+        "right_source": "literal",
+        "observed": 65,
+        "error": ""
+      }
+    ]
+  },
+  "action_plan": {
+    "selected": true,
+    "action": "decay",
+    "risk_level": "low",
+    "required_reads": [
+      "network_state"
+    ],
+    "required_writes": [
+      "scoped_state",
+      "ledger"
+    ],
+    "proof_required": true
+  },
+  "execution": {
+    "ok": true,
+    "action": "decay",
+    "write": {
+      "path": "states/f2-capsules/scheduler_child.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "fe100af5858bf019e738506904b6dd037e722973",
+      "content_sha": "7fd1a65107533f0e6b55cd3d1863f9a4517cbd96"
+    },
+    "verify": {
+      "path": "states/f2-capsules/scheduler_child.json",
+      "ok": true,
+      "status": 200,
+      "hash_field": "capsule_hash",
+      "expected": "54646a1e6559df75",
+      "declared": "54646a1e6559df75",
+      "computed": "54646a1e6559df75",
+      "attempt_count": 2,
+      "observations": [
+        {
+          "status": 200,
+          "ok": false,
+          "declared": "0783b869bf3e35e9",
+          "computed": "0783b869bf3e35e9",
+          "error": ""
+        },
+        {
+          "status": 200,
+          "ok": true,
+          "declared": "54646a1e6559df75",
+          "computed": "54646a1e6559df75",
+          "error": ""
+        }
+      ]
+    },
+    "child_hash": "54646a1e6559df75"
+  },
+  "before_child": {
+    "exists": true,
+    "state": "split_child",
+    "retired": false,
+    "vitality": 65,
+    "capsule_hash": "0783b869bf3e35e9"
+  },
+  "after_child": {
+    "exists": true,
+    "state": "decayed",
+    "retired": false,
+    "vitality": 30,
+    "capsule_hash": "54646a1e6559df75"
+  },
+  "f2_state_hash": "9e9b59807bb83147",
+  "f2_ledger_hash": "91142ed76fdda99b",
+  "f3_state_hash": "8b3648b4b8593d09",
+  "f3_ledger_hash": "2a4921ae5a6f87ef",
+  "proof_ledger_hash": "ef59ffc0d73482e5",
+  "f3_last_run_hash": "c4add6ca57dbdc5c",
+  "f3_report_hash": "a0d2613f4a6ea5ac",
+  "writes": {
+    "f2_state": {
+      "path": "states/f2-scheduler-state.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "8e056bae59581c043265a6f649e7ceddafa5c93a",
+      "content_sha": "e79d3cec69e2e92ea70269c766e903e566ef4400"
+    },
+    "f3_state": {
+      "path": "states/f3-loop-state.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "0013cb3001691148399cd56000a023596b40efb6",
+      "content_sha": "e08ec4d68511a3d2a88f15c1fc03ab09fe7a053e"
+    },
+    "proof_ledger": {
+      "path": "states/nlang-1c-proof-ledger.json",
+      "existing_status": 404,
+      "ok": true,
+      "status": 201,
+      "error": "",
+      "commit_hash": "b8fe51fe4a588d7911950421c9aee2c34ac5d7a5",
+      "content_sha": "54d84d548bb0d7d1b2eff1fdf8df9a4ca0b7a532"
+    },
+    "f3_last_run": {
+      "path": "states/f3-last-run.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "e8908ee3c97da0755711a122a2302a61824332cb",
+      "content_sha": "92ccd1eb79a21716696589c9505a14c55c6c91bc"
+    },
+    "f3_last_report": {
+      "path": "states/f3-last-report.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "b3b7b1a9ecbdb7acab8bfe8bab9d38c4ae076676",
+      "content_sha": "d0e7d6ac923198a331e452ddde8012994d2dcf67"
+    }
+  },
+  "truth_boundary": "NLANG-1C proves compiled-plan materialization over remote anchors. It does not prove endpoint-free or CPU-free execution."
+}
