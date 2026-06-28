@@ -235,6 +235,9 @@ def build_recent(run_id: str, mode: str, summary: dict[str, Any]) -> dict[str, A
 
 
 def put_and_verify(owner: str, repo: str, token: str, path: str, value: dict[str, Any], hash_field: str, message: str) -> dict[str, Any]:
+    if hash_field:
+        value[hash_field] = ""
+        value[hash_field] = stable_hash(value, hash_field)
     write: dict[str, Any] = {}
     attempts: list[dict[str, Any]] = []
     for attempt in range(1, 4):
