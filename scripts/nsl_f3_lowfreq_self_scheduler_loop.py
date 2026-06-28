@@ -111,7 +111,7 @@ def scheduler_state_from_sources(
     previous_f2_state: dict[str, Any] | None,
     run_id: str,
     f1_state: dict[str, Any],
-) -> tuple[dict[str, Any], int, int, str]:
+) -> tuple[dict[str, Any], int, int, int, str]:
     if isinstance(previous_f3_state, dict) and isinstance(previous_f3_state.get("scheduler_state"), dict):
         state = json.loads(json.dumps(previous_f3_state["scheduler_state"], ensure_ascii=False))
         state["scheduler_generation"] = int(state.get("scheduler_generation") or 1) + 1
@@ -121,22 +121,24 @@ def scheduler_state_from_sources(
             state,
             int(previous_f3_state.get("window_count") or 0),
             int(previous_f3_state.get("lifecycle_cycle_count") or 0),
+            int(previous_f3_state.get("last_peer_check_cycle_count") or 0),
             str(previous_f3_state.get("state_hash") or ""),
         )
 
     if isinstance(previous_f2_state, dict):
         state = normalize_previous_state(previous_f2_state, run_id, f1_state)
         state["last_peer_check_hash"] = ""
-        return state, 0, 0, str(previous_f2_state.get("state_hash") or "")
+        return state, 0, 0, 0, str(previous_f2_state.get("state_hash") or "")
 
     state = normalize_previous_state(None, run_id, f1_state)
-    return state, 0, 0, ""
+    return state, 0, 0, 0, ""
 
 
 def score_f3_candidates(
     scheduler_state: dict[str, Any],
     f1_state: dict[str, Any],
     lifecycle_cycle_count: int,
+    last_peer_check_cycle_count: int,
 ) -> list[dict[str, Any]]:
     child = active_child(scheduler_state)
     f1_hash = str(f1_state.get("state_hash") or "")
@@ -151,9 +153,10 @@ def score_f3_candidates(
         add("decay", 90, "active scheduler child vitality is above decay threshold")
     if child_active and child["vitality"] <= 35:
         add("retire", 92, "active scheduler child vitality reached retirement threshold")
-    if (not child_active) and lifecycle_cycle_count > 0 and last_peer_hash != f1_hash:
-        add("peer_check", 96, "a lifecycle cycle ended and source F1 state has not been checked in F3")
-    if (not child_active) and not (lifecycle_cycle_count > 0 and last_peer_hash != f1_hash):
+    cycle_needs_peer_check = lifecycle_cycle_count > last_peer_check_cycle_count
+    if (not child_active) and cycle_needs_peer_check:
+        add("peer_check", 96, "a lifecycle cycle ended and has not been peer-checked in F3")
+    if (not child_active) and not cycle_needs_peer_check:
         add("split", 95, "no active scheduler child exists; begin next low-risk lifecycle cycle")
     if last_peer_hash != f1_hash:
         add("peer_check", 80, "source F1 state hash has not been peer-checked by F3")
@@ -202,6 +205,7 @@ def build_last_run(result: dict[str, Any]) -> dict[str, Any]:
         "selected_actions": result["selected_actions"],
         "window_count": result["window_count"],
         "lifecycle_cycle_count": result["lifecycle_cycle_count"],
+        "last_peer_check_cycle_count": result["last_peer_check_cycle_count"],
         "f3_state_hash": result["f3_state"]["state_hash"],
         "f3_ledger_hash": result["f3_ledger"]["ledger_hash"],
         "f2_state_hash": result["f2_state"]["state_hash"],
@@ -222,6 +226,7 @@ def build_last_report(result: dict[str, Any]) -> dict[str, Any]:
         "selected_actions": result["selected_actions"],
         "window_count": result["window_count"],
         "lifecycle_cycle_count": result["lifecycle_cycle_count"],
+        "last_peer_check_cycle_count": result["last_peer_check_cycle_count"],
         "f3_state_hash": result["f3_state"]["state_hash"],
         "f3_ledger_hash": result["f3_ledger"]["ledger_hash"],
         "f2_state_hash": result["f2_state"]["state_hash"],
@@ -293,7 +298,7 @@ def main() -> int:
 
     previous_f3_state, _, _ = content_get(args.owner, args.repo, F3_STATE_PATH, token)
     previous_f2_state, _, _ = content_get(args.owner, args.repo, F2_STATE_PATH, token)
-    scheduler_state, previous_window_count, lifecycle_cycle_count, previous_state_hash = scheduler_state_from_sources(
+    scheduler_state, previous_window_count, lifecycle_cycle_count, last_peer_check_cycle_count, previous_state_hash = scheduler_state_from_sources(
         previous_f3_state if isinstance(previous_f3_state, dict) else None,
         previous_f2_state if isinstance(previous_f2_state, dict) else None,
         run_id,
@@ -311,17 +316,21 @@ def main() -> int:
 
     decisions: list[dict[str, Any]] = []
     for window_index in range(1, max(1, args.windows) + 1):
-        candidates = score_f3_candidates(scheduler_state, f1_state, lifecycle_cycle_count)
+        candidates = score_f3_candidates(scheduler_state, f1_state, lifecycle_cycle_count, last_peer_check_cycle_count)
         selected = next(item for item in candidates if item.get("allowed"))
         execution = execute_action(args.owner, args.repo, token, run_id, str(selected["action"]), scheduler_state, f1_state)
         decision = append_decision(decisions, window_index, candidates, selected, execution)
         if execution.get("ok") and selected["action"] == "retire":
             lifecycle_cycle_count += 1
+        if execution.get("ok") and selected["action"] == "peer_check":
+            last_peer_check_cycle_count = lifecycle_cycle_count
+            scheduler_state["last_peer_check_cycle_count"] = last_peer_check_cycle_count
         scheduler_state["total_scheduler_ticks"] = int(scheduler_state.get("total_scheduler_ticks") or 0) + 1
         scheduler_state["last_selected_action"] = str(selected["action"])
         decision["window_after"] = {
             "window_count": previous_window_count + window_index,
             "lifecycle_cycle_count": lifecycle_cycle_count,
+            "last_peer_check_cycle_count": last_peer_check_cycle_count,
             "scheduler_child": active_child(scheduler_state),
             "last_peer_check_hash": scheduler_state.get("last_peer_check_hash"),
         }
@@ -370,6 +379,7 @@ def main() -> int:
         "window_count": final_window_count,
         "windows_executed_this_run": len(decisions),
         "lifecycle_cycle_count": lifecycle_cycle_count,
+        "last_peer_check_cycle_count": last_peer_check_cycle_count,
         "selected_actions": selected_actions,
         "decision_count": len(decisions),
         "all_decisions_ok": all_decisions_ok,
@@ -445,6 +455,7 @@ def main() -> int:
         "window_count": final_window_count,
         "windows_executed_this_run": len(decisions),
         "lifecycle_cycle_count": lifecycle_cycle_count,
+        "last_peer_check_cycle_count": last_peer_check_cycle_count,
         "f2_state": {"state_hash": f2_state["state_hash"], "write": f2_state_write, "verify": f2_state_check},
         "f2_ledger": {"ledger_hash": f2_ledger["ledger_hash"], "entry_count": f2_ledger["entry_count"], "write": f2_ledger_write, "verify": f2_ledger_check},
         "f3_capsule": {"capsule_hash": f3_capsule["capsule_hash"], "write": f3_capsule_write, "verify": f3_capsule_check},
@@ -477,6 +488,7 @@ def main() -> int:
                 "selected_actions": selected_actions,
                 "window_count": final_window_count,
                 "lifecycle_cycle_count": lifecycle_cycle_count,
+                "last_peer_check_cycle_count": last_peer_check_cycle_count,
                 "f3_state_hash": f3_state["state_hash"],
                 "f3_ledger_hash": f3_ledger["ledger_hash"],
                 "truth_boundary": result["truth_boundary"],
