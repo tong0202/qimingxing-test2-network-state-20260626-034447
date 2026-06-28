@@ -1,0 +1,121 @@
+{
+  "stage": "E8-network-body-map",
+  "schema_version": "QMX-E8-BODY-MAP-0.1",
+  "created_at": "2026-06-28T09:50:57.041570+00:00",
+  "run_id": "nsl-e8-local-20260628095044",
+  "owner": {
+    "mode": "local",
+    "workflow": null,
+    "run_id": null,
+    "run_attempt": null,
+    "event_name": null,
+    "actor": null,
+    "repository": null,
+    "sha": null,
+    "local": true
+  },
+  "generation": 1,
+  "protocol_hash": "8c5372c04f33c62d",
+  "body_layers": [
+    {
+      "layer": "identity",
+      "remote_path": "states/e8-network-body-protocol.json",
+      "role": "network body identity and operating law"
+    },
+    {
+      "layer": "memory",
+      "remote_path": "states/nsl-l11-5-minimal-logic-spec.json",
+      "role": "minimal self-check and repair logic"
+    },
+    {
+      "layer": "rhythm",
+      "remote_path": "states/e5-last-run.json",
+      "role": "scheduled external interpreter loop evidence"
+    },
+    {
+      "layer": "vitals",
+      "remote_path": "states/e6-last-run.json",
+      "role": "low-frequency vitals bus"
+    },
+    {
+      "layer": "maintenance",
+      "remote_path": "states/e7-last-run.json",
+      "role": "controlled low-risk self-maintenance receipt"
+    },
+    {
+      "layer": "mirror",
+      "remote_path": "states/e8-last-run.json",
+      "role": "latest E8 readback and local status anchor"
+    }
+  ],
+  "mirror_contract": {
+    "network_to_local": "Remote protocol, vitals, and maintenance receipts can be read locally and shown as status.",
+    "local_to_network": "Local runs may write only audited protocol/status evidence unless a higher-risk review path is added.",
+    "conflict_rule": "Remote evidence with valid hashes is the body source of truth; local files are mirrors and working copies."
+  },
+  "sampled_paths": [
+    {
+      "id": "e5_last_run",
+      "path": "states/e5-last-run.json",
+      "read_ok": true,
+      "hash_ok": true
+    },
+    {
+      "id": "e6_last_run",
+      "path": "states/e6-last-run.json",
+      "read_ok": true,
+      "hash_ok": true
+    },
+    {
+      "id": "e6_last_report",
+      "path": "states/e6-last-report.json",
+      "read_ok": true,
+      "hash_ok": true
+    },
+    {
+      "id": "e6_bus_state",
+      "path": "states/e6-lowfreq-vitals-bus-state.json",
+      "read_ok": true,
+      "hash_ok": true
+    },
+    {
+      "id": "e7_last_run",
+      "path": "states/e7-last-run.json",
+      "read_ok": true,
+      "hash_ok": true
+    },
+    {
+      "id": "e7_last_report",
+      "path": "states/e7-last-report.json",
+      "read_ok": true,
+      "hash_ok": true
+    },
+    {
+      "id": "e7_state",
+      "path": "states/e7-controlled-self-maintenance-state.json",
+      "read_ok": true,
+      "hash_ok": true
+    },
+    {
+      "id": "l11_5_logic_spec",
+      "path": "states/nsl-l11-5-minimal-logic-spec.json",
+      "read_ok": true,
+      "hash_ok": true
+    },
+    {
+      "id": "global_runtime_lock",
+      "path": "states/qmx-global-runtime-lock.json",
+      "read_ok": true,
+      "hash_ok": true
+    },
+    {
+      "id": "previous_e8_protocol",
+      "path": "states/e8-network-body-protocol.json",
+      "read_ok": false,
+      "hash_ok": false
+    }
+  ],
+  "conclusion": "E8 body map binds identity, memory, rhythm, vitals, maintenance, and mirror surfaces into one auditable network subject map.",
+  "truth_boundary": "This is a body map for current V0 evidence. It is not a claim that every future organ is already autonomous or continuous.",
+  "map_hash": "abb57b25f41f505a"
+}
