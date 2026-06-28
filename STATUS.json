@@ -229,8 +229,8 @@
     "E7.2": "completed_wake_capsule_reverse_github_dispatch_v0",
     "E7.3": "partial_e7_3a_completed_e7_3b_e7_3c_pending",
     "E7.3a": "completed_http_repository_dispatch_entry_verified_manual_http_trigger",
-    "E7.3b": "pending_third_party_external_clock_configuration",
-    "E7.3c": "pending_non_manual_external_clock_observation"
+    "E7.3b": "template_prepared_pending_cloudflare_deploy",
+    "E7.3c": "pending_non_manual_cloudflare_cron_observation"
   },
   "remote_repo": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447",
   "remote_state": {
@@ -1243,7 +1243,7 @@
     "conclusion": "L12.2 V0 is deployed and verified: multi-cron schedule, slot dedupe, finite catch-up recording, and global runtime lock work on the remote workflow.",
     "truth_boundary": "This reduces missed schedule risk but does not guarantee every hour without a second independent clock source."
   },
-  "last_remote_sync_at": "2026-06-28T21:01:47+08:00",
+  "last_remote_sync_at": "2026-06-28T21:20:00+08:00",
   "latest_remote_sync": {
     "synced_at_local": "2026-06-28T21:01:47+08:00",
     "source": "E7.3a HTTP bridge entry run 28323063883, E7.2 receiver run 28323069603, and states/e7-last-run.json repository_dispatch writeback",
@@ -1616,20 +1616,27 @@
   },
   "e7_3b_result": {
     "stage": "E7.3b-third-party-external-clock",
-    "status": "pending",
+    "status": "template_prepared_pending_cloudflare_deploy",
     "completed": false,
-    "reason": "No cron-job.org, UptimeRobot, Cloudflare Worker Cron, or equivalent third-party clock credentials/configuration has been attached yet.",
-    "required_next": "Configure an external HTTP scheduler to POST qmx_e7_3_bridge_tick to the GitHub dispatch endpoint using a secret token stored outside the repository."
+    "clock_source": "Cloudflare Worker Cron",
+    "local_template_paths": [
+      "cloudflare/e7_3_clock_worker/worker.js",
+      "cloudflare/e7_3_clock_worker/wrangler.toml",
+      "cloudflare/e7_3_clock_worker/README.md"
+    ],
+    "security_boundary": "GITHUB_TOKEN must be stored only as a Cloudflare Worker secret, never in repo files, docs, logs, or chat.",
+    "required_next": "Deploy the Worker in Cloudflare, add GITHUB_TOKEN as a secret, configure cron */10 * * * *, then wait for a scheduled trigger."
   },
   "e7_3c_result": {
     "stage": "E7.3c-non-manual-trigger-observation",
-    "status": "pending",
+    "status": "pending_cloudflare_cron_observation",
     "completed": false,
     "completion_criteria": [
-      "E7.3a HTTP Bridge Entry run has event=repository_dispatch from third-party clock",
+      "Cloudflare Worker Cron fires without local gh api",
+      "E7.3a HTTP Bridge Entry run appears with event=repository_dispatch",
       "E7.2 receiver run succeeds after it",
       "states/e7-last-run.json contains ok=true, maintenance_ok=true, executed_count=4, blocked_count=4, owner_event_name=repository_dispatch"
     ],
-    "truth_boundary": "Manual gh api dispatch cannot satisfy E7.3c."
+    "truth_boundary": "A manual Worker test or manual gh api dispatch can test plumbing, but only an actual Cloudflare cron trigger satisfies E7.3c."
   }
 }
