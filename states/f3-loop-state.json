@@ -1,18 +1,18 @@
 {
   "stage": "F3-lowfreq-self-scheduler-loop-state",
   "schema_version": "QMX-F3-STATE-0.1",
-  "created_at": "2026-06-28T20:24:45.680870+00:00",
-  "run_id": "nlang_1b_local-20260628202419",
+  "created_at": "2026-06-28T20:44:27.514880+00:00",
+  "run_id": "nlang_1c_remote_external-20260628204412",
   "owner": {
-    "mode": "local",
-    "workflow": null,
-    "run_id": null,
-    "run_attempt": null,
-    "event_name": null,
-    "actor": null,
-    "repository": null,
-    "sha": null,
-    "local": true
+    "mode": "external",
+    "workflow": "NLANG 1C Remote Workflow Materializer",
+    "run_id": "28335410602",
+    "run_attempt": "1",
+    "event_name": "workflow_dispatch",
+    "actor": "tong0202",
+    "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
+    "sha": "0009ecf2d5e94a65e3660d6fb8296c0109d4c6ee",
+    "local": false
   },
   "mainline_contract": {
     "mainline": "F-series with NLANG/FIELD foundation prerequisites",
@@ -20,19 +20,19 @@
       "L": "network language and controlled interpreter infrastructure",
       "E": "external wake, post-wake health check, ledger, and status infrastructure"
     },
-    "rule": "This F3 state was advanced by an NLANG-compiled action_plan materializer."
+    "rule": "This F3 state was advanced by an NLANG-1C compiled action_plan materializer."
   },
-  "previous_state_hash": "5deb8244675edcf6",
+  "previous_state_hash": "853eac1c8ae2b1dc",
   "source_f1_state_hash": "1bace43c838cbde1",
-  "f2_state_hash": "74c9ab59d59c4fee",
-  "f2_ledger_hash": "a73990719ee0be5d",
-  "f3_capsule_hash": "df4048ab14da28d7",
-  "window_count": 12,
+  "f2_state_hash": "9e9b59807bb83147",
+  "f2_ledger_hash": "91142ed76fdda99b",
+  "f3_capsule_hash": "4c026c6826dedd22",
+  "window_count": 13,
   "windows_executed_this_run": 1,
   "lifecycle_cycle_count": 3,
   "last_peer_check_cycle_count": 3,
   "selected_actions": [
-    "split"
+    "decay"
   ],
   "decision_count": 1,
   "all_decisions_ok": true,
@@ -53,20 +53,20 @@
     "memory_shadow_state": "awake",
     "child": {
       "exists": true,
-      "state": "split_child",
+      "state": "decayed",
       "retired": false,
-      "vitality": 65,
-      "capsule_hash": "0783b869bf3e35e9"
+      "vitality": 30,
+      "capsule_hash": "54646a1e6559df75"
     },
     "last_peer_check_hash": "1bace43c838cbde1",
-    "total_scheduler_ticks": 20,
-    "last_selected_action": "split",
+    "total_scheduler_ticks": 21,
+    "last_selected_action": "decay",
     "last_peer_check_cycle_count": 3
   },
   "decisions": [
     {
       "tick": 1,
-      "created_at": "2026-06-28T20:24:32.541564+00:00",
+      "created_at": "2026-06-28T20:44:22.424736+00:00",
       "candidates": [
         {
           "action": "peer_check",
@@ -77,10 +77,10 @@
         },
         {
           "action": "split",
-          "score": 100,
+          "score": 0,
           "reason": "WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count >= f3.lifecycle_cycle_count THEN split",
           "allowed": true,
-          "matched": true
+          "matched": false
         },
         {
           "action": "split",
@@ -91,10 +91,10 @@
         },
         {
           "action": "decay",
-          "score": 0,
+          "score": 100,
           "reason": "WHEN f3.child.retired == false AND f3.child.vitality > 35 THEN decay",
           "allowed": true,
-          "matched": false
+          "matched": true
         },
         {
           "action": "retire",
@@ -104,48 +104,55 @@
           "matched": false
         }
       ],
-      "selected_action": "split",
+      "selected_action": "decay",
       "selected_score": 100,
       "selected_reason": "selected by NLANG compiler action_plan",
       "execution_ok": true,
       "execution": {
         "ok": true,
-        "action": "split",
+        "action": "decay",
         "write": {
           "path": "states/f2-capsules/scheduler_child.json",
           "existing_status": 200,
           "ok": true,
           "status": 200,
           "error": "",
-          "commit_hash": "a962458d955920726259247f5fb79b3983559c5e",
-          "content_sha": "ba3b34db05887733db1b4493b2af793bb932eb6e"
+          "commit_hash": "fe100af5858bf019e738506904b6dd037e722973",
+          "content_sha": "7fd1a65107533f0e6b55cd3d1863f9a4517cbd96"
         },
         "verify": {
           "path": "states/f2-capsules/scheduler_child.json",
           "ok": true,
           "status": 200,
           "hash_field": "capsule_hash",
-          "expected": "0783b869bf3e35e9",
-          "declared": "0783b869bf3e35e9",
-          "computed": "0783b869bf3e35e9",
-          "attempt_count": 1,
+          "expected": "54646a1e6559df75",
+          "declared": "54646a1e6559df75",
+          "computed": "54646a1e6559df75",
+          "attempt_count": 2,
           "observations": [
             {
               "status": 200,
-              "ok": true,
+              "ok": false,
               "declared": "0783b869bf3e35e9",
               "computed": "0783b869bf3e35e9",
+              "error": ""
+            },
+            {
+              "status": 200,
+              "ok": true,
+              "declared": "54646a1e6559df75",
+              "computed": "54646a1e6559df75",
               "error": ""
             }
           ]
         },
-        "child_hash": "0783b869bf3e35e9"
+        "child_hash": "54646a1e6559df75"
       },
-      "decision_hash": "285cd31cf2c76c6f",
+      "decision_hash": "a3b0f02bbd07aba3",
       "nlang_selected_rule": {
-        "index": 1,
-        "source": "WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count >= f3.lifecycle_cycle_count THEN split",
-        "action": "split",
+        "index": 3,
+        "source": "WHEN f3.child.retired == false AND f3.child.vitality > 35 THEN decay",
+        "action": "decay",
         "matched": true,
         "risk_level": "low",
         "predicates": [
@@ -153,25 +160,25 @@
             "ok": true,
             "left": "f3.child.retired",
             "op": "==",
-            "right": true,
+            "right": false,
             "right_source": "literal",
-            "observed": true,
+            "observed": false,
             "error": ""
           },
           {
             "ok": true,
-            "left": "f3.last_peer_check_cycle_count",
-            "op": ">=",
-            "right": 3,
-            "right_source": "f3.lifecycle_cycle_count",
-            "observed": 3,
+            "left": "f3.child.vitality",
+            "op": ">",
+            "right": 35,
+            "right_source": "literal",
+            "observed": 65,
             "error": ""
           }
         ]
       },
       "nlang_action_plan": {
         "selected": true,
-        "action": "split",
+        "action": "decay",
         "risk_level": "low",
         "required_reads": [
           "network_state"
@@ -185,6 +192,6 @@
     }
   ],
   "nlang_materialized": true,
-  "truth_boundary": "F3 state was advanced by NLANG-1B materialization; this is still external-runner execution over mutable remote anchors.",
-  "state_hash": "853eac1c8ae2b1dc"
+  "truth_boundary": "F3 state was advanced by NLANG-1C materialization; this is still external-runner execution over mutable remote anchors.",
+  "state_hash": "8b3648b4b8593d09"
 }
