@@ -1,0 +1,32 @@
+name: F0 Capsule Quorum Rebuild
+
+on:
+  repository_dispatch:
+    types: [qmx_f0_capsule_rebuild]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: f0-capsule-quorum-rebuild
+  cancel-in-progress: false
+
+jobs:
+  capsule-quorum-rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run F0 capsule quorum rebuild
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_f0_capsule_quorum_rebuild.py --mode external --target-role rule_capsule --raw-check
