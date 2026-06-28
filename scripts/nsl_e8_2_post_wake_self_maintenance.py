@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from nsl_l12_hourly_self_maintenance import (
+    api_request,
     commit_hash_from_put,
     content_get,
     content_sha_from_put,
@@ -36,6 +37,8 @@ STATE_PATH = "states/e8-2-post-wake-state.json"
 LAST_RUN_PATH = "states/e8-2-last-run.json"
 LAST_REPORT_PATH = "states/e8-2-last-report.json"
 SNAPSHOT_PREFIX = "states/e8-2-post-wake-snapshots"
+LEDGER_PATH = "states/e8-4-post-wake-ledger.json"
+LEDGER_REPORT_PATH = "states/e8-4-last-ledger-report.json"
 
 LOW_RISK_ALLOWLIST = {
     "record_post_wake_chain_health",
@@ -491,6 +494,220 @@ def snapshot_path(run_id: str) -> str:
     return f"{SNAPSHOT_PREFIX}/{run_id}.json"
 
 
+def list_snapshot_paths(owner: str, repo: str, token: str) -> dict[str, Any]:
+    response = api_request(owner, repo, "GET", f"/contents/{SNAPSHOT_PREFIX}?ref=main", token)
+    payload_out = response.get("payload")
+    paths: list[str] = []
+    if response.get("ok") and isinstance(payload_out, list):
+        for item in payload_out:
+            if not isinstance(item, dict):
+                continue
+            path = str(item.get("path") or "")
+            if item.get("type") == "file" and path.endswith(".json"):
+                paths.append(path)
+    return {
+        "ok": bool(response.get("ok") and isinstance(payload_out, list)),
+        "status": response.get("status"),
+        "error": response.get("error"),
+        "paths": sorted(paths),
+        "count": len(paths),
+    }
+
+
+def compact_health(health: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "post_wake_ready": health.get("post_wake_ready"),
+        "bridge_chain_ok": health.get("bridge_chain_ok"),
+        "e7_current_health_ok": health.get("e7_current_health_ok"),
+        "e7_latest_event_name": health.get("e7_latest_event_name"),
+        "e7_latest_overwritten_by_schedule": health.get("e7_latest_overwritten_by_schedule"),
+        "network_body_ok": health.get("network_body_ok"),
+        "external_clock_pending": health.get("external_clock_pending"),
+    }
+
+
+def build_ledger_entry(
+    run_id: str,
+    created_at: str,
+    owner: dict[str, Any],
+    generation: int,
+    post_wake_ready: bool,
+    state_hash: str,
+    self_check_hash: str,
+    plan_hash: str,
+    actions_hash: str,
+    snapshot_path_value: str,
+    snapshot_hash: str,
+    health: dict[str, Any],
+    source: str,
+    ok: bool | None = None,
+    last_run_hash: str = "",
+    report_hash: str = "",
+) -> dict[str, Any]:
+    entry = {
+        "schema_version": "QMX-E8.4-LEDGER-ENTRY-0.1",
+        "run_id": run_id,
+        "created_at": created_at,
+        "source": source,
+        "ok": ok,
+        "post_wake_ready": post_wake_ready,
+        "generation": generation,
+        "owner": {
+            "workflow": owner.get("workflow"),
+            "event_name": owner.get("event_name"),
+            "run_id": owner.get("run_id"),
+            "run_attempt": owner.get("run_attempt"),
+            "actor": owner.get("actor"),
+            "sha": owner.get("sha"),
+        },
+        "state_hash": state_hash,
+        "self_check_hash": self_check_hash,
+        "plan_hash": plan_hash,
+        "actions_hash": actions_hash,
+        "last_run_hash": last_run_hash,
+        "report_hash": report_hash,
+        "snapshot_path": snapshot_path_value,
+        "snapshot_hash": snapshot_hash,
+        "health": compact_health(health),
+        "entry_hash": "",
+    }
+    return seal(entry, "entry_hash")
+
+
+def ledger_entry_from_snapshot(snapshot: dict[str, Any], path: str) -> dict[str, Any] | None:
+    state = snapshot.get("state") if isinstance(snapshot.get("state"), dict) else {}
+    self_check = snapshot.get("self_check") if isinstance(snapshot.get("self_check"), dict) else {}
+    plan = snapshot.get("plan") if isinstance(snapshot.get("plan"), dict) else {}
+    actions = snapshot.get("actions") if isinstance(snapshot.get("actions"), dict) else {}
+    if not state:
+        return None
+    run_id = str(state.get("run_id") or snapshot.get("run_id") or "")
+    if not run_id:
+        return None
+    return build_ledger_entry(
+        run_id=run_id,
+        created_at=str(state.get("created_at") or snapshot.get("created_at") or ""),
+        owner=state.get("owner") if isinstance(state.get("owner"), dict) else {},
+        generation=int(state.get("generation") or snapshot.get("generation") or 0),
+        post_wake_ready=bool(state.get("post_wake_ready")),
+        state_hash=str(state.get("state_hash") or ""),
+        self_check_hash=str(state.get("self_check_hash") or self_check.get("self_check_hash") or ""),
+        plan_hash=str(state.get("plan_hash") or plan.get("plan_hash") or ""),
+        actions_hash=str(state.get("actions_hash") or actions.get("actions_hash") or ""),
+        snapshot_path_value=path,
+        snapshot_hash=str(snapshot.get("snapshot_hash") or ""),
+        health=self_check.get("health") if isinstance(self_check.get("health"), dict) else {},
+        source="snapshot_backfill",
+        ok=None,
+    )
+
+
+def ledger_entry_from_result(
+    result: dict[str, Any],
+    last_run: dict[str, Any],
+    last_report: dict[str, Any],
+    snap_path: str,
+) -> dict[str, Any]:
+    return build_ledger_entry(
+        run_id=result["run_id"],
+        created_at=result["created_at"],
+        owner=result["owner"],
+        generation=int(result["generation"]),
+        post_wake_ready=bool(result["health"]["post_wake_ready"]),
+        state_hash=str(result["state"]["state_hash"]),
+        self_check_hash=str(result["self_check"]["self_check_hash"]),
+        plan_hash=str(result["plan"]["plan_hash"]),
+        actions_hash=str(result["actions"]["actions_hash"]),
+        snapshot_path_value=snap_path,
+        snapshot_hash=str(result["snapshot"]["snapshot_hash"]),
+        health=result["health"],
+        source="current_result",
+        ok=bool(result["ok"]),
+        last_run_hash=str(last_run.get("last_run_hash") or ""),
+        report_hash=str(last_report.get("report_hash") or ""),
+    )
+
+
+def sort_entries(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(entries, key=lambda item: (str(item.get("created_at") or ""), str(item.get("run_id") or "")))
+
+
+def build_ledger(owner: str, repo: str, token: str, result: dict[str, Any], last_run: dict[str, Any], last_report: dict[str, Any], snap_path: str) -> dict[str, Any]:
+    existing_ledger, _, _ = content_get(owner, repo, LEDGER_PATH, token)
+    entries_by_run: dict[str, dict[str, Any]] = {}
+    if isinstance(existing_ledger, dict):
+        for entry in existing_ledger.get("entries") or []:
+            if isinstance(entry, dict) and entry.get("run_id"):
+                entries_by_run[str(entry["run_id"])] = entry
+
+    listing = list_snapshot_paths(owner, repo, token)
+    backfill_read_count = 0
+    for path in listing.get("paths") or []:
+        snapshot_payload, _, _ = content_get(owner, repo, str(path), token)
+        if not isinstance(snapshot_payload, dict):
+            continue
+        entry = ledger_entry_from_snapshot(snapshot_payload, str(path))
+        if entry:
+            entries_by_run.setdefault(str(entry["run_id"]), entry)
+            backfill_read_count += 1
+
+    current_entry = ledger_entry_from_result(result, last_run, last_report, snap_path)
+    entries_by_run[str(current_entry["run_id"])] = current_entry
+    entries = sort_entries(list(entries_by_run.values()))
+    covered_workflows = sorted({str((entry.get("owner") or {}).get("workflow") or "") for entry in entries if (entry.get("owner") or {}).get("workflow")})
+    covered_events = sorted({str((entry.get("owner") or {}).get("event_name") or "") for entry in entries if (entry.get("owner") or {}).get("event_name")})
+    workflow_counts: dict[str, int] = {}
+    for entry in entries:
+        workflow = str((entry.get("owner") or {}).get("workflow") or "unknown")
+        workflow_counts[workflow] = workflow_counts.get(workflow, 0) + 1
+
+    ledger = {
+        "stage": "E8.4-post-wake-ledger",
+        "schema_version": "QMX-E8.4-LEDGER-0.1",
+        "created_at": now(),
+        "updated_by_run_id": result["run_id"],
+        "entry_count": len(entries),
+        "ready_count": sum(1 for entry in entries if entry.get("post_wake_ready") is True),
+        "covered_workflows": covered_workflows,
+        "covered_events": covered_events,
+        "workflow_counts": workflow_counts,
+        "latest_entry": entries[-1] if entries else {},
+        "entries": entries,
+        "backfill": {
+            "snapshot_listing_ok": listing.get("ok"),
+            "snapshot_count_seen": listing.get("count"),
+            "snapshot_read_count": backfill_read_count,
+            "existing_ledger_entry_count": len((existing_ledger or {}).get("entries") or []) if isinstance(existing_ledger, dict) else 0,
+        },
+        "truth_boundary": (
+            "E8.4 is a mutable GitHub state ledger rebuilt from immutable per-run snapshots and the current result. "
+            "It improves auditability but is not a tamper-proof database and does not prove CPU-free wakefulness."
+        ),
+        "ledger_hash": "",
+    }
+    return seal(ledger, "ledger_hash")
+
+
+def build_ledger_report(result: dict[str, Any], ledger: dict[str, Any]) -> dict[str, Any]:
+    report = {
+        "stage": "E8.4-ledger-report",
+        "schema_version": "QMX-E8.4-REPORT-0.1",
+        "created_at": now(),
+        "run_id": result["run_id"],
+        "ok": result["ok"],
+        "entry_count": ledger["entry_count"],
+        "ready_count": ledger["ready_count"],
+        "covered_workflows": ledger["covered_workflows"],
+        "covered_events": ledger["covered_events"],
+        "latest_entry_run_id": (ledger.get("latest_entry") or {}).get("run_id"),
+        "ledger_hash": ledger["ledger_hash"],
+        "conclusion": "E8.4 records post-wake self-check receipts into a unified deduplicated ledger.",
+        "truth_boundary": ledger["truth_boundary"],
+        "report_hash": "",
+    }
+    return seal(report, "report_hash")
+
+
 def put_and_verify(owner: str, repo: str, token: str, path: str, value: dict[str, Any], hash_field: str, message: str) -> dict[str, Any]:
     write: dict[str, Any] = {}
     attempts: list[dict[str, Any]] = []
@@ -721,6 +938,8 @@ def main() -> int:
             "snapshot": snap_path,
             "last_run": LAST_RUN_PATH,
             "last_report": LAST_REPORT_PATH,
+            "ledger": LEDGER_PATH,
+            "ledger_report": LEDGER_REPORT_PATH,
         },
         "writes": {
             "self_check": self_check_write,
@@ -754,6 +973,22 @@ def main() -> int:
         and last_report_write.get("commit_raw_ok")
     )
     result["evidence_level"] = "E8.2-post-wake-self-maintenance-v0" if result["ok"] else "E8.2-post-wake-self-maintenance-partial"
+    ledger = build_ledger(args.owner, args.repo, token, result, last_run, last_report, snap_path)
+    ledger_write = put_and_verify(args.owner, args.repo, token, LEDGER_PATH, ledger, "ledger_hash", f"E8.4 ledger {run_id}")
+    ledger_report = build_ledger_report(result, ledger)
+    ledger_report_write = put_and_verify(args.owner, args.repo, token, LEDGER_REPORT_PATH, ledger_report, "report_hash", f"E8.4 ledger report {run_id}")
+    result["ledger"] = ledger
+    result["ledger_report"] = ledger_report
+    result["writes"]["ledger"] = ledger_write
+    result["writes"]["ledger_report"] = ledger_report_write
+    result["ok"] = bool(
+        result["ok"]
+        and ledger_write.get("ok")
+        and ledger_write.get("commit_raw_ok")
+        and ledger_report_write.get("ok")
+        and ledger_report_write.get("commit_raw_ok")
+    )
+    result["evidence_level"] = "E8.2-post-wake-self-maintenance-v0+E8.4-ledger" if result["ok"] else "E8.2-post-wake-self-maintenance-partial"
     write_local_outputs(run_dir, result)
     print(
         json.dumps(
@@ -768,6 +1003,8 @@ def main() -> int:
                 "queued_count": result["actions"]["queued_count"],
                 "blocked_count": result["actions"]["blocked_count"],
                 "state_hash": result["state"]["state_hash"],
+                "ledger_entry_count": (result.get("ledger") or {}).get("entry_count"),
+                "ledger_hash": (result.get("ledger") or {}).get("ledger_hash"),
                 "branch_raw_release_ok": result["verification"]["branch_raw_release"].get("ok"),
                 "truth_boundary": result["truth_boundary"],
             },
