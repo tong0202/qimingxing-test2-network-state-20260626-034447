@@ -1,0 +1,60 @@
+{
+  "stage": "F2-lifecycle-self-scheduler",
+  "schema_version": "QMX-F2-SCHEDULER-CAPSULE-0.1",
+  "created_by_run_id": "nsl-f2-local-20260628183914",
+  "created_at": "2026-06-28T18:39:16.310730+00:00",
+  "updated_at": "2026-06-28T18:39:16.310745+00:00",
+  "role": "lifecycle_scheduler",
+  "path": "states/f2-scheduler-capsule.json",
+  "core": {
+    "role": "lifecycle_scheduler",
+    "kind": "scheduler",
+    "capsule_id": "f2cap-lifecycle-scheduler",
+    "path": "states/f2-scheduler-capsule.json",
+    "source_f1_state_hash": "1bace43c838cbde1",
+    "duty": "choose the next low-risk lifecycle event from remote lifecycle state",
+    "network_language": {
+      "family": "QMX-F2-LIFECYCLE-SELF-SCHEDULER",
+      "rule": "WHEN lifecycle state changes THEN score low-risk candidate events and execute one selected event",
+      "allowed_actions": [
+        "decay",
+        "observe",
+        "peer_check",
+        "retire",
+        "sleep",
+        "split",
+        "wake"
+      ],
+      "direct_body_execution": false,
+      "arbitrary_code_execution": false
+    },
+    "policy": {
+      "max_ticks_per_run": 4,
+      "high_risk_actions": [
+        "arbitrary_code",
+        "delete_unscoped_anchor",
+        "external_secret_use"
+      ],
+      "default_budget": "low_risk_only"
+    }
+  },
+  "core_hash": "bf42d2534b374897",
+  "safety": {
+    "direct_body_execution": false,
+    "arbitrary_code_execution": false,
+    "allowed_write_prefixes": [
+      "states/f2-"
+    ],
+    "allowed_actions": [
+      "decay",
+      "observe",
+      "peer_check",
+      "retire",
+      "sleep",
+      "split",
+      "wake"
+    ]
+  },
+  "truth_boundary": "The scheduler capsule chooses and writes low-risk lifecycle events; it is not self-executing without an external runner.",
+  "capsule_hash": "e401adf0ec038927"
+}
