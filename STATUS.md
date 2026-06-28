@@ -1314,3 +1314,105 @@ E8.4：统一醒后体检 ledger。
 避免以后只查 latest 或手动找 snapshot。
 ```
 <!-- E8_3_STATUS_END -->
+
+<!-- E8_4_STATUS_START -->
+## E8.4：统一醒后体检 ledger
+
+Status: completed V0.
+
+中文名字：
+
+```text
+醒后体检历史账本
+```
+
+这一步做什么：
+
+```text
+E8.3 已经让三条主线低频唤醒路径都能写回 E8.2 醒后体检。
+E8.4 把这些醒后体检结果组织成统一 ledger，
+避免以后只看 states/e8-2-last-run.json 这个会被覆盖的 latest 文件。
+```
+
+新增/更新：
+
+```text
+scripts/nsl_e8_2_post_wake_self_maintenance.py
+E8_4_POST_WAKE_LEDGER.md
+states/e8-4-post-wake-ledger.json
+states/e8-4-last-ledger-report.json
+```
+
+ledger 生成方式：
+
+```text
+读取已有 ledger
+读取 states/e8-2-post-wake-snapshots/*.json
+把历史 snapshot 回填成 ledger entry
+把当前 E8.2 结果加入 ledger
+按 run_id 去重
+写回 ledger_hash
+```
+
+本地创建验证：
+
+```text
+run_id=nsl-e8-2-local-20260628160746
+ledger_entry_count=8
+ledger_hash=07d73b6f5d094e77
+```
+
+远端追加验证：
+
+```text
+workflow=E7.1 External Wake Timer
+workflow_run_id=28328169814
+E8.2 run_id=nsl-e8-2-workflow_dispatch-28328169814-attempt-1
+post_wake_ready=true
+```
+
+当前 ledger 状态：
+
+```text
+path=states/e8-4-post-wake-ledger.json
+entry_count=9
+ready_count=8
+ledger_hash=34238b68d7462312
+ledger_hash_verified=true
+```
+
+覆盖来源：
+
+```text
+E7 Controlled Vitals Self Maintenance
+E7.1 External Wake Timer
+E7.3a HTTP Bridge Entry
+E8.2 Post Wake Self Maintenance
+```
+
+E8.4 证明：
+
+```text
+醒后体检现在有统一历史账本。
+历史 E8.2 snapshot 可以被回填成 ledger entry。
+新的低频唤醒路径运行后，ledger 会继续增加或按 run_id 去重更新。
+ledger 和 ledger report 都有哈希自校验。
+```
+
+E8.4 没有证明：
+
+```text
+它不是不可篡改数据库。
+它不是区块链。
+它不证明无 CPU 自唤醒。
+它不证明自主进化。
+它只是把已有醒后体检证据组织成统一可查的历史账本。
+```
+
+下一步：
+
+```text
+E8.5：ledger 查询器和状态摘要。
+目标是不用打开大 JSON，也能快速查看最近 N 次醒后体检、失败次数、来源路径和当前健康趋势。
+```
+<!-- E8_4_STATUS_END -->
