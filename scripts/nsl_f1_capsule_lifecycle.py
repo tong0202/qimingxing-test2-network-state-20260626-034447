@@ -103,6 +103,62 @@ def verify_remote_hash(owner: str, repo: str, token: str, path: str, field: str)
     }
 
 
+def wait_for_hash(
+    owner: str,
+    repo: str,
+    token: str,
+    path: str,
+    field: str,
+    expected: str,
+    timeout_seconds: int = 45,
+    interval_seconds: float = 3.0,
+) -> dict[str, Any]:
+    deadline = time.time() + timeout_seconds
+    observations: list[dict[str, Any]] = []
+    while time.time() < deadline:
+        payload, _, response = content_get(owner, repo, path, token)
+        declared = ""
+        computed = ""
+        if isinstance(payload, dict):
+            declared = str(payload.get(field) or "")
+            computed = stable_hash(payload, field)
+        ok = bool(response.get("ok") and declared == expected and computed == expected)
+        observations.append(
+            {
+                "status": response.get("status"),
+                "ok": ok,
+                "declared": declared,
+                "computed": computed,
+                "error": response.get("error"),
+            }
+        )
+        if ok:
+            return {
+                "path": path,
+                "ok": True,
+                "status": response.get("status"),
+                "hash_field": field,
+                "expected": expected,
+                "declared": declared,
+                "computed": computed,
+                "attempt_count": len(observations),
+                "observations": observations,
+            }
+        time.sleep(interval_seconds)
+    latest = observations[-1] if observations else {}
+    return {
+        "path": path,
+        "ok": False,
+        "status": latest.get("status"),
+        "hash_field": field,
+        "expected": expected,
+        "declared": latest.get("declared", ""),
+        "computed": latest.get("computed", ""),
+        "attempt_count": len(observations),
+        "observations": observations,
+    }
+
+
 def append_event(events: list[dict[str, Any]], event: dict[str, Any]) -> dict[str, Any]:
     sealed = seal(event, "event_hash")
     events.append(sealed)
@@ -493,8 +549,11 @@ def main() -> int:
     capsules, registry = build_capsules(run_id, generation)
     seed_writes = [put_json(args.owner, args.repo, token, capsule["path"], capsule, f"F1 birth {capsule['role']} {run_id}") for capsule in capsules]
     registry_write = put_json(args.owner, args.repo, token, REGISTRY_PATH, registry, f"F1 registry {run_id}")
-    seed_checks = [verify_remote_hash(args.owner, args.repo, token, capsule["path"], "capsule_hash") for capsule in capsules]
-    registry_check = verify_remote_hash(args.owner, args.repo, token, REGISTRY_PATH, "registry_hash")
+    seed_checks = [
+        wait_for_hash(args.owner, args.repo, token, capsule["path"], "capsule_hash", capsule["capsule_hash"])
+        for capsule in capsules
+    ]
+    registry_check = wait_for_hash(args.owner, args.repo, token, REGISTRY_PATH, "registry_hash", registry["registry_hash"])
     birth_ok = bool(all(item.get("ok") for item in seed_writes) and registry_write.get("ok") and all(item.get("ok") for item in seed_checks) and registry_check.get("ok"))
     append_event(
         events,
@@ -512,7 +571,7 @@ def main() -> int:
     memory_payload, memory_response = read_capsule(args.owner, args.repo, token, "memory_capsule")
     sleeping_memory = transition_capsule(memory_payload or {}, "sleep", "sleeping", run_id)
     sleep_write = put_json(args.owner, args.repo, token, role_path("memory_capsule"), sleeping_memory, f"F1 sleep memory_capsule {run_id}")
-    sleep_check = verify_remote_hash(args.owner, args.repo, token, role_path("memory_capsule"), "capsule_hash")
+    sleep_check = wait_for_hash(args.owner, args.repo, token, role_path("memory_capsule"), "capsule_hash", sleeping_memory["capsule_hash"])
     sleep_ok = bool(memory_response.get("ok") and sleep_write.get("ok") and sleep_check.get("ok"))
     append_event(
         events,
@@ -531,7 +590,7 @@ def main() -> int:
     memory_payload, memory_response = read_capsule(args.owner, args.repo, token, "memory_capsule")
     awake_memory = transition_capsule(memory_payload or {}, "wake", "awake", run_id)
     wake_write = put_json(args.owner, args.repo, token, role_path("memory_capsule"), awake_memory, f"F1 wake memory_capsule {run_id}")
-    wake_check = verify_remote_hash(args.owner, args.repo, token, role_path("memory_capsule"), "capsule_hash")
+    wake_check = wait_for_hash(args.owner, args.repo, token, role_path("memory_capsule"), "capsule_hash", awake_memory["capsule_hash"])
     wake_ok = bool(memory_response.get("ok") and wake_write.get("ok") and wake_check.get("ok"))
     append_event(
         events,
@@ -574,7 +633,7 @@ def main() -> int:
     repair_check: dict[str, Any] = {}
     if missing_wait.get("ok") and quorum["ok"] and verify_capsule(blueprint).get("ok"):
         repair_write = put_json(args.owner, args.repo, token, target_path, repaired, f"F1 repair {target_role} {run_id}")
-        repair_check = verify_remote_hash(args.owner, args.repo, token, target_path, "capsule_hash")
+        repair_check = wait_for_hash(args.owner, args.repo, token, target_path, "capsule_hash", repaired["capsule_hash"])
     repair_ok = bool(delete_result.get("ok") and missing_wait.get("ok") and quorum["ok"] and repair_write.get("ok") and repair_check.get("ok"))
     repair = {
         "ok": repair_ok,
@@ -611,7 +670,7 @@ def main() -> int:
     split_parent_write = put_json(args.owner, args.repo, token, role_path("repair_capsule"), split_parent, f"F1 split parent repair_capsule {run_id}")
     child = build_split_child(split_parent, run_id)
     child_write = put_json(args.owner, args.repo, token, SPLIT_CHILD_PATH, child, f"F1 split child {run_id}")
-    child_check = verify_remote_hash(args.owner, args.repo, token, SPLIT_CHILD_PATH, "capsule_hash")
+    child_check = wait_for_hash(args.owner, args.repo, token, SPLIT_CHILD_PATH, "capsule_hash", child["capsule_hash"])
     split_ok = bool(repair_parent_response.get("ok") and split_parent_write.get("ok") and child_write.get("ok") and child_check.get("ok"))
     split = {
         "ok": split_ok,
@@ -638,7 +697,7 @@ def main() -> int:
     child_payload, child_response = content_get(args.owner, args.repo, SPLIT_CHILD_PATH, token)[0::2]
     decayed_child = transition_capsule(child_payload or {}, "decay", "decayed", run_id)
     decay_write = put_json(args.owner, args.repo, token, SPLIT_CHILD_PATH, decayed_child, f"F1 decay child {run_id}")
-    decay_check = verify_remote_hash(args.owner, args.repo, token, SPLIT_CHILD_PATH, "capsule_hash")
+    decay_check = wait_for_hash(args.owner, args.repo, token, SPLIT_CHILD_PATH, "capsule_hash", decayed_child["capsule_hash"])
     decay_ok = bool(child_response.get("ok") and decay_write.get("ok") and decay_check.get("ok"))
     decay = {
         "ok": decay_ok,
@@ -664,7 +723,7 @@ def main() -> int:
     child_payload, child_response_tuple_sha, child_response = content_get(args.owner, args.repo, SPLIT_CHILD_PATH, token)
     retired_child = transition_capsule(child_payload or {}, "retire", "retired", run_id)
     retire_write = put_json(args.owner, args.repo, token, SPLIT_CHILD_PATH, retired_child, f"F1 retire child {run_id}")
-    retire_check = verify_remote_hash(args.owner, args.repo, token, SPLIT_CHILD_PATH, "capsule_hash")
+    retire_check = wait_for_hash(args.owner, args.repo, token, SPLIT_CHILD_PATH, "capsule_hash", retired_child["capsule_hash"])
     retire_ok = bool(child_response.get("ok") and retire_write.get("ok") and retire_check.get("ok") and retired_child["lifecycle"]["retired"])
     retire = {
         "ok": retire_ok,
@@ -706,7 +765,7 @@ def main() -> int:
 
     state = build_state(run_id, args.mode, generation, events, capsule_status)
     state_write = put_json(args.owner, args.repo, token, STATE_PATH, state, f"F1 lifecycle state {run_id}")
-    state_check = verify_remote_hash(args.owner, args.repo, token, STATE_PATH, "state_hash")
+    state_check = wait_for_hash(args.owner, args.repo, token, STATE_PATH, "state_hash", state["state_hash"])
     run_entry = {
         "stage": "F1-lifecycle-ledger-entry",
         "created_at": now(),
