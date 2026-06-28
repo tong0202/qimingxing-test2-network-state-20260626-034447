@@ -1,0 +1,150 @@
+{
+  "stage": "NLANG-1B-materialize-action-plan",
+  "ok": true,
+  "run_id": "nlang_1b_local-20260628202419",
+  "remote_f3_state_hash_before": "5deb8244675edcf6",
+  "remote_f3_state_hash_ok": true,
+  "compiled_selected_action": "split",
+  "compiled_selected_rule": {
+    "index": 1,
+    "source": "WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count >= f3.lifecycle_cycle_count THEN split",
+    "action": "split",
+    "matched": true,
+    "risk_level": "low",
+    "predicates": [
+      {
+        "ok": true,
+        "left": "f3.child.retired",
+        "op": "==",
+        "right": true,
+        "right_source": "literal",
+        "observed": true,
+        "error": ""
+      },
+      {
+        "ok": true,
+        "left": "f3.last_peer_check_cycle_count",
+        "op": ">=",
+        "right": 3,
+        "right_source": "f3.lifecycle_cycle_count",
+        "observed": 3,
+        "error": ""
+      }
+    ]
+  },
+  "action_plan": {
+    "selected": true,
+    "action": "split",
+    "risk_level": "low",
+    "required_reads": [
+      "network_state"
+    ],
+    "required_writes": [
+      "scoped_state",
+      "ledger"
+    ],
+    "proof_required": true
+  },
+  "execution": {
+    "ok": true,
+    "action": "split",
+    "write": {
+      "path": "states/f2-capsules/scheduler_child.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "a962458d955920726259247f5fb79b3983559c5e",
+      "content_sha": "ba3b34db05887733db1b4493b2af793bb932eb6e"
+    },
+    "verify": {
+      "path": "states/f2-capsules/scheduler_child.json",
+      "ok": true,
+      "status": 200,
+      "hash_field": "capsule_hash",
+      "expected": "0783b869bf3e35e9",
+      "declared": "0783b869bf3e35e9",
+      "computed": "0783b869bf3e35e9",
+      "attempt_count": 1,
+      "observations": [
+        {
+          "status": 200,
+          "ok": true,
+          "declared": "0783b869bf3e35e9",
+          "computed": "0783b869bf3e35e9",
+          "error": ""
+        }
+      ]
+    },
+    "child_hash": "0783b869bf3e35e9"
+  },
+  "before_child": {
+    "exists": true,
+    "state": "retired",
+    "retired": true,
+    "vitality": 0,
+    "capsule_hash": "8f2584b54ec860b7"
+  },
+  "after_child": {
+    "exists": true,
+    "state": "split_child",
+    "retired": false,
+    "vitality": 65,
+    "capsule_hash": "0783b869bf3e35e9"
+  },
+  "f2_state_hash": "74c9ab59d59c4fee",
+  "f2_ledger_hash": "a73990719ee0be5d",
+  "f3_state_hash": "853eac1c8ae2b1dc",
+  "f3_ledger_hash": "3b64029660f2f563",
+  "proof_ledger_hash": "5030a04f24a3ef11",
+  "f3_last_run_hash": "ea85c800d5e6d37a",
+  "f3_report_hash": "a32814572ba2e946",
+  "writes": {
+    "f2_state": {
+      "path": "states/f2-scheduler-state.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "0f9df9decca60d2ca042910593495f1d6cbc86aa",
+      "content_sha": "2f539a06887b26e803eb5073b1cc4735edecba75"
+    },
+    "f3_state": {
+      "path": "states/f3-loop-state.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "95e61026100579f0db8f3187f52358dac5dcf0bd",
+      "content_sha": "177f447252ed9c55aec1b0470e9e7b6f6ba3ca99"
+    },
+    "proof_ledger": {
+      "path": "states/nlang-1b-proof-ledger.json",
+      "existing_status": 404,
+      "ok": true,
+      "status": 201,
+      "error": "",
+      "commit_hash": "c34f4de4c2a950c931b81b94b65ac47e390e9d9b",
+      "content_sha": "2537a275d83acc7dd143d2b1ad3a06b46f155899"
+    },
+    "f3_last_run": {
+      "path": "states/f3-last-run.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "af3d9dab571af36d5c24a24569f81380c0568780",
+      "content_sha": "2483fa8aeefd6e9235612ad9631abdd8355517fc"
+    },
+    "f3_last_report": {
+      "path": "states/f3-last-report.json",
+      "existing_status": 200,
+      "ok": true,
+      "status": 200,
+      "error": "",
+      "commit_hash": "66d7da1f7ab6da3233fe88b638ca683ad4cb27ff",
+      "content_sha": "025d6226eef19c21cf1dfb465989907f9428eb45"
+    }
+  },
+  "truth_boundary": "NLANG-1B proves compiled-plan materialization over remote anchors. It does not prove endpoint-free or CPU-free execution."
+}
