@@ -2,7 +2,7 @@
   "updated_at": "2026-06-29",
   "scope": "qimingxing/test2",
   "single_source_of_truth": "STATUS.md",
-  "current_layer": "post_wake_ledger_query_status_layer",
+  "current_layer": "self_regenerating_capsule_anchor_layer",
   "proved": [
     "network_can_carry_continuous_state",
     "network_residuals_can_form_low_frequency_rhythm",
@@ -101,7 +101,13 @@
     "e8_5_ledger_hash_and_entry_hashes_verified",
     "e8_5_summary_recent_last_run_last_report_hashes_verified",
     "e8_5_recent_post_wake_status_is_queryable_without_opening_full_ledger",
-    "e8_5_known_history_gap_is_preserved_as_alert"
+    "e8_5_known_history_gap_is_preserved_as_alert",
+    "f0_remote_capsule_set_seeded",
+    "f0_target_capsule_disappearance_confirmed",
+    "f0_alive_peer_capsules_vote_on_missing_capsule_identity",
+    "f0_quorum_rebuild_authorization_passes",
+    "f0_missing_capsule_rebuilt_with_matching_core_hash_and_capsule_hash",
+    "f0_rebuild_ledger_last_run_and_last_report_hashes_verified"
   ],
   "not_proved": [
     "network_only_computation_without_cpu",
@@ -178,7 +184,12 @@
     "e8_5_new_executor_or_action_runner",
     "e8_5_self_maintenance_actions",
     "e8_5_cpu_free_self_wake",
-    "e8_5_autonomous_evolution"
+    "e8_5_autonomous_evolution",
+    "f0_endpoint_free_existence",
+    "f0_cpu_free_network_computation",
+    "f0_tamper_proof_storage",
+    "f0_self_executing_capsules_without_external_runner",
+    "f0_fully_autonomous_digital_life"
   ],
   "compute_sources": {
     "local_experiments": "local_cpu",
@@ -269,7 +280,8 @@
     "E8.2": "completed_post_wake_self_maintenance_v0_dispatch_and_e7_3a_chain_verified",
     "E8.3": "completed_unified_post_wake_hooks_for_e7_e7_1_e7_3a_v0",
     "E8.4": "completed_unified_post_wake_ledger_v0",
-    "E8.5": "completed_ledger_query_status_v0_remote_verified"
+    "E8.5": "completed_ledger_query_status_v0_remote_verified",
+    "F0": "completed_capsule_quorum_rebuild_v0_remote_verified"
   },
   "remote_repo": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447",
   "remote_state": {
@@ -734,10 +746,10 @@
     "github_actions_expansion_label": "external_endpoint_execution_enhancement",
     "forbidden_overclaim": "network_compute_enhancement"
   },
-  "recommended_next_mainline": "E8.6-lightweight-dashboard-or-cli-status-entry",
-  "completed_mainline": "E8.5-ledger-query-status-v0",
+  "recommended_next_mainline": "F1-capsule-lifecycle-layer",
+  "completed_mainline": "F0-capsule-quorum-rebuild-v0",
   "engineering_branch": "N8-riverbed-program-capsule-v0",
-  "truth_boundary": "Test2 now proves network-state riverbed layers through E8.5: GitHub Actions can wake low-frequency paths, record post-wake checks into a mutable ledger, and summarize that ledger into hash-verifiable status files. It still does not prove CPU-free network computation, tamper-proof storage, autonomous self-generated logic, autonomous self-modification, digital life, digital supercomputing, or hard real-time scheduling.",
+  "truth_boundary": "Test2 now proves network-state riverbed layers through F0: external GitHub Actions can wake, remote capsule anchors can be seeded, one capsule can disappear, alive peer capsules can quorum-vote its expected identity, and the missing capsule can be rebuilt with verified hashes. It still does not prove endpoint-free existence, CPU-free network computation, tamper-proof storage, self-executing capsules, autonomous self-generated logic, or fully autonomous digital life.",
   "l11_result": {
     "run_id": "nsl-l11-20260626162324",
     "ok": true,
@@ -1282,19 +1294,19 @@
     "conclusion": "L12.2 V0 is deployed and verified: multi-cron schedule, slot dedupe, finite catch-up recording, and global runtime lock work on the remote workflow.",
     "truth_boundary": "This reduces missed schedule risk but does not guarantee every hour without a second independent clock source."
   },
-  "last_remote_sync_at": "2026-06-29T01:27:58+08:00",
+  "last_remote_sync_at": "2026-06-29T02:07:50+08:00",
   "latest_remote_sync": {
-    "synced_at_local": "2026-06-29T01:27:58+08:00",
-    "source": "E8.5 remote ledger query/status summary run 28330036818",
-    "e8_5_completed": true,
-    "workflow_run_id": 28330036818,
-    "status_level": "healthy_with_known_gaps",
-    "entry_count": 11,
-    "ready_count": 10,
-    "recent_count": 8,
-    "recent_ready_count": 8,
+    "synced_at_local": "2026-06-29T02:07:50+08:00",
+    "source": "F0 remote capsule quorum rebuild run 28331218212",
+    "f0_completed": true,
+    "workflow_run_id": 28331218212,
+    "target_role": "rule_capsule",
+    "confirmed_missing": true,
+    "agree_count": 4,
+    "quorum_threshold": 3,
+    "rebuild_ok": true,
     "hashes_verified": true,
-    "next_mainline": "E8.6: connect E8.5 summary to a lightweight dashboard or CLI status entry"
+    "next_mainline": "F1: capsule lifecycle layer"
   },
   "e7_result": {
     "stage": "E7-controlled-vitals-self-maintenance",
@@ -1978,5 +1990,88 @@
     },
     "conclusion": "E8.5 turns the E8.4 post-wake ledger into compact queryable status files and verifies summary/recent/last-run/last-report hashes after a remote GitHub Actions run.",
     "truth_boundary": "E8.5 is a query and summary layer only. It does not execute maintenance actions, does not create tamper-proof storage, and does not prove CPU-free self-wake or autonomous evolution."
+  },
+  "f0_result": {
+    "stage": "F0-capsule-quorum-rebuild",
+    "status": "completed_v0",
+    "ok": true,
+    "evidence_level": "F0-capsule-quorum-rebuild-v0",
+    "local_control_run": {
+      "run_id": "nsl-f0-local-20260628180300",
+      "ok": true,
+      "generation": 2,
+      "target_role": "rule_capsule",
+      "delete_status": 200,
+      "confirmed_missing": true,
+      "missing_read_status": 404,
+      "alive_count": 4,
+      "quorum_threshold": 3,
+      "agree_count": 4,
+      "rebuild_ok": true,
+      "expected_core_hash": "40804fb0c78f4679",
+      "rebuilt_core_hash": "40804fb0c78f4679",
+      "expected_capsule_hash": "d47bff429eb592ab",
+      "rebuilt_capsule_hash": "d47bff429eb592ab",
+      "ledger_hash": "2a112224421f86a7"
+    },
+    "remote_run": {
+      "workflow": "F0 Capsule Quorum Rebuild",
+      "workflow_file": ".github/workflows/nsl-f0-capsule-quorum-rebuild.yml",
+      "workflow_run_id": 28331218212,
+      "workflow_event": "workflow_dispatch",
+      "workflow_conclusion": "success",
+      "workflow_url": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447/actions/runs/28331218212",
+      "run_id": "nsl-f0-workflow_dispatch-28331218212-attempt-1",
+      "target_role": "rule_capsule",
+      "generation": 3,
+      "confirmed_missing": true,
+      "alive_count": 4,
+      "quorum_threshold": 3,
+      "agree_count": 4,
+      "rebuild_ok": true,
+      "expected_core_hash": "11f5e32109401a47",
+      "rebuilt_core_hash": "11f5e32109401a47",
+      "expected_capsule_hash": "27a9695076100f3c",
+      "rebuilt_capsule_hash": "27a9695076100f3c",
+      "ledger_hash": "ffb73ca526bfca83"
+    },
+    "remote_paths": {
+      "runner": "scripts/nsl_f0_capsule_quorum_rebuild.py",
+      "workflow": ".github/workflows/nsl-f0-capsule-quorum-rebuild.yml",
+      "doc": "F0_CAPSULE_QUORUM_REBUILD.md",
+      "capsules": "states/f0-capsules/<role>.json",
+      "registry": "states/f0-capsule-registry.json",
+      "ledger": "states/f0-rebuild-ledger.json",
+      "last_run": "states/f0-last-run.json",
+      "last_report": "states/f0-last-report.json"
+    },
+    "hash_verification": {
+      "last_run_hash": {
+        "value": "6adc31f9332391bd",
+        "verified": true
+      },
+      "report_hash": {
+        "value": "a76fc174315a17e4",
+        "verified": true
+      },
+      "ledger_hash": {
+        "value": "ffb73ca526bfca83",
+        "verified": true
+      },
+      "registry_hash": {
+        "value": "bab121f41f678f54",
+        "verified": true
+      },
+      "rebuilt_rule_capsule_hash": {
+        "value": "27a9695076100f3c",
+        "verified": true
+      },
+      "rebuilt_rule_capsule_core_hash": {
+        "value": "11f5e32109401a47",
+        "verified": true
+      }
+    },
+    "conclusion": "F0 proves that a remote capsule file can disappear, be detected by alive peer capsules, pass quorum, and be rebuilt with matching core_hash and capsule_hash.",
+    "truth_boundary": "F0 proves self-repair over mutable remote anchors. It does not prove endpoint-free existence, CPU-free network computation, tamper-proof storage, self-executing capsules, or fully autonomous digital life."
   }
 }
