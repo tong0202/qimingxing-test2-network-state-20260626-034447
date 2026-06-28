@@ -244,3 +244,63 @@ GitHub token 只能放 Cloudflare Secret：GITHUB_TOKEN。
 还没有观察到 Cloudflare 非手动定时触发。
 所以 E7.3b/E7.3c 仍然 pending。
 ```
+
+## 2026-06-28 E8.2 外部唤醒后的自检/自维护增强
+
+用户决定：
+```text
+暂时跳过 Cloudflare，继续做 E8：外部唤醒后的自检/自维护能力增强。
+```
+
+落地内容：
+```text
+新增 nsl_e8_2_post_wake_self_maintenance.py
+新增 nsl-e8-2-post-wake-self-maintenance.yml
+新增 E8_2_POST_WAKE_SELF_MAINTENANCE.md
+修改 nsl-e7-3a-http-bridge-entry.yml，让 E7.3a bridge 后自动运行 E8.2
+```
+
+独立验证：
+```text
+workflow=E8.2 Post Wake Self Maintenance
+run=28327426266
+event=workflow_dispatch
+conclusion=success
+post_wake_ready=true
+executed_count=4
+queued_count=1
+blocked_count=2
+```
+
+E7.3a 链路验证：
+```text
+E7.3a run=28327487602
+event=repository_dispatch
+conclusion=success
+E7.2 receiver run=28327492295
+E7 writeback=nsl-e7-repository_dispatch-28327492295-attempt-1
+E8.2 writeback=nsl-e8-2-repository_dispatch-28327487602-attempt-1
+```
+
+远端写回：
+```text
+states/e8-2-last-run.json
+ok=true
+post_wake_ready=true
+generation=4
+self_check_hash=e7ab7be1dc79e2e5
+state_hash=c7fdd887fb4f18ba
+```
+
+真实含义：
+```text
+这一步证明外部唤醒之后可以自动进入醒后体检和低风险维护回执。
+它把“叫醒成功”推进到“叫醒后能检查自己、记录状态、排队中风险、阻断高风险”。
+```
+
+真实边界：
+```text
+E8.2 仍然由 GitHub Actions CPU 执行。
+它不证明无 CPU 自唤醒、自主进化、完全自由漂浮网络体或无限开放行动。
+Cloudflare 第三方时钟仍然是后续增强项，不是当前主线阻塞项。
+```
