@@ -1,0 +1,32 @@
+name: E8 Network Body Protocol
+
+on:
+  schedule:
+    - cron: "11 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: e8-network-body-protocol
+  cancel-in-progress: false
+
+jobs:
+  network-body-protocol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run E8 network-body protocol
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e8_network_body_protocol.py --mode external --raw-timeout 240 --raw-interval 8
