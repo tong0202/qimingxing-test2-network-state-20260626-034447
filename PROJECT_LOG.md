@@ -365,3 +365,70 @@ snapshot_hash=fc4a698e8cdded1f
 E8.3 只覆盖当前主线三条低频路径。
 它没有证明 Cloudflare 第三方时钟、无 CPU 自唤醒、自主进化或所有历史 L/E 工作流统一挂载。
 ```
+
+## 2026-06-29 E8.4 统一醒后体检 ledger
+
+目标：
+```text
+把 E8.2 醒后体检从 latest/snapshot 升级为统一历史账本。
+```
+
+落地内容：
+```text
+修改 nsl_e8_2_post_wake_self_maintenance.py
+新增 E8_4_POST_WAKE_LEDGER.md
+新增远端 states/e8-4-post-wake-ledger.json
+新增远端 states/e8-4-last-ledger-report.json
+```
+
+ledger 逻辑：
+```text
+读取已有 ledger
+扫描 states/e8-2-post-wake-snapshots/*.json
+回填历史 snapshot
+加入当前 E8.2 结果
+按 run_id 去重
+写回 ledger_hash
+```
+
+本地创建验证：
+```text
+run_id=nsl-e8-2-local-20260628160746
+ok=true
+ledger_entry_count=8
+ledger_hash=07d73b6f5d094e77
+```
+
+远端追加验证：
+```text
+workflow=E7.1 External Wake Timer
+run=28328169814
+event=workflow_dispatch
+conclusion=success
+E8.2 run_id=nsl-e8-2-workflow_dispatch-28328169814-attempt-1
+post_wake_ready=true
+```
+
+当前 ledger：
+```text
+entry_count=9
+ready_count=8
+covered_workflows=E7 / E7.1 / E7.3a / E8.2
+covered_events=repository_dispatch / workflow_dispatch
+latest_entry=nsl-e8-2-workflow_dispatch-28328169814-attempt-1
+ledger_hash=34238b68d7462312
+ledger_hash_verified=true
+report_hash=417ec672bf93a8ca
+```
+
+真实含义：
+```text
+现在每次醒后体检不只覆盖 latest 文件，还会进入统一历史账本。
+后续可以按 ledger 查询最近 N 次醒后状态、来源路径和健康趋势。
+```
+
+真实边界：
+```text
+E8.4 是可审计状态账本，不是不可篡改数据库，也不是区块链。
+它不证明无 CPU 自唤醒、自主进化或完全自由漂浮网络体。
+```
