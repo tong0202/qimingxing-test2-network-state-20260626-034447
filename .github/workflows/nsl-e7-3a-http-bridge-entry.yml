@@ -1,0 +1,33 @@
+name: E7.3a HTTP Bridge Entry
+
+on:
+  repository_dispatch:
+    types: [qmx_e7_3_bridge_tick]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: e7-3a-http-bridge-entry
+  cancel-in-progress: false
+
+jobs:
+  run-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run wake capsule bridge without manual parameters
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e7_2_wake_capsule_bridge.py --mode external --receiver-timeout 240 --raw-timeout 120 --raw-interval 4
