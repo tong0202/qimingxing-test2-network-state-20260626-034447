@@ -46,6 +46,53 @@ verify rebuilt core_hash and capsule_hash
 write F0 ledger, last-run, and last-report
 ```
 
+## Latest evidence
+
+Local control run:
+
+```text
+run_id=nsl-f0-local-20260628180300
+ok=true
+target_role=rule_capsule
+delete_status=200
+confirmed_missing=true
+missing_read_status=404
+alive_count=4
+quorum_threshold=3
+agree_count=4
+rebuild_ok=true
+expected_core_hash=40804fb0c78f4679
+rebuilt_core_hash=40804fb0c78f4679
+expected_capsule_hash=d47bff429eb592ab
+rebuilt_capsule_hash=d47bff429eb592ab
+ledger_hash=2a112224421f86a7
+```
+
+Remote GitHub Actions run:
+
+```text
+workflow=F0 Capsule Quorum Rebuild
+run=28331218212
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-f0-workflow_dispatch-28331218212-attempt-1
+target_role=rule_capsule
+confirmed_missing=true
+alive_count=4
+quorum_threshold=3
+agree_count=4
+rebuild_ok=true
+expected_core_hash=11f5e32109401a47
+rebuilt_core_hash=11f5e32109401a47
+expected_capsule_hash=27a9695076100f3c
+rebuilt_capsule_hash=27a9695076100f3c
+ledger_hash=ffb73ca526bfca83
+last_run_hash=6adc31f9332391bd verified=true
+report_hash=a76fc174315a17e4 verified=true
+registry_hash=bab121f41f678f54 verified=true
+rebuilt_capsule_hash_verified=true
+```
+
 ## What F0 proves
 
 ```text
