@@ -52,7 +52,13 @@ SOURCE_SPECS: list[dict[str, Any]] = [
     {"id": "e7_state", "path": "states/e7-controlled-self-maintenance-state.json", "hash_field": "state_hash", "required": True},
     {"id": "l11_5_logic_spec", "path": "states/nsl-l11-5-minimal-logic-spec.json", "hash_field": "logic_hash", "required": True},
     {"id": "global_runtime_lock", "path": "states/qmx-global-runtime-lock.json", "hash_field": "lock_hash", "required": False},
-    {"id": "previous_e8_protocol", "path": PROTOCOL_PATH, "hash_field": "protocol_hash", "required": False},
+    {
+        "id": "previous_e8_protocol",
+        "path": PROTOCOL_PATH,
+        "hash_field": "protocol_hash",
+        "required": False,
+        "prefer_api": True,
+    },
 ]
 
 
@@ -165,10 +171,24 @@ def summarize_payload(source_id: str, payload: dict[str, Any] | None) -> dict[st
 
 
 def sample_source(owner: str, repo: str, spec: dict[str, Any], token: str) -> dict[str, Any]:
-    sample = fetch_json_url(raw_url(owner, repo, "main", spec["path"]), f"e8-{spec['id']}")
-    payload = sample.get("payload") if isinstance(sample.get("payload"), dict) else None
+    payload: dict[str, Any] | None = None
+    sample: dict[str, Any] = {}
     source = "branch_raw"
+    if spec.get("prefer_api"):
+        payload, _, api_response = content_get(owner, repo, spec["path"], token)
+        source = "contents_api_fallback"
+        if payload:
+            sample = {
+                "ok": True,
+                "status": api_response.get("status"),
+                "elapsed_ms": api_response.get("elapsed_ms"),
+                "error": "",
+            }
     if not payload:
+        sample = fetch_json_url(raw_url(owner, repo, "main", spec["path"]), f"e8-{spec['id']}")
+        payload = sample.get("payload") if isinstance(sample.get("payload"), dict) else None
+        source = "branch_raw"
+    if not payload and not spec.get("prefer_api"):
         payload, _, api_response = content_get(owner, repo, spec["path"], token)
         source = "contents_api_fallback"
         if payload:
