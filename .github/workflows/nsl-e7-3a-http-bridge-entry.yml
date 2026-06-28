@@ -37,3 +37,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python scripts/nsl_e8_2_post_wake_self_maintenance.py --mode external --raw-timeout 240 --raw-interval 8
+
+      - name: Run E8.5 ledger query status summary
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e8_5_ledger_query_status.py --mode external --recent-limit 8
