@@ -2369,3 +2369,75 @@ Do not claim ghost-computer compute from FIELD-1C.
 Either build FIELD-2 with better task families and rate-limit-safe targets, or connect NLANG-1C to a controlled multi-wake remote loop.
 ```
 <!-- NLANG_FIELD_1C_END -->
+
+<!-- NSC_0_START -->
+## NSC-0 Network State Compute
+
+Status: completed V0 on 2026-06-29.
+
+Goal:
+
+```text
+Reframe compute as state transduction, not CPU-like FLOPS or task-choice speed.
+Test whether real network-state input can drive a small state body through convergence, continuity, recovery, and coupling.
+```
+
+Protocol:
+
+```text
+rounds=10
+target_count=5
+perturb_at_round=5
+streams=real, fixed, prng, shuffled_real
+run_path=runs/latest_nsc_0_network_state_compute_result.json
+remote_path=states/nsc-0-last-run.json
+remote_state_hash=f381b8660e62a5bd
+remote_hash_verified=True
+```
+
+Verdict:
+
+```text
+verdict=nsc_0_weak_real_network_edge
+real_effective_state_work=0.582374
+best_control_effective_state_work=0.564055
+real_vs_best_control_margin=0.018319
+real_vs_best_control_margin_rate=0.032477
+strong_advantage_threshold_margin_rate=0.05
+```
+
+Stream comparison:
+
+```text
+real:          final_distance=0.373273 convergence=0.540184 recovery=0.476547 coupling=0.217893 work=0.582374
+fixed:         final_distance=0.381813 convergence=0.529664 recovery=0.459672 coupling=0.0 work=0.54918
+prng:          final_distance=0.495528 convergence=0.389584 recovery=0.364933 coupling=0.141951 work=0.503041
+shuffled_real: final_distance=0.371753 convergence=0.542057 recovery=0.477306 coupling=0.058765 work=0.564055
+```
+
+NSC-0 proves:
+
+```text
+A non-FLOPS state-transduction benchmark now exists.
+The real network stream completed and wrote remote evidence.
+In this V0 run, real network input showed a weak edge over fixed, PRNG, and shuffled controls under the combined metric.
+```
+
+NSC-0 does not prove:
+
+```text
+Strong network-state compute advantage.
+CPU-free computation.
+Endpoint-free execution.
+Faster-than-CPU compute.
+A stable discovered network compute law.
+A finished ghost computer.
+```
+
+Next:
+
+```text
+NSC-1 should repeat this across more batches, stronger controls, and separated metrics.
+The most important question is whether temporal order and real network coupling remain useful after stricter replication.
+```
+<!-- NSC_0_END -->
