@@ -76,6 +76,48 @@ Content-Type: application/json
 - `UptimeRobot`：如果账号支持自定义 POST 和 Header，可以直接打 GitHub dispatch；如果只支持 GET/简单监控，需要中转 Worker。
 - `Cloudflare Worker Cron`：把 PAT 放进 Worker Secret，由 Cron Trigger 定时调用 GitHub dispatch。
 
+## Cloudflare Worker Cron 落地步骤
+
+本项目已经准备了模板：
+
+```text
+cloudflare/e7_3_clock_worker/worker.js
+cloudflare/e7_3_clock_worker/wrangler.toml
+cloudflare/e7_3_clock_worker/README.md
+```
+
+推荐先用 Cloudflare 网页部署：
+
+1. 登录 Cloudflare Dashboard。
+2. 进入 `Workers & Pages`。
+3. 创建 Worker，命名为 `qimingxing-e7-3-clock`。
+4. 把 `cloudflare/e7_3_clock_worker/worker.js` 内容粘贴到 Worker 编辑器。
+5. 部署 Worker。
+6. 进入 Worker 的 `Settings -> Variables and Secrets`。
+7. 添加 Secret：`GITHUB_TOKEN`。
+8. 进入 `Triggers -> Cron Triggers`。
+9. 添加 cron：`*/10 * * * *`。
+10. 等待下一次定时触发。
+
+GitHub token 只放 Cloudflare Secret，不写进仓库、文档、日志或聊天。
+
+验收时观察：
+
+```text
+E7.3a HTTP Bridge Entry
+event=repository_dispatch
+conclusion=success
+```
+
+然后确认：
+
+```text
+states/e7-last-run.json
+ok=true
+maintenance_ok=true
+owner_event_name=repository_dispatch
+```
+
 ## E7.3c 完成标准
 
 必须同时满足：
