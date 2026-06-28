@@ -1,0 +1,32 @@
+name: F2 Lifecycle Self Scheduler
+
+on:
+  repository_dispatch:
+    types: [qmx_f2_lifecycle_self_scheduler]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: f2-lifecycle-self-scheduler
+  cancel-in-progress: false
+
+jobs:
+  lifecycle-self-scheduler:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run F2 lifecycle self scheduler
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_f2_lifecycle_self_scheduler.py --mode external --ticks 4 --raw-check
