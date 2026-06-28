@@ -1,0 +1,72 @@
+{
+  "stage": "L10-multi-capsule-low-frequency-self-loop-signal",
+  "schema_version": "NSL-L10-SIGNAL-0.1",
+  "created_at": "2026-06-28T05:07:28.764654+00:00",
+  "run_id": "nsl-l10-external-28312122863",
+  "cycle_index": 1,
+  "step_index": 2,
+  "role": "memory_index",
+  "path": "states/nsl-l10-signals/nsl-l10-external-28312122863-cycle-001-step-002-memory_index.json",
+  "owner": {
+    "mode": "external",
+    "workflow": "L10 Multi Capsule Self Loop",
+    "run_id": "28312122863",
+    "run_attempt": "1",
+    "event_name": "schedule",
+    "actor": "tong0202",
+    "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
+    "sha": "ccc9f933aa18dafe6c2829fc950d80b87f2803be",
+    "local": false
+  },
+  "capsule_id": "l8cap-memory_index-0fa98f11bc067183",
+  "capsule_hash": "c1d19deac1a916ee",
+  "network_id": "l8net-935aa73f3dbeafd7",
+  "network_hash": "e2b0f7037648ec33",
+  "inputs_required": [
+    "SHADOW",
+    "RESIDUAL",
+    "IDENTITY_CONFIRMED"
+  ],
+  "signals_before": [
+    "ADVANCE_AFTER_RELEASE",
+    "IDENTITY_CONFIRMED",
+    "RELEASE",
+    "RESIDUAL",
+    "RHYTHM",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "signals_out": [
+    "MEMORY_TRACE_READY"
+  ],
+  "signals_after": [
+    "ADVANCE_AFTER_RELEASE",
+    "IDENTITY_CONFIRMED",
+    "MEMORY_TRACE_READY",
+    "RELEASE",
+    "RESIDUAL",
+    "RHYTHM",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "decision": {
+    "ok": true,
+    "checks": {
+      "role_known": true,
+      "capsule_hash_ok": true,
+      "action_allowlisted": true,
+      "no_forbidden_keys": true,
+      "inputs_available": true,
+      "graph_validation_available": true
+    },
+    "missing_inputs": [],
+    "action": "index_memory_shadow"
+  },
+  "interpreted_action": {
+    "type": "index_memory_shadow",
+    "executed": true,
+    "effect": "emit declarative signal only; no arbitrary capsule body execution"
+  },
+  "signal_hash": "0f0370fc7b85d43f",
+  "truth_boundary": "L10 signal is emitted by a controlled low-frequency interpreter loop, not by autonomous network self-execution."
+}
