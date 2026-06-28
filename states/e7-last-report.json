@@ -1,26 +1,26 @@
 {
   "stage": "E7-last-report",
   "schema_version": "QMX-E7-REPORT-0.1",
-  "created_at": "2026-06-28T08:02:45.626061+00:00",
-  "run_id": "nsl-e7-workflow_dispatch-28315912624-attempt-1",
-  "ok": true,
-  "evidence_level": "E7-controlled-low-risk-self-maintenance-v0",
-  "generation": 3,
+  "created_at": "2026-06-28T11:09:19.302472+00:00",
+  "run_id": "nsl-e7-workflow_dispatch-28320252879-attempt-1",
+  "ok": false,
+  "evidence_level": "E7-controlled-low-risk-self-maintenance-partial",
+  "generation": 4,
   "health": {
     "required_reads_ok": true,
     "required_hashes_ok": true,
     "truth_boundaries_ok": true,
-    "e6_last_ok": true,
-    "e6_report_ok": true,
-    "e6_bus_state_ok": true,
+    "e6_last_ok": false,
+    "e6_report_ok": false,
+    "e6_bus_state_ok": false,
     "e6_schedule_observed": true,
     "e5_schedule_observed": true,
     "global_lock_released": true,
     "logic_ready": true,
-    "maintenance_ready": true,
+    "maintenance_ready": false,
     "signals": {
-      "CONTROLLED_SELF_MAINTENANCE_READY": true,
-      "E6_VITALS_HEALTHY": true,
+      "CONTROLLED_SELF_MAINTENANCE_READY": false,
+      "E6_VITALS_HEALTHY": false,
       "NATURAL_WAKE_CHAIN_OBSERVED": true,
       "NO_CORE_MUTATION_ALLOWED": true,
       "ONLY_LOW_RISK_ACTIONS_EXECUTABLE": true
@@ -32,11 +32,11 @@
     "plan": "states/e7-maintenance-plan.json",
     "actions": "states/e7-maintenance-actions.json",
     "state": "states/e7-controlled-self-maintenance-state.json",
-    "snapshot": "states/e7-maintenance-snapshots/nsl-e7-workflow_dispatch-28315912624-attempt-1.json",
+    "snapshot": "states/e7-maintenance-snapshots/nsl-e7-workflow_dispatch-28320252879-attempt-1.json",
     "last_run": "states/e7-last-run.json",
     "last_report": "states/e7-last-report.json"
   },
-  "conclusion": "E7 connected E6 low-frequency vitals to controlled low-risk self-maintenance receipts and remote writeback.",
+  "conclusion": "E7 ran, but one or more health, policy, writeback, or Raw release checks did not pass.",
   "truth_boundary": "E7 is controlled low-risk self-maintenance executed by local or GitHub Actions CPU. It records health and no-op repair receipts only; it does not modify core code, workflows, permissions, or prove CPU-free network self-execution.",
-  "report_hash": "f4b950cb9c95d671"
+  "report_hash": "7625f33e8c3f1926"
 }
