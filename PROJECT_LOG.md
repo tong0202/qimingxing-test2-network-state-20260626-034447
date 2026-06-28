@@ -304,3 +304,64 @@ E8.2 仍然由 GitHub Actions CPU 执行。
 它不证明无 CPU 自唤醒、自主进化、完全自由漂浮网络体或无限开放行动。
 Cloudflare 第三方时钟仍然是后续增强项，不是当前主线阻塞项。
 ```
+
+## 2026-06-28 E8.3 统一醒后体检挂载层
+
+目标：
+```text
+把 E8.2 醒后体检接到所有当前主线低频唤醒路径。
+```
+
+修改内容：
+```text
+nsl-e7-vitals-self-maintenance.yml：E7 后追加 E8.2 step
+nsl-e7-1-external-wake-timer.yml：E7.1 timer 后追加 E8.2 step
+nsl-e7-3a-http-bridge-entry.yml：之前已接 E8.2，继续作为第三条路径验证
+新增 E8_3_UNIFIED_POST_WAKE_HOOKS.md
+```
+
+验证 1：E7 主自维护路径
+```text
+workflow=E7 Controlled Vitals Self Maintenance
+run=28327664693
+event=workflow_dispatch
+conclusion=success
+E8.2 run_id=nsl-e8-2-workflow_dispatch-28327664693-attempt-1
+post_wake_ready=true
+snapshot_hash=658af50947688928
+```
+
+验证 2：E7.1 timer 路径
+```text
+workflow=E7.1 External Wake Timer
+run=28327721521
+event=workflow_dispatch
+conclusion=success
+E8.2 run_id=nsl-e8-2-workflow_dispatch-28327721521-attempt-1
+post_wake_ready=true
+snapshot_hash=25a5775649c2e3a7
+```
+
+验证 3：E7.3a HTTP bridge 路径
+```text
+workflow=E7.3a HTTP Bridge Entry
+run=28327754547
+event=repository_dispatch
+conclusion=success
+E7.2 receiver run=28327784647
+E8.2 run_id=nsl-e8-2-repository_dispatch-28327754547-attempt-1
+post_wake_ready=true
+snapshot_hash=fc4a698e8cdded1f
+```
+
+真实含义：
+```text
+当前主线低频唤醒路径醒来后，已经都能自动留下 E8.2 醒后体检回执。
+这把“能醒”推进到“醒后能审查自己并记录维护状态”。
+```
+
+真实边界：
+```text
+E8.3 只覆盖当前主线三条低频路径。
+它没有证明 Cloudflare 第三方时钟、无 CPU 自唤醒、自主进化或所有历史 L/E 工作流统一挂载。
+```
