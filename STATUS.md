@@ -1505,3 +1505,118 @@ E8.6: connect the E8.5 summary to a lightweight dashboard or CLI status entry.
 Goal: show recent post-wake checks, health trend, and known gaps without opening JSON files.
 ```
 <!-- E8_5_STATUS_END -->
+
+<!-- F0_STATUS_START -->
+## F0 capsule quorum rebuild
+
+Status: completed V0.
+
+Plain name:
+
+```text
+Multi-capsule peer-check and missing-capsule rebuild experiment.
+```
+
+What this stage did:
+
+```text
+F0 seeded five remote capsules.
+It deliberately deleted rule_capsule from the remote anchor.
+It confirmed the target capsule became missing.
+The four alive capsules witnessed the missing capsule expected_core_hash.
+Quorum passed with 4 agreeing votes against threshold 3.
+The missing capsule was rebuilt from the registry blueprint.
+The rebuilt capsule core_hash and capsule_hash matched the expected hashes.
+```
+
+Remote paths:
+
+```text
+states/f0-capsules/<role>.json
+states/f0-capsule-registry.json
+states/f0-rebuild-ledger.json
+states/f0-last-run.json
+states/f0-last-report.json
+```
+
+Local control evidence:
+
+```text
+run_id=nsl-f0-local-20260628180300
+ok=true
+target_role=rule_capsule
+delete_status=200
+confirmed_missing=true
+missing_read_status=404
+alive_count=4
+quorum_threshold=3
+agree_count=4
+rebuild_ok=true
+expected_core_hash=40804fb0c78f4679
+rebuilt_core_hash=40804fb0c78f4679
+expected_capsule_hash=d47bff429eb592ab
+rebuilt_capsule_hash=d47bff429eb592ab
+ledger_hash=2a112224421f86a7
+```
+
+Remote GitHub Actions evidence:
+
+```text
+workflow=F0 Capsule Quorum Rebuild
+workflow_run_id=28331218212
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-f0-workflow_dispatch-28331218212-attempt-1
+target_role=rule_capsule
+confirmed_missing=true
+alive_count=4
+quorum_threshold=3
+agree_count=4
+rebuild_ok=true
+expected_core_hash=11f5e32109401a47
+rebuilt_core_hash=11f5e32109401a47
+expected_capsule_hash=27a9695076100f3c
+rebuilt_capsule_hash=27a9695076100f3c
+ledger_hash=ffb73ca526bfca83
+```
+
+Hash verification:
+
+```text
+last_run_hash=6adc31f9332391bd verified=true
+report_hash=a76fc174315a17e4 verified=true
+ledger_hash=ffb73ca526bfca83 verified=true
+registry_hash=bab121f41f678f54 verified=true
+rebuilt_rule_capsule_hash=27a9695076100f3c verified=true
+rebuilt_rule_capsule_core_hash=11f5e32109401a47 verified=true
+```
+
+What F0 proves:
+
+```text
+A capsule can be stored as remote network state.
+A capsule can disappear from the remote anchor.
+Alive peer capsules can witness the expected identity hash of the missing capsule.
+Quorum can authorize deterministic rebuild.
+The rebuilt capsule can match expected core_hash and capsule_hash.
+The rebuild leaves ledger evidence.
+```
+
+What F0 does not prove:
+
+```text
+It does not prove endpoint-free existence.
+It does not prove CPU-free network computation.
+It does not prove tamper-proof storage.
+It does not prove fully autonomous digital life.
+It does not prove that capsules self-execute without an external runner.
+It proves self-repair over mutable remote anchors.
+```
+
+Next step:
+
+```text
+F1: capsule lifecycle layer.
+Goal: define birth, sleep, wake, peer-check, repair, split, decay, and retirement as standard capsule lifecycle events.
+```
+<!-- F0_STATUS_END -->
