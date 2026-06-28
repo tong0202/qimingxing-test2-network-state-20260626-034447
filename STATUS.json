@@ -2,7 +2,7 @@
   "updated_at": "2026-06-29",
   "scope": "qimingxing/test2",
   "single_source_of_truth": "STATUS.md",
-  "current_layer": "nsc_0_network_state_compute_experiment",
+  "current_layer": "nsc_1_replication_metrics_experiment",
   "proved": [
     "network_can_carry_continuous_state",
     "network_residuals_can_form_low_frequency_rhythm",
@@ -151,7 +151,12 @@
     "nsc_0_real_network_state_transduction_stream_completed",
     "nsc_0_fixed_prng_and_shuffled_controls_completed",
     "nsc_0_remote_last_run_written_and_hash_verified",
-    "nsc_0_weak_real_network_edge_observed_under_v0_metric"
+    "nsc_0_weak_real_network_edge_observed_under_v0_metric",
+    "nsc_1_multi_batch_replication_completed",
+    "nsc_1_split_metrics_completed",
+    "nsc_1_reversed_real_temporal_order_control_added",
+    "nsc_1_remote_last_run_written_and_hash_verified",
+    "nsc_1_nsc0_weak_edge_did_not_replicate_under_stricter_controls"
   ],
   "not_proved": [
     "network_only_computation_without_cpu",
@@ -280,7 +285,16 @@
     "nsc_0_endpoint_free_execution",
     "nsc_0_faster_than_cpu_compute",
     "nsc_0_finished_ghost_computer",
-    "nsc_0_discovered_stable_network_compute_law"
+    "nsc_0_discovered_stable_network_compute_law",
+    "nsc_1_stable_real_network_state_edge",
+    "nsc_1_stable_temporal_order_advantage",
+    "nsc_1_stable_coupling_advantage",
+    "nsc_1_stable_recovery_advantage",
+    "nsc_1_stable_convergence_advantage",
+    "nsc_1_cpu_free_computation",
+    "nsc_1_endpoint_free_execution",
+    "nsc_1_faster_than_cpu_compute",
+    "nsc_1_stable_network_compute_law"
   ],
   "compute_sources": {
     "local_experiments": "local_cpu",
@@ -385,7 +399,8 @@
     "FIELD-1B": "completed_stronger_metrics_signal_present_no_prng_advantage",
     "NLANG-1C": "completed_remote_workflow_materializer_verified",
     "FIELD-1C": "completed_task_utility_benchmark_no_utility_advantage",
-    "NSC-0": "completed_v0_weak_real_network_edge_not_strong_advantage"
+    "NSC-0": "completed_v0_weak_real_network_edge_not_strong_advantage",
+    "NSC-1": "completed_v0_no_stable_edge_negative_replication"
   },
   "remote_repo": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447",
   "remote_state": {
@@ -850,7 +865,7 @@
     "github_actions_expansion_label": "external_endpoint_execution_enhancement",
     "forbidden_overclaim": "network_compute_enhancement"
   },
-  "recommended_next_mainline": "NSC-1 should repeat NSC-0 across more batches and stronger controls, then split the metric into separate laws: coupling, recovery, convergence, and temporal-order advantage. Do not claim network compute law from NSC-0 alone.",
+  "recommended_next_mainline": "Do not continue claiming a network compute law from NSC-0. Either redesign NSC-2 around a different transducer/hypothesis, or return mainline focus to NLANG remote runtime because NLANG has stronger positive evidence than FIELD/NSC compute claims.",
   "completed_mainline": "F3-lowfreq-multi-run-self-scheduler-loop-v0",
   "engineering_branch": "N8-riverbed-program-capsule-v0",
   "truth_boundary": "Test2 now proves network-state riverbed layers through F1: external GitHub Actions can wake, remote capsules can carry lifecycle state, one lifecycle chain can perform birth/sleep/wake/peer_check/repair/split/decay/retire, and all final state artifacts hash-verify. It still does not prove endpoint-free existence, CPU-free network computation, tamper-proof storage, self-executing capsules, autonomous self-generated logic, or fully autonomous digital life.",
@@ -3020,5 +3035,195 @@
     "remote_path": "states/nsc-0-last-run.json",
     "conclusion": "NSC-0 reframed compute as state transduction. The real network stream beat fixed, PRNG, and shuffled controls under the V0 effective_state_work metric, but the margin over the best control was only 3.25%, below the 5% strong-advantage threshold.",
     "truth_boundary": "NSC-0 still uses a material CPU for observation, transduction, and scoring. It does not prove CPU-free, endpoint-free, faster-than-CPU, or a stable network compute law."
+  },
+  "nsc_1_result": {
+    "stage": "NSC-1-replication-and-split-metrics",
+    "status": "completed_v0_no_stable_edge_negative_replication",
+    "ok": true,
+    "run_id": "nsc_1_replication_metrics-20260628212502",
+    "batches": 5,
+    "rounds_per_batch": 8,
+    "target_count": 5,
+    "controls": [
+      "fixed",
+      "prng",
+      "shuffled_real",
+      "reversed_real"
+    ],
+    "split_questions": [
+      "coupling",
+      "recovery",
+      "convergence",
+      "temporal_order"
+    ],
+    "verdict": {
+      "verdict": "nsc_1_no_stable_edge",
+      "batch_count": 5,
+      "metrics": {
+        "effective_state_work": {
+          "win_count": 1,
+          "batch_count": 5,
+          "win_rate": 0.2,
+          "mean_margin": -0.016859,
+          "mean_margin_rate": -0.031545,
+          "stdev_margin_rate": 0.026295,
+          "classification": "unstable_or_negative",
+          "margins": [
+            -0.035598,
+            -0.023162,
+            -0.024515,
+            -0.002341,
+            0.001321
+          ],
+          "margin_rates": [
+            -0.066261,
+            -0.044152,
+            -0.045461,
+            -0.004415,
+            0.002564
+          ]
+        },
+        "convergence": {
+          "win_count": 0,
+          "batch_count": 5,
+          "win_rate": 0.0,
+          "mean_margin": -0.036635,
+          "mean_margin_rate": -0.078309,
+          "stdev_margin_rate": 0.044,
+          "classification": "unstable_or_negative",
+          "margins": [
+            -0.020546,
+            -0.015404,
+            -0.031335,
+            -0.039797,
+            -0.076093
+          ],
+          "margin_rates": [
+            -0.044192,
+            -0.036391,
+            -0.067772,
+            -0.083514,
+            -0.159678
+          ]
+        },
+        "recovery": {
+          "win_count": 0,
+          "batch_count": 5,
+          "win_rate": 0.0,
+          "mean_margin": -0.031147,
+          "mean_margin_rate": -0.074298,
+          "stdev_margin_rate": 0.031338,
+          "classification": "unstable_or_negative",
+          "margins": [
+            -0.019554,
+            -0.021697,
+            -0.02518,
+            -0.032383,
+            -0.056922
+          ],
+          "margin_rates": [
+            -0.046709,
+            -0.054342,
+            -0.060355,
+            -0.076179,
+            -0.133904
+          ]
+        },
+        "coupling": {
+          "win_count": 1,
+          "batch_count": 5,
+          "win_rate": 0.2,
+          "mean_margin": -0.096688,
+          "mean_margin_rate": -0.257237,
+          "stdev_margin_rate": 0.542656,
+          "classification": "unstable_or_negative",
+          "margins": [
+            -0.298586,
+            -0.117499,
+            -0.180906,
+            -0.006975,
+            0.120526
+          ],
+          "margin_rates": [
+            -0.95813,
+            -0.443088,
+            -0.512173,
+            -0.02542,
+            0.652628
+          ]
+        },
+        "temporal_order": {
+          "win_count": 1,
+          "batch_count": 5,
+          "win_rate": 0.2,
+          "mean_margin": -0.0152,
+          "mean_margin_rate": -0.028264,
+          "stdev_margin_rate": 0.030957,
+          "classification": "unstable_or_negative",
+          "margins": [
+            -0.035598,
+            -0.023162,
+            -0.024515,
+            -0.002341,
+            0.009614
+          ],
+          "margin_rates": [
+            -0.066261,
+            -0.044152,
+            -0.045461,
+            -0.004415,
+            0.018968
+          ]
+        }
+      },
+      "strong_metrics": [],
+      "weak_metrics": [],
+      "unstable_metrics": [
+        "effective_state_work",
+        "convergence",
+        "recovery",
+        "coupling",
+        "temporal_order"
+      ],
+      "truth_boundary": "NSC-1 tests repeatability and split metrics. It does not prove CPU-free or faster-than-CPU computation."
+    },
+    "result_hash": "478944bb38345176",
+    "remote_write": {
+      "ok": true,
+      "path": "states/nsc-1-last-run.json",
+      "state_hash": "5b1467f8f387f858",
+      "write": {
+        "path": "states/nsc-1-last-run.json",
+        "existing_status": 404,
+        "ok": true,
+        "status": 201,
+        "error": "",
+        "commit_hash": "e4a19698ba9e80fe146f32f702e581ae97d3680e",
+        "content_sha": "e6ccd99975d07bac24ef2a6c8104ae3136da5f40"
+      },
+      "check": {
+        "path": "states/nsc-1-last-run.json",
+        "ok": true,
+        "status": 200,
+        "hash_field": "state_hash",
+        "expected": "5b1467f8f387f858",
+        "declared": "5b1467f8f387f858",
+        "computed": "5b1467f8f387f858",
+        "attempt_count": 1,
+        "observations": [
+          {
+            "status": 200,
+            "ok": true,
+            "declared": "5b1467f8f387f858",
+            "computed": "5b1467f8f387f858",
+            "error": ""
+          }
+        ]
+      }
+    },
+    "run_path": "runs/latest_nsc_1_replication_metrics_result.json",
+    "remote_path": "states/nsc-1-last-run.json",
+    "conclusion": "NSC-1 ran 5 batches and split the NSC-0 weak edge into effective work, convergence, recovery, coupling, and temporal-order metrics. None were stable; NSC-0 weak edge did not replicate under stricter controls.",
+    "truth_boundary": "NSC-1 is a negative replication for the current NSC transducer. It does not prove CPU-free compute, endpoint-free execution, faster-than-CPU compute, or a stable network compute law."
   }
 }
