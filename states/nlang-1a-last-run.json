@@ -1,0 +1,226 @@
+{
+  "stage": "NLANG-1A-remote-f3-compile",
+  "ok": true,
+  "remote": {
+    "repo": "tong0202/qimingxing-test2-network-state-20260626-034447",
+    "path": "states/f3-loop-state.json",
+    "content_sha": "177cc620db4668802eb9b071bc11bfc02c887f3a",
+    "status": 200,
+    "state_hash": "5deb8244675edcf6",
+    "state_hash_ok": true,
+    "run_id": "nsl-f3-workflow_dispatch-28332909221-attempt-1"
+  },
+  "nlang_state": {
+    "f3": {
+      "remote": {
+        "run_id": "nsl-f3-workflow_dispatch-28332909221-attempt-1",
+        "state_hash": "5deb8244675edcf6",
+        "window_count": 11,
+        "selected_actions": [
+          "peer_check"
+        ]
+      },
+      "child": {
+        "exists": true,
+        "state": "retired",
+        "retired": true,
+        "vitality": 0,
+        "capsule_hash": "8f2584b54ec860b7"
+      },
+      "lifecycle_cycle_count": 3,
+      "last_peer_check_cycle_count": 3,
+      "last_peer_check_hash": "1bace43c838cbde1",
+      "total_scheduler_ticks": 19,
+      "last_selected_action": "peer_check"
+    }
+  },
+  "compiled": {
+    "stage": "NLANG-1-compiler-v0",
+    "ok": true,
+    "selected_rule": {
+      "index": 1,
+      "source": "WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count >= f3.lifecycle_cycle_count THEN split",
+      "action": "split",
+      "matched": true,
+      "risk_level": "low",
+      "predicates": [
+        {
+          "ok": true,
+          "left": "f3.child.retired",
+          "op": "==",
+          "right": true,
+          "right_source": "literal",
+          "observed": true,
+          "error": ""
+        },
+        {
+          "ok": true,
+          "left": "f3.last_peer_check_cycle_count",
+          "op": ">=",
+          "right": 3,
+          "right_source": "f3.lifecycle_cycle_count",
+          "observed": 3,
+          "error": ""
+        }
+      ]
+    },
+    "rules": [
+      {
+        "index": 0,
+        "source": "WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count < f3.lifecycle_cycle_count THEN peer_check",
+        "action": "peer_check",
+        "matched": false,
+        "risk_level": "low",
+        "predicates": [
+          {
+            "ok": true,
+            "left": "f3.child.retired",
+            "op": "==",
+            "right": true,
+            "right_source": "literal",
+            "observed": true,
+            "error": ""
+          },
+          {
+            "ok": false,
+            "left": "f3.last_peer_check_cycle_count",
+            "op": "<",
+            "right": 3,
+            "right_source": "f3.lifecycle_cycle_count",
+            "observed": 3,
+            "error": ""
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "source": "WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count >= f3.lifecycle_cycle_count THEN split",
+        "action": "split",
+        "matched": true,
+        "risk_level": "low",
+        "predicates": [
+          {
+            "ok": true,
+            "left": "f3.child.retired",
+            "op": "==",
+            "right": true,
+            "right_source": "literal",
+            "observed": true,
+            "error": ""
+          },
+          {
+            "ok": true,
+            "left": "f3.last_peer_check_cycle_count",
+            "op": ">=",
+            "right": 3,
+            "right_source": "f3.lifecycle_cycle_count",
+            "observed": 3,
+            "error": ""
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "source": "WHEN f3.child.exists == false THEN split",
+        "action": "split",
+        "matched": false,
+        "risk_level": "low",
+        "predicates": [
+          {
+            "ok": false,
+            "left": "f3.child.exists",
+            "op": "==",
+            "right": false,
+            "right_source": "literal",
+            "observed": true,
+            "error": ""
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "source": "WHEN f3.child.retired == false AND f3.child.vitality > 35 THEN decay",
+        "action": "decay",
+        "matched": false,
+        "risk_level": "low",
+        "predicates": [
+          {
+            "ok": false,
+            "left": "f3.child.retired",
+            "op": "==",
+            "right": false,
+            "right_source": "literal",
+            "observed": true,
+            "error": ""
+          },
+          {
+            "ok": false,
+            "left": "f3.child.vitality",
+            "op": ">",
+            "right": 35,
+            "right_source": "literal",
+            "observed": 0,
+            "error": ""
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "source": "WHEN f3.child.retired == false AND f3.child.vitality <= 35 THEN retire",
+        "action": "retire",
+        "matched": false,
+        "risk_level": "low",
+        "predicates": [
+          {
+            "ok": false,
+            "left": "f3.child.retired",
+            "op": "==",
+            "right": false,
+            "right_source": "literal",
+            "observed": true,
+            "error": ""
+          },
+          {
+            "ok": true,
+            "left": "f3.child.vitality",
+            "op": "<=",
+            "right": 35,
+            "right_source": "literal",
+            "observed": 0,
+            "error": ""
+          }
+        ]
+      }
+    ],
+    "action_plan": {
+      "selected": true,
+      "action": "split",
+      "risk_level": "low",
+      "required_reads": [
+        "network_state"
+      ],
+      "required_writes": [
+        "scoped_state",
+        "ledger"
+      ],
+      "proof_required": true
+    },
+    "truth_boundary": "NLANG-1 compiles formal rules into an action plan. It does not prove spontaneous network compute."
+  },
+  "selected_action": "split",
+  "action_plan": {
+    "selected": true,
+    "action": "split",
+    "risk_level": "low",
+    "required_reads": [
+      "network_state"
+    ],
+    "required_writes": [
+      "scoped_state",
+      "ledger"
+    ],
+    "proof_required": true
+  },
+  "meaning": "NLANG selected the next action from real remote F3 state.",
+  "truth_boundary": "NLANG-1A proves remote-state compilation only. It does not execute the action or prove spontaneous network compute."
+}
