@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-06-28",
+  "updated_at": "2026-06-29",
   "scope": "qimingxing/test2",
   "single_source_of_truth": "STATUS.md",
-  "current_layer": "unified_post_wake_hooks_layer",
+  "current_layer": "post_wake_ledger_layer",
   "proved": [
     "network_can_carry_continuous_state",
     "network_residuals_can_form_low_frequency_rhythm",
@@ -91,7 +91,11 @@
     "e8_3_post_wake_check_attached_to_e7_controlled_self_maintenance",
     "e8_3_post_wake_check_attached_to_e7_1_external_wake_timer",
     "e8_3_post_wake_check_attached_to_e7_3a_http_bridge",
-    "e8_3_three_low_frequency_wake_paths_write_e8_2_receipts"
+    "e8_3_three_low_frequency_wake_paths_write_e8_2_receipts",
+    "e8_4_unified_post_wake_ledger_created",
+    "e8_4_ledger_backfills_existing_e8_2_snapshots",
+    "e8_4_ledger_appends_new_e7_1_post_wake_run",
+    "e8_4_ledger_hash_and_report_hash_verified"
   ],
   "not_proved": [
     "network_only_computation_without_cpu",
@@ -159,7 +163,11 @@
     "e8_3_all_historical_l_and_e_workflows_have_post_wake_hooks",
     "e8_3_third_party_cloudflare_clock_connected",
     "e8_3_cpu_free_self_wake",
-    "e8_3_autonomous_evolution"
+    "e8_3_autonomous_evolution",
+    "e8_4_tamper_proof_database",
+    "e8_4_blockchain_or_immutable_storage",
+    "e8_4_cpu_free_self_wake",
+    "e8_4_autonomous_evolution"
   ],
   "compute_sources": {
     "local_experiments": "local_cpu",
@@ -248,7 +256,8 @@
     "E7.3b": "template_prepared_pending_cloudflare_deploy_skipped_for_now",
     "E7.3c": "pending_non_manual_third_party_clock_observation",
     "E8.2": "completed_post_wake_self_maintenance_v0_dispatch_and_e7_3a_chain_verified",
-    "E8.3": "completed_unified_post_wake_hooks_for_e7_e7_1_e7_3a_v0"
+    "E8.3": "completed_unified_post_wake_hooks_for_e7_e7_1_e7_3a_v0",
+    "E8.4": "completed_unified_post_wake_ledger_v0"
   },
   "remote_repo": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447",
   "remote_state": {
@@ -1261,17 +1270,14 @@
     "conclusion": "L12.2 V0 is deployed and verified: multi-cron schedule, slot dedupe, finite catch-up recording, and global runtime lock work on the remote workflow.",
     "truth_boundary": "This reduces missed schedule risk but does not guarantee every hour without a second independent clock source."
   },
-  "last_remote_sync_at": "2026-06-28T23:58:00+08:00",
+  "last_remote_sync_at": "2026-06-29T00:12:00+08:00",
   "latest_remote_sync": {
-    "synced_at_local": "2026-06-28T23:58:00+08:00",
-    "source": "E8.3 verification runs: E7 28327664693, E7.1 28327721521, E7.3a 28327754547, E7.2 receiver 28327784647",
-    "e8_3_completed": true,
-    "covered_low_frequency_paths": [
-      "E7 Controlled Vitals Self Maintenance",
-      "E7.1 External Wake Timer",
-      "E7.3a HTTP Bridge Entry"
-    ],
-    "next_mainline": "E8.4: append-only post-wake ledger so evidence is not dependent on latest files"
+    "synced_at_local": "2026-06-29T00:12:00+08:00",
+    "source": "E8.4 local ledger creation nsl-e8-2-local-20260628160746 and remote E7.1 append run 28328169814",
+    "e8_4_completed": true,
+    "ledger_entry_count": 9,
+    "ledger_ready_count": 8,
+    "next_mainline": "E8.5: ledger query/status summary so recent post-wake receipts can be read without opening the full JSON"
   },
   "e7_result": {
     "stage": "E7-controlled-vitals-self-maintenance",
@@ -1810,5 +1816,67 @@
     },
     "conclusion": "E8.3 attaches the E8.2 post-wake self-check to the main low-frequency wake paths: E7 schedule/workflow dispatch, E7.1 timer, and E7.3a HTTP bridge. Each verified path wrote an ok=true post_wake_ready=true E8.2 snapshot.",
     "truth_boundary": "E8.3 covers the current main low-frequency wake paths only. It does not prove third-party Cloudflare clock deployment, CPU-free self-wake, autonomous evolution, or that every historical L/E workflow has a post-wake hook."
+  },
+  "e8_4_result": {
+    "stage": "E8.4-unified-post-wake-ledger",
+    "status": "completed_v0",
+    "ok": true,
+    "evidence_level": "E8.4-post-wake-ledger-v0",
+    "local_creation": {
+      "run_id": "nsl-e8-2-local-20260628160746",
+      "ok": true,
+      "ledger_entry_count": 8,
+      "ledger_hash": "07d73b6f5d094e77",
+      "created_at_utc": "2026-06-28T16:09:34Z"
+    },
+    "remote_append_verification": {
+      "workflow": "E7.1 External Wake Timer",
+      "workflow_file": ".github/workflows/nsl-e7-1-external-wake-timer.yml",
+      "workflow_run_id": 28328169814,
+      "workflow_event": "workflow_dispatch",
+      "workflow_conclusion": "success",
+      "e8_2_run_id": "nsl-e8-2-workflow_dispatch-28328169814-attempt-1",
+      "post_wake_ready": true,
+      "owner_workflow": "E7.1 External Wake Timer",
+      "owner_run_id": "28328169814"
+    },
+    "ledger": {
+      "path": "states/e8-4-post-wake-ledger.json",
+      "entry_count": 9,
+      "ready_count": 8,
+      "covered_workflows": [
+        "E7 Controlled Vitals Self Maintenance",
+        "E7.1 External Wake Timer",
+        "E7.3a HTTP Bridge Entry",
+        "E8.2 Post Wake Self Maintenance"
+      ],
+      "covered_events": [
+        "repository_dispatch",
+        "workflow_dispatch"
+      ],
+      "latest_entry_run_id": "nsl-e8-2-workflow_dispatch-28328169814-attempt-1",
+      "latest_entry_workflow": "E7.1 External Wake Timer",
+      "latest_entry_ready": true,
+      "ledger_hash": "34238b68d7462312",
+      "ledger_hash_verified": true
+    },
+    "ledger_report": {
+      "path": "states/e8-4-last-ledger-report.json",
+      "run_id": "nsl-e8-2-workflow_dispatch-28328169814-attempt-1",
+      "entry_count": 9,
+      "ready_count": 8,
+      "ledger_hash": "34238b68d7462312",
+      "report_hash": "417ec672bf93a8ca",
+      "report_hash_verified": true
+    },
+    "remote_paths": {
+      "runner": "scripts/nsl_e8_2_post_wake_self_maintenance.py",
+      "doc": "E8_4_POST_WAKE_LEDGER.md",
+      "ledger": "states/e8-4-post-wake-ledger.json",
+      "ledger_report": "states/e8-4-last-ledger-report.json",
+      "snapshots": "states/e8-2-post-wake-snapshots/"
+    },
+    "conclusion": "E8.4 creates a unified deduplicated post-wake ledger from existing E8.2 snapshots and appends new E8.2 results after wake paths run. The first remote append verification increased the ledger to 9 entries.",
+    "truth_boundary": "E8.4 is a mutable GitHub state ledger rebuilt from per-run snapshots and current results. It is not a tamper-proof database, not blockchain, and does not prove CPU-free wakefulness or autonomous evolution."
   }
 }
