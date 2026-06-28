@@ -31,3 +31,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python scripts/nsl_e7_2_wake_capsule_bridge.py --mode external --receiver-timeout 240 --raw-timeout 120 --raw-interval 4
+
+      - name: Run post-wake self-check and controlled maintenance receipt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e8_2_post_wake_self_maintenance.py --mode external --raw-timeout 240 --raw-interval 8
