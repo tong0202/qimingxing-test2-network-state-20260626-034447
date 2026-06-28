@@ -1,0 +1,32 @@
+name: F1 Capsule Lifecycle
+
+on:
+  repository_dispatch:
+    types: [qmx_f1_capsule_lifecycle]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: f1-capsule-lifecycle
+  cancel-in-progress: false
+
+jobs:
+  capsule-lifecycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run F1 capsule lifecycle
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_f1_capsule_lifecycle.py --mode external --repair-target rule_capsule --raw-check
