@@ -1,0 +1,32 @@
+name: NLANG 1C Remote Workflow Materializer
+
+on:
+  repository_dispatch:
+    types: [qmx_nlang_1c_materialize]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nlang-1c-remote-materializer
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run NLANG-1C remote materializer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python nlang/nlang_1c_remote_materializer.py

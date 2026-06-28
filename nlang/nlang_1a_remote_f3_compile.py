@@ -7,8 +7,11 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+SCRIPTS = ROOT / "scripts"
+for path in (Path(__file__).resolve().parent, ROOT, SCRIPTS):
+    text = str(path)
+    if path.exists() and text not in sys.path:
+        sys.path.insert(0, text)
 
 from nlang_compiler_v0 import compile_rules, load_rules  # noqa: E402
 from nsl_l12_hourly_self_maintenance import content_get, gh_token, stable_hash  # noqa: E402
@@ -100,4 +103,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
