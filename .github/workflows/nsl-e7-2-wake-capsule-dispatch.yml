@@ -1,0 +1,32 @@
+name: E7.2 Wake Capsule Dispatch Receiver
+
+on:
+  repository_dispatch:
+    types: [qmx_e7_wake_capsule]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: e7-2-wake-capsule-dispatch
+  cancel-in-progress: false
+
+jobs:
+  wake-e7-from-capsule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run E7 from wake capsule dispatch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e7_vitals_self_maintenance.py --mode external --raw-timeout 240 --raw-interval 8
