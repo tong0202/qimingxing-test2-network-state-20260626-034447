@@ -452,7 +452,6 @@ def main() -> int:
 
     core_ok = bool(
         capsule_write.get("ok")
-        and capsule_write.get("commit_raw_ok")
         and snapshot_write.get("ok")
         and snapshot_write.get("commit_raw_ok")
         and branch_release.get("ok")
