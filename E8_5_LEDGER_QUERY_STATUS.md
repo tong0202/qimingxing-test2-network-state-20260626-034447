@@ -1,14 +1,14 @@
-# E8.5 ledger 查询器和状态摘要
+# E8.5 ledger query/status summary
 
-## 中文名字
+## Plain name
 
-醒后体检账本查询器。
+Post-wake ledger query layer.
 
-## 这一步证明什么
+## What this stage proves
 
-E8.4 已经有统一 ledger，但 ledger 很大，不适合每次人工打开。
+E8.4 created a unified post-wake ledger. E8.5 adds a compact query/status layer above it, so later checks do not need to manually open the full ledger JSON.
 
-E8.5 把 ledger 转成轻量摘要：
+Remote status files:
 
 ```text
 states/e8-5-ledger-status-summary.json
@@ -17,45 +17,68 @@ states/e8-5-last-run.json
 states/e8-5-last-report.json
 ```
 
-## 摘要会显示什么
+## What the summary shows
 
 ```text
-entry_count：账本总记录数
-ready_count：ready 记录数
-ready_rate_percent：ready 比例
-recent_entries：最近 N 次醒后体检
-latest_by_workflow：每条唤醒路径的最近一次体检
-workflow_counts：来源路径统计
-event_counts：触发事件统计
-status_level：healthy / healthy_with_known_gaps / degraded
-alerts：需要注意的情况
+entry_count: total ledger entries
+ready_count: ready entries
+ready_rate_percent: ready ratio
+recent_entries: latest N post-wake checks
+latest_by_workflow: latest check per wake path
+workflow_counts: source workflow counts
+event_counts: trigger event counts
+status_level: healthy / healthy_with_known_gaps / degraded
+alerts: explicit known gaps
 ```
 
-## 完成标准
+## Completion criteria
 
 ```text
-能读取 states/e8-4-post-wake-ledger.json
-ledger_hash 校验通过
-entry_hash 全部校验通过
-summary 写回成功
-recent 写回成功
-last-run / last-report 写回成功
+read states/e8-4-post-wake-ledger.json
+ledger_hash verified
+all entry_hash values verified
+summary writeback succeeded
+recent writeback succeeded
+last-run / last-report writeback succeeded
+remote declared hashes match local recomputation
 ```
 
-## 没证明什么
+## Latest remote evidence
 
 ```text
-E8.5 只是查询和摘要层。
-它不执行自维护动作。
-它不是不可篡改数据库。
-它不证明无 CPU 自唤醒。
-它不证明自主进化。
+workflow=E8.5 Ledger Query Status
+run=28330036818
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-e8-5-workflow_dispatch-28330036818-attempt-1
+status_level=healthy_with_known_gaps
+status_text=healthy_with_recorded_history_gap
+entry_count=11
+ready_count=10
+recent_count=8
+recent_ready_count=8
+ledger_hash_ok=true
+entry_hashes_ok=true
+alerts=["history_contains_partial_entries"]
+summary_hash=c443a08bf5d9b020 verified=true
+recent_hash=d0cb710671b071bb verified=true
+last_run_hash=e3e816d0c4ec3c53 verified=true
+report_hash=a047df3cd9ddd4bc verified=true
 ```
 
-## 下一步
-
-如果 E8.5 成立，下一步可以做：
+## What it does not prove
 
 ```text
-E8.6：把 E8.5 摘要接入一个简单 Dashboard，让人不用看 JSON。
+E8.5 is a query and summary layer only.
+It does not run maintenance actions.
+It is not tamper-proof storage.
+It does not prove CPU-free self-wake.
+It does not prove autonomous evolution.
+```
+
+## Next step
+
+```text
+E8.6: connect the E8.5 summary to a lightweight dashboard or CLI status entry.
+Goal: show recent post-wake checks, health trend, and known gaps without opening JSON files.
 ```
