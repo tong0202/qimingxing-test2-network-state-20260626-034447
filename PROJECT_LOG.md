@@ -1011,3 +1011,27 @@ NLANG-1C proves remote workflow materialization over mutable anchors.
 FIELD-1C produced a negative task-utility result.
 Neither result proves endpoint-free execution, CPU-free computation, or network supercompute.
 ```
+
+
+## 2026-06-29 NSC-0 Network State Compute
+
+NSC-0 completed a first state-transduction experiment.
+
+```text
+run_id=nsc_0_network_state_compute-20260628211544
+rounds=10
+target_count=5
+verdict=nsc_0_weak_real_network_edge
+real_work=0.582374
+best_control_work=0.564055
+margin=0.018319
+margin_rate=0.032477
+remote_state_hash=f381b8660e62a5bd
+```
+
+Interpretation:
+
+```text
+This is a weak real-network edge, not a strong advantage.
+The result supports continuing NSC experiments, but does not prove CPU-free compute or a stable network compute law.
+```
