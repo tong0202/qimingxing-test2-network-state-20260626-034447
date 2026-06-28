@@ -1,16 +1,16 @@
 {
   "stage": "F1-capsule-lifecycle",
   "schema_version": "QMX-F1-CAPSULE-0.1",
-  "created_by_run_id": "nsl-f1-workflow_dispatch-28331564625-attempt-1",
-  "created_at": "2026-06-28T18:18:01.813231+00:00",
-  "updated_at": "2026-06-28T18:18:15.795916+00:00",
-  "generation": 2,
+  "created_by_run_id": "nsl-f1-local-20260628182013",
+  "created_at": "2026-06-28T18:20:14.642955+00:00",
+  "updated_at": "2026-06-28T18:20:14.642965+00:00",
+  "generation": 3,
   "role": "repair_capsule",
   "path": "states/f1-capsules/repair_capsule.json",
   "core": {
     "role": "repair_capsule",
     "kind": "repair",
-    "generation": 2,
+    "generation": 3,
     "capsule_id": "f1cap-repair_capsule",
     "path": "states/f1-capsules/repair_capsule.json",
     "duty": "hold repair receipt rules and recovery evidence format",
@@ -35,38 +35,38 @@
       "state_machine": "born -> awake/sleeping -> peer_checked -> repaired/split -> decayed -> retired"
     }
   },
-  "core_hash": "0d2ff61abc42264c",
+  "core_hash": "8dc2aac5d11cfbb9",
   "peer_manifest": {
     "roles": [
       {
         "role": "identity_capsule",
         "path": "states/f1-capsules/identity_capsule.json",
         "capsule_id": "f1cap-identity_capsule",
-        "expected_core_hash": "d450787a1fb210fe"
+        "expected_core_hash": "390b9cd631ff3027"
       },
       {
         "role": "memory_capsule",
         "path": "states/f1-capsules/memory_capsule.json",
         "capsule_id": "f1cap-memory_capsule",
-        "expected_core_hash": "74eca51a00aab6a6"
+        "expected_core_hash": "d7b13214bbc12658"
       },
       {
         "role": "rule_capsule",
         "path": "states/f1-capsules/rule_capsule.json",
         "capsule_id": "f1cap-rule_capsule",
-        "expected_core_hash": "4638a99987337cdc"
+        "expected_core_hash": "4d7b33093f6a0d5c"
       },
       {
         "role": "peer_capsule",
         "path": "states/f1-capsules/peer_capsule.json",
         "capsule_id": "f1cap-peer_capsule",
-        "expected_core_hash": "0ce8faaa1f315846"
+        "expected_core_hash": "f8ef453f4498a772"
       },
       {
         "role": "repair_capsule",
         "path": "states/f1-capsules/repair_capsule.json",
         "capsule_id": "f1cap-repair_capsule",
-        "expected_core_hash": "0d2ff61abc42264c"
+        "expected_core_hash": "8dc2aac5d11cfbb9"
       }
     ],
     "quorum_threshold": 3,
@@ -74,20 +74,19 @@
     "vote_basis": "alive capsules witness expected_core_hash for the missing role"
   },
   "lifecycle": {
-    "state": "awake",
-    "birth_run_id": "nsl-f1-workflow_dispatch-28331564625-attempt-1",
+    "state": "born",
+    "birth_run_id": "nsl-f1-local-20260628182013",
     "wake_count": 0,
     "sleep_count": 0,
     "peer_check_count": 0,
     "repair_count": 0,
-    "split_count": 1,
+    "split_count": 0,
     "decay_count": 0,
     "retired": false,
     "vitality": 100,
-    "age_ticks": 1,
-    "last_event": "split",
-    "last_event_at": "2026-06-28T18:18:15.795899+00:00",
-    "last_child_role": "repair_capsule_child"
+    "age_ticks": 0,
+    "last_event": "birth",
+    "last_event_at": "2026-06-28T18:20:14.643075+00:00"
   },
   "safety": {
     "direct_body_execution": false,
@@ -98,6 +97,5 @@
     ]
   },
   "truth_boundary": "F1 capsules have lifecycle state stored in a remote anchor. They still require an external runner to be read, changed, and written.",
-  "capsule_hash": "d57f1366ded35093",
-  "updated_by_run_id": "nsl-f1-workflow_dispatch-28331564625-attempt-1"
+  "capsule_hash": "e0abe65923123453"
 }
