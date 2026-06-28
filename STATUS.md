@@ -2441,3 +2441,75 @@ NSC-1 should repeat this across more batches, stronger controls, and separated m
 The most important question is whether temporal order and real network coupling remain useful after stricter replication.
 ```
 <!-- NSC_0_END -->
+
+<!-- NSC_1_START -->
+## NSC-1 Replication And Split Metrics
+
+Status: completed V0 on 2026-06-29.
+
+Goal:
+
+```text
+Repeat NSC-0 across multiple batches and split the weak edge into separate questions:
+- coupling
+- recovery
+- convergence
+- temporal_order
+```
+
+Protocol:
+
+```text
+run_path=runs/latest_nsc_1_replication_metrics_result.json
+remote_path=states/nsc-1-last-run.json
+remote_state_hash=5b1467f8f387f858
+remote_hash_verified=True
+batches=5
+rounds_per_batch=8
+target_count=5
+controls=fixed, prng, shuffled_real, reversed_real
+```
+
+Verdict:
+
+```text
+verdict=nsc_1_no_stable_edge
+strong_metrics=[]
+weak_metrics=[]
+unstable_metrics=['effective_state_work', 'convergence', 'recovery', 'coupling', 'temporal_order']
+```
+
+Split metrics:
+
+```text
+effective_state_work: win_rate=0.2 mean_margin_rate=-0.031545 classification=unstable_or_negative
+convergence:          win_rate=0.0 mean_margin_rate=-0.078309 classification=unstable_or_negative
+recovery:             win_rate=0.0 mean_margin_rate=-0.074298 classification=unstable_or_negative
+coupling:             win_rate=0.2 mean_margin_rate=-0.257237 classification=unstable_or_negative
+temporal_order:       win_rate=0.2 mean_margin_rate=-0.028264 classification=unstable_or_negative
+```
+
+NSC-1 proves:
+
+```text
+A stricter multi-batch replication harness exists.
+The NSC-0 weak edge did not replicate under stronger controls.
+The current NSC transducer does not show stable coupling, recovery, convergence, or temporal-order advantage.
+```
+
+NSC-1 does not prove:
+
+```text
+Stable network-state compute law.
+CPU-free computation.
+Endpoint-free execution.
+Faster-than-CPU compute.
+Ghost computer compute substrate.
+```
+
+Next:
+
+```text
+Either redesign NSC-2 around a new transducer/hypothesis, or return mainline focus to NLANG remote runtime because NLANG has stronger positive evidence.
+```
+<!-- NSC_1_END -->
