@@ -91,13 +91,25 @@ def verify_hash(payload: dict[str, Any] | None, field: str) -> dict[str, Any]:
     }
 
 
-def sample_source(owner: str, repo: str, spec: dict[str, Any]) -> dict[str, Any]:
+def sample_source(owner: str, repo: str, spec: dict[str, Any], token: str) -> dict[str, Any]:
     sample = fetch_json_url(raw_url(owner, repo, "main", spec["path"]), f"e7-{spec['id']}")
     payload = sample.get("payload") if isinstance(sample.get("payload"), dict) else None
+    source = "branch_raw"
+    if not payload:
+        payload, _, api_response = content_get(owner, repo, spec["path"], token)
+        source = "contents_api_fallback"
+        if payload:
+            sample = {
+                "ok": True,
+                "status": api_response.get("status"),
+                "elapsed_ms": api_response.get("elapsed_ms"),
+                "error": "",
+            }
     return {
         "id": spec["id"],
         "path": spec["path"],
         "required": bool(spec.get("required")),
+        "source": source,
         "read_ok": bool(sample.get("ok") and payload),
         "status": sample.get("status"),
         "elapsed_ms": sample.get("elapsed_ms"),
@@ -555,7 +567,7 @@ def main() -> int:
     token = gh_token()
     global_release: dict[str, Any] = {}
     try:
-        samples = [sample_source(args.owner, args.repo, spec) for spec in SOURCE_SPECS]
+        samples = [sample_source(args.owner, args.repo, spec, token) for spec in SOURCE_SPECS]
         previous_state = source_by_id(samples, "e7_previous_state").get("payload") or {}
         generation = int((previous_state or {}).get("generation") or 0) + 1
         health = derive_health(samples)
@@ -587,23 +599,26 @@ def main() -> int:
         state_write = put_and_verify(args.owner, args.repo, token, E7_STATE_PATH, state, "state_hash", f"E7 maintenance state {run_id}")
         snapshot_write = put_and_verify(args.owner, args.repo, token, snap_path, state, "state_hash", f"E7 maintenance snapshot {run_id}")
 
+        # Fixed state paths can lag behind GitHub Raw branch caching after rapid rewrites.
+        # The unique snapshot path is the branch-level release proof; fixed paths are already
+        # verified through commit-specific Raw in put_and_verify.
         expected_release = [
-            {"path": E7_PLAN_PATH, "hash_field": "plan_hash", "hash_value": plan["plan_hash"]},
-            {"path": E7_ACTIONS_PATH, "hash_field": "actions_hash", "hash_value": actions["actions_hash"]},
-            {"path": E7_STATE_PATH, "hash_field": "state_hash", "hash_value": state["state_hash"]},
             {"path": snap_path, "hash_field": "state_hash", "hash_value": state["state_hash"]},
         ]
         branch_release = wait_for_branch_release(args.owner, args.repo, expected_release, args.raw_timeout, args.raw_interval)
+        fixed_path_commit_ok = bool(
+            plan_write.get("commit_raw_ok")
+            and actions_write.get("commit_raw_ok")
+            and state_write.get("commit_raw_ok")
+        )
         core_ok = bool(
             state["maintenance_ok"]
             and plan_write.get("ok")
-            and plan_write.get("commit_raw_ok")
             and actions_write.get("ok")
-            and actions_write.get("commit_raw_ok")
             and state_write.get("ok")
-            and state_write.get("commit_raw_ok")
             and snapshot_write.get("ok")
             and snapshot_write.get("commit_raw_ok")
+            and fixed_path_commit_ok
             and branch_release.get("ok")
         )
         result: dict[str, Any] = {
@@ -638,6 +653,7 @@ def main() -> int:
             },
             "verification": {
                 "branch_raw_release": branch_release,
+                "fixed_path_commit_raw_ok": fixed_path_commit_ok,
                 "plan_write_ok": plan_write.get("ok"),
                 "actions_write_ok": actions_write.get("ok"),
                 "state_write_ok": state_write.get("ok"),
