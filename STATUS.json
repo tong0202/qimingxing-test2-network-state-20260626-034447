@@ -2,7 +2,7 @@
   "updated_at": "2026-06-28",
   "scope": "qimingxing/test2",
   "single_source_of_truth": "STATUS.md",
-  "current_layer": "external_clock_http_bridge_layer",
+  "current_layer": "post_wake_self_maintenance_layer",
   "proved": [
     "network_can_carry_continuous_state",
     "network_residuals_can_form_low_frequency_rhythm",
@@ -83,7 +83,11 @@
     "e7_repository_dispatch_run_writes_ok_true_maintenance_receipt",
     "e7_3a_http_bridge_entry_workflow_deployed",
     "e7_3a_repository_dispatch_runs_bridge_without_manual_parameters",
-    "e7_3a_bridge_triggers_e7_2_receiver_and_e7_writeback"
+    "e7_3a_bridge_triggers_e7_2_receiver_and_e7_writeback",
+    "e8_2_post_wake_self_check_reads_remote_wake_chain_evidence",
+    "e8_2_post_wake_low_risk_maintenance_receipts_written",
+    "e7_3a_http_bridge_runs_e8_2_post_wake_check",
+    "e8_2_remote_github_actions_workflow_dispatch_runs_successfully"
   ],
   "not_proved": [
     "network_only_computation_without_cpu",
@@ -143,7 +147,11 @@
     "e7_2_bridge_free_reverse_github_startup",
     "e7_3b_third_party_external_clock_connected",
     "e7_3c_non_manual_external_clock_trigger_observed",
-    "e7_3_cpu_free_or_bridge_free_self_wake"
+    "e7_3_cpu_free_or_bridge_free_self_wake",
+    "e8_2_cpu_free_wakefulness",
+    "e8_2_autonomous_evolution",
+    "e8_2_unreviewed_core_self_modification",
+    "e7_3b_cloudflare_external_clock_deployed"
   ],
   "compute_sources": {
     "local_experiments": "local_cpu",
@@ -227,10 +235,11 @@
     "E8.1": "pending_natural_network_body_refresh_and_e7_1_schedule_observation",
     "E7.1_timer": "deployed_dispatch_verified_schedule_pending",
     "E7.2": "completed_wake_capsule_reverse_github_dispatch_v0",
-    "E7.3": "partial_e7_3a_completed_e7_3b_e7_3c_pending",
-    "E7.3a": "completed_http_repository_dispatch_entry_verified_manual_http_trigger",
-    "E7.3b": "template_prepared_pending_cloudflare_deploy",
-    "E7.3c": "pending_non_manual_cloudflare_cron_observation"
+    "E7.3": "partial_e7_3a_completed_with_e8_2_chain_e7_3b_e7_3c_pending",
+    "E7.3a": "completed_http_entry_bridge_and_post_wake_e8_2_verified",
+    "E7.3b": "template_prepared_pending_cloudflare_deploy_skipped_for_now",
+    "E7.3c": "pending_non_manual_third_party_clock_observation",
+    "E8.2": "completed_post_wake_self_maintenance_v0_dispatch_and_e7_3a_chain_verified"
   },
   "remote_repo": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447",
   "remote_state": {
@@ -1243,14 +1252,15 @@
     "conclusion": "L12.2 V0 is deployed and verified: multi-cron schedule, slot dedupe, finite catch-up recording, and global runtime lock work on the remote workflow.",
     "truth_boundary": "This reduces missed schedule risk but does not guarantee every hour without a second independent clock source."
   },
-  "last_remote_sync_at": "2026-06-28T21:20:00+08:00",
+  "last_remote_sync_at": "2026-06-28T23:46:30+08:00",
   "latest_remote_sync": {
-    "synced_at_local": "2026-06-28T21:01:47+08:00",
-    "source": "E7.3a HTTP bridge entry run 28323063883, E7.2 receiver run 28323069603, and states/e7-last-run.json repository_dispatch writeback",
-    "e7_3a_completed": true,
+    "synced_at_local": "2026-06-28T23:46:30+08:00",
+    "source": "E8.2 standalone workflow_dispatch run 28327426266 and E7.3a chained run 28327487602 with E8.2 post-wake writeback",
+    "e8_2_completed": true,
+    "e7_3a_post_wake_chain_completed": true,
     "e7_3b_completed": false,
     "e7_3c_completed": false,
-    "next_mainline": "connect real third-party clock source, then observe one non-manual repository_dispatch writeback"
+    "next_mainline": "E8.3: make post-wake self-check run automatically after every low-frequency wake path; Cloudflare remains optional hardening"
   },
   "e7_result": {
     "stage": "E7-controlled-vitals-self-maintenance",
@@ -1638,5 +1648,99 @@
       "states/e7-last-run.json contains ok=true, maintenance_ok=true, executed_count=4, blocked_count=4, owner_event_name=repository_dispatch"
     ],
     "truth_boundary": "A manual Worker test or manual gh api dispatch can test plumbing, but only an actual Cloudflare cron trigger satisfies E7.3c."
+  },
+  "e8_2_result": {
+    "stage": "E8.2-post-wake-self-maintenance",
+    "status": "completed_dispatch_and_e7_3a_chain_verified",
+    "ok": true,
+    "evidence_level": "E8.2-post-wake-self-maintenance-v0",
+    "standalone_workflow": {
+      "name": "E8.2 Post Wake Self Maintenance",
+      "workflow_file": ".github/workflows/nsl-e8-2-post-wake-self-maintenance.yml",
+      "workflow_run_id": 28327426266,
+      "workflow_event": "workflow_dispatch",
+      "workflow_status": "completed",
+      "workflow_conclusion": "success",
+      "workflow_url": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447/actions/runs/28327426266",
+      "created_at_utc": "2026-06-28T15:43:33Z",
+      "updated_at_utc": "2026-06-28T15:44:52Z"
+    },
+    "chained_e7_3a_workflow": {
+      "name": "E7.3a HTTP Bridge Entry",
+      "workflow_file": ".github/workflows/nsl-e7-3a-http-bridge-entry.yml",
+      "workflow_run_id": 28327487602,
+      "workflow_event": "repository_dispatch",
+      "workflow_status": "completed",
+      "workflow_conclusion": "success",
+      "workflow_url": "https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447/actions/runs/28327487602",
+      "created_at_utc": "2026-06-28T15:45:48Z",
+      "updated_at_utc": "2026-06-28T15:46:26Z"
+    },
+    "bridge_evidence": {
+      "path": "states/e7-2-last-run.json",
+      "run_id": "nsl-e7-2-repository_dispatch-28327487602-attempt-1",
+      "ok": true,
+      "capsule_id": "e72cap-9dfa5e405a1ba2ef",
+      "capsule_hash": "9ec8669cc56f2fb0",
+      "validation_ok": true,
+      "dispatch_ok": true,
+      "receiver_ok": true,
+      "receiver_workflow_run_id": 28327492295,
+      "receiver_event": "repository_dispatch",
+      "receiver_conclusion": "success"
+    },
+    "e7_writeback": {
+      "path": "states/e7-last-run.json",
+      "run_id": "nsl-e7-repository_dispatch-28327492295-attempt-1",
+      "ok": true,
+      "generation": 14,
+      "maintenance_ok": true,
+      "executed_count": 4,
+      "blocked_count": 4,
+      "state_hash": "70cda5294ab983d1",
+      "last_run_hash": "91321a54f290aa14",
+      "owner_event_name": "repository_dispatch"
+    },
+    "post_wake_last_run": {
+      "path": "states/e8-2-last-run.json",
+      "run_id": "nsl-e8-2-repository_dispatch-28327487602-attempt-1",
+      "ok": true,
+      "generation": 4,
+      "post_wake_ready": true,
+      "executed_count": 4,
+      "queued_count": 1,
+      "blocked_count": 2,
+      "self_check_hash": "e7ab7be1dc79e2e5",
+      "state_hash": "c7fdd887fb4f18ba",
+      "last_run_hash": "d2b9d163dda9c910",
+      "owner_workflow": "E7.3a HTTP Bridge Entry",
+      "owner_event_name": "repository_dispatch"
+    },
+    "post_wake_report": {
+      "path": "states/e8-2-last-report.json",
+      "run_id": "nsl-e8-2-repository_dispatch-28327487602-attempt-1",
+      "ok": true,
+      "post_wake_ready": true,
+      "bridge_chain_ok": true,
+      "e7_current_health_ok": true,
+      "e7_latest_event_name": "schedule",
+      "e7_latest_overwritten_by_schedule": true,
+      "network_body_ok": true,
+      "external_clock_pending": true,
+      "report_hash": "4f37ba19f344681b"
+    },
+    "remote_paths": {
+      "runner": "scripts/nsl_e8_2_post_wake_self_maintenance.py",
+      "workflow": ".github/workflows/nsl-e8-2-post-wake-self-maintenance.yml",
+      "e7_3a_workflow": ".github/workflows/nsl-e7-3a-http-bridge-entry.yml",
+      "self_check": "states/e8-2-post-wake-self-check.json",
+      "plan": "states/e8-2-maintenance-plan.json",
+      "actions": "states/e8-2-maintenance-actions.json",
+      "state": "states/e8-2-post-wake-state.json",
+      "last_run": "states/e8-2-last-run.json",
+      "last_report": "states/e8-2-last-report.json"
+    },
+    "conclusion": "E8.2 proves the external wake path can be followed by an auditable post-wake self-check and low-risk maintenance receipt. E7.3a now runs E8.2 after the Wake Capsule bridge.",
+    "truth_boundary": "E8.2 is executed by local or GitHub Actions CPU. It strengthens post-wake self-check and controlled maintenance records; it does not prove CPU-free wakefulness, autonomous evolution, or unrestricted self-modification."
   }
 }
