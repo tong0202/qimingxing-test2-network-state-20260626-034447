@@ -432,3 +432,67 @@ report_hash=417ec672bf93a8ca
 E8.4 是可审计状态账本，不是不可篡改数据库，也不是区块链。
 它不证明无 CPU 自唤醒、自主进化或完全自由漂浮网络体。
 ```
+
+## 2026-06-29 E8.5 ledger query/status summary
+
+Goal:
+```text
+Turn the E8.4 post-wake ledger into compact queryable status files.
+Avoid judging the system by manually opening the full ledger JSON every time.
+```
+
+Implemented:
+```text
+script=scripts/nsl_e8_5_ledger_query_status.py
+workflow=.github/workflows/nsl-e8-5-ledger-query-status.yml
+doc=E8_5_LEDGER_QUERY_STATUS.md
+summary=states/e8-5-ledger-status-summary.json
+recent=states/e8-5-recent-post-wake.json
+last_run=states/e8-5-last-run.json
+last_report=states/e8-5-last-report.json
+```
+
+Remote evidence:
+```text
+workflow=E8.5 Ledger Query Status
+run=28330036818
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-e8-5-workflow_dispatch-28330036818-attempt-1
+```
+
+Status summary:
+```text
+status_level=healthy_with_known_gaps
+status_text=healthy_with_recorded_history_gap
+entry_count=11
+ready_count=10
+recent_count=8
+recent_ready_count=8
+ledger_hash_ok=true
+entry_hashes_ok=true
+alerts=["history_contains_partial_entries"]
+```
+
+Hash verification:
+```text
+summary_hash=c443a08bf5d9b020 verified=true
+recent_hash=d0cb710671b071bb verified=true
+last_run_hash=e3e816d0c4ec3c53 verified=true
+report_hash=a047df3cd9ddd4bc verified=true
+```
+
+Truth meaning:
+```text
+Post-wake history can now be queried and summarized by an external workflow.
+The system keeps the old not-ready history as a known gap instead of hiding it.
+```
+
+Truth boundary:
+```text
+E8.5 is not a tamper-proof database.
+E8.5 is not a new executor.
+E8.5 does not perform self-maintenance actions.
+E8.5 does not prove CPU-free self-wake, autonomous evolution, or fully floating network life.
+It only turns the post-wake ledger into a queryable, summarized, hash-verifiable state layer.
+```
