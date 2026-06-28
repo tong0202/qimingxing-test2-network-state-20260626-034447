@@ -1620,3 +1620,123 @@ F1: capsule lifecycle layer.
 Goal: define birth, sleep, wake, peer-check, repair, split, decay, and retirement as standard capsule lifecycle events.
 ```
 <!-- F0_STATUS_END -->
+
+<!-- F1_STATUS_START -->
+## F1 capsule lifecycle layer
+
+Status: completed V0.
+
+Plain name:
+
+```text
+Remote capsule lifecycle layer.
+```
+
+What this stage did:
+
+```text
+F1 defines a minimal capsule lifecycle:
+birth -> sleep -> wake -> peer_check -> repair -> split -> decay -> retire.
+
+The run writes lifecycle state to remote capsule files,
+records the ordered events in state and ledger files,
+and verifies the final hashes.
+```
+
+Remote paths:
+
+```text
+states/f1-capsules/<role>.json
+states/f1-capsules/repair_capsule_child.json
+states/f1-lifecycle-registry.json
+states/f1-lifecycle-state.json
+states/f1-lifecycle-ledger.json
+states/f1-last-run.json
+states/f1-last-report.json
+```
+
+Local control evidence:
+
+```text
+run_id=nsl-f1-local-20260628182013
+ok=true
+event_order=birth,sleep,wake,peer_check,repair,split,decay,retire
+repair_ok=true
+split_ok=true
+decay_ok=true
+retire_ok=true
+final_child_state=retired
+final_child_retired=true
+final_child_vitality=0
+state_hash=d335925a2a39f6de
+ledger_hash=54c0b3b39c7a55b8
+last_run_hash=c9837d8943c4b4f1
+report_hash=99647ff868dd0b90
+```
+
+Remote GitHub Actions evidence:
+
+```text
+workflow=F1 Capsule Lifecycle
+workflow_run_id=28331684924
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-f1-workflow_dispatch-28331684924-attempt-1
+event_order=birth,sleep,wake,peer_check,repair,split,decay,retire
+repair_ok=true
+split_ok=true
+decay_ok=true
+retire_ok=true
+final_child_state=retired
+final_child_retired=true
+final_child_vitality=0
+state_hash=1bace43c838cbde1
+ledger_hash=16b7dfb94e2d49ec
+```
+
+Hash verification:
+
+```text
+last_run_hash=1cbddd4683028f85 verified=true
+report_hash=3b55864b657482ab verified=true
+state_hash=1bace43c838cbde1 verified=true
+ledger_hash=16b7dfb94e2d49ec verified=true
+registry_hash=d44a0ac3e0432961 verified=true
+retired_child_hash=2285be267c4541ad verified=true
+retired_child_core_hash verified=true
+```
+
+Engineering correction:
+
+```text
+The first remote F1 run failed because GitHub main-branch reads lagged immediately after writes.
+The fix was to wait for each critical hash to appear before judging the lifecycle event.
+This confirms that network-anchor timing must be handled explicitly.
+```
+
+What F1 proves:
+
+```text
+Capsules can carry lifecycle state in remote anchors.
+The same capsule network can record birth, sleep, wake, peer_check, repair, split, decay, and retire.
+The child capsule can end in retired state with vitality=0.
+The lifecycle state, ledger, last-run, last-report, registry, and retired child all hash-verify.
+```
+
+What F1 does not prove:
+
+```text
+It does not prove endpoint-free existence.
+It does not prove CPU-free network computation.
+It does not prove self-executing capsules.
+It does not prove fully autonomous digital life.
+It proves lifecycle transitions over mutable remote anchors.
+```
+
+Next step:
+
+```text
+F2: lifecycle-driven self-scheduling.
+Goal: let the capsule lifecycle choose its next low-risk event from state, instead of always running a fixed event chain.
+```
+<!-- F1_STATUS_END -->
