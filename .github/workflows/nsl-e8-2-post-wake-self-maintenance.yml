@@ -1,0 +1,32 @@
+name: E8.2 Post Wake Self Maintenance
+
+on:
+  repository_dispatch:
+    types: [qmx_e8_2_post_wake_check]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: e8-2-post-wake-self-maintenance
+  cancel-in-progress: false
+
+jobs:
+  post-wake-self-maintenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run E8.2 post-wake self-maintenance
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e8_2_post_wake_self_maintenance.py --mode external --raw-timeout 240 --raw-interval 8
