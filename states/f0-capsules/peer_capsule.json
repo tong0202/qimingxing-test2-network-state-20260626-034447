@@ -1,0 +1,84 @@
+{
+  "stage": "F0-capsule-quorum-rebuild",
+  "schema_version": "QMX-F0-CAPSULE-0.1",
+  "created_by_run_id": "nsl-f0-local-20260628180127",
+  "created_at": "2026-06-28T18:01:28.273345+00:00",
+  "generation": 1,
+  "role": "peer_capsule",
+  "path": "states/f0-capsules/peer_capsule.json",
+  "core": {
+    "role": "peer_capsule",
+    "kind": "peer_registry",
+    "generation": 1,
+    "capsule_id": "f0cap-peer_capsule",
+    "path": "states/f0-capsules/peer_capsule.json",
+    "duty": "hold peer paths, quorum threshold, and expected core hashes",
+    "network_language": {
+      "family": "QMX-F0-CAPSULE-LANGUAGE",
+      "rule": "WHEN a peer is missing THEN collect witness votes",
+      "allowed_action": "hold_peer_manifest",
+      "direct_body_execution": false,
+      "arbitrary_code_execution": false
+    },
+    "persistence_claim": "This capsule is a network-state fragment; it still needs a physical executor to be read and written."
+  },
+  "core_hash": "b2c6460652bf17fb",
+  "peer_manifest": {
+    "roles": [
+      {
+        "role": "identity_capsule",
+        "path": "states/f0-capsules/identity_capsule.json",
+        "capsule_id": "f0cap-identity_capsule",
+        "expected_core_hash": "3e56e2eb7bdbb4e9"
+      },
+      {
+        "role": "memory_capsule",
+        "path": "states/f0-capsules/memory_capsule.json",
+        "capsule_id": "f0cap-memory_capsule",
+        "expected_core_hash": "12af3425c81b874e"
+      },
+      {
+        "role": "rule_capsule",
+        "path": "states/f0-capsules/rule_capsule.json",
+        "capsule_id": "f0cap-rule_capsule",
+        "expected_core_hash": "9e9b9d0673788eb6"
+      },
+      {
+        "role": "peer_capsule",
+        "path": "states/f0-capsules/peer_capsule.json",
+        "capsule_id": "f0cap-peer_capsule",
+        "expected_core_hash": "b2c6460652bf17fb"
+      },
+      {
+        "role": "repair_capsule",
+        "path": "states/f0-capsules/repair_capsule.json",
+        "capsule_id": "f0cap-repair_capsule",
+        "expected_core_hash": "8d21276f1de6ffc5"
+      }
+    ],
+    "quorum_threshold": 3,
+    "total_capsules": 5,
+    "vote_basis": "alive capsules witness expected_core_hash for the missing role"
+  },
+  "safety": {
+    "direct_body_execution": false,
+    "arbitrary_code_execution": false,
+    "allowed_write_prefixes": [
+      "states/f0-capsules",
+      "states/f0-"
+    ],
+    "forbidden_program_keys": [
+      "cmd",
+      "code",
+      "command",
+      "eval",
+      "exec",
+      "javascript",
+      "powershell",
+      "python",
+      "shell"
+    ]
+  },
+  "truth_boundary": "F0 capsules are network-state fragments stored in remote anchors. They are not self-executing and do not prove CPU-free network life.",
+  "capsule_hash": "647e84b3c5850ac6"
+}
