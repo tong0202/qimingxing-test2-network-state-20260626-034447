@@ -30,3 +30,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python scripts/nsl_e7_vitals_self_maintenance.py --mode external --raw-timeout 240 --raw-interval 8
+
+      - name: Run E8.2 post-wake self-check and maintenance receipt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/nsl_e8_2_post_wake_self_maintenance.py --mode external --raw-timeout 240 --raw-interval 8
