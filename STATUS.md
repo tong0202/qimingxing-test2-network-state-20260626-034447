@@ -1227,3 +1227,90 @@ E8.3：把醒后自检接到所有低频唤醒路径，而不是只接 E7.3a。
 也就是让 GitHub schedule、E7.1 timer、E7.3a HTTP bridge 之后都能留下统一的醒后体检回执。
 ```
 <!-- E8_2_STATUS_END -->
+
+<!-- E8_3_STATUS_START -->
+## E8.3：统一醒后体检挂载层
+
+Status: completed V0.
+
+中文名字：
+
+```text
+所有低频唤醒路径的醒后体检挂载
+```
+
+这一步做什么：
+
+```text
+E8.2 已证明“醒后体检”能独立运行。
+E8.3 把 E8.2 接到主要低频唤醒路径后面，
+让不同入口醒来后都能留下统一的自检/维护回执。
+```
+
+已覆盖路径：
+
+```text
+E7 Controlled Vitals Self Maintenance
+-> E7 self-maintenance
+-> E8.2 post-wake self-check
+```
+
+```text
+E7.1 External Wake Timer
+-> E7 self-maintenance
+-> E8.2 post-wake self-check
+```
+
+```text
+E7.3a HTTP Bridge Entry
+-> Wake Capsule bridge
+-> E7.2 receiver
+-> E7 self-maintenance
+-> E8.2 post-wake self-check
+```
+
+远端验证结果：
+
+| 路径 | workflow run | event | E8.2 run_id | post_wake_ready | snapshot |
+| --- | ---: | --- | --- | --- | --- |
+| E7 主自维护 | `28327664693` | `workflow_dispatch` | `nsl-e8-2-workflow_dispatch-28327664693-attempt-1` | `true` | `658af50947688928` |
+| E7.1 timer | `28327721521` | `workflow_dispatch` | `nsl-e8-2-workflow_dispatch-28327721521-attempt-1` | `true` | `25a5775649c2e3a7` |
+| E7.3a HTTP bridge | `28327754547` | `repository_dispatch` | `nsl-e8-2-repository_dispatch-28327754547-attempt-1` | `true` | `fc4a698e8cdded1f` |
+
+最新 E7.3a 链路补充：
+
+```text
+E7.2 receiver run=28327784647
+E7 writeback run_id=nsl-e7-repository_dispatch-28327784647-attempt-1
+E7 ok=true
+E7 maintenance_ok=true
+E7 executed_count=4
+E7 blocked_count=4
+```
+
+E8.3 证明：
+
+```text
+醒后体检不再只属于 E7.3a。
+E7 主路径、E7.1 timer、E7.3a HTTP bridge 都能在醒后自动写回 E8.2 体检回执。
+每条路径都有独立 snapshot，证据不会只依赖 latest 文件。
+```
+
+E8.3 没有证明：
+
+```text
+没有证明 Cloudflare 第三方时钟已经接入。
+没有证明无 CPU 自唤醒。
+没有证明自主进化。
+没有证明所有历史 L/E 工作流都已经统一挂载。
+没有改变权限、密钥、核心代码自修改策略。
+```
+
+下一步：
+
+```text
+E8.4：统一醒后体检 ledger。
+目标是把每次 E8.2 结果追加到一个索引/账本里，
+避免以后只查 latest 或手动找 snapshot。
+```
+<!-- E8_3_STATUS_END -->
