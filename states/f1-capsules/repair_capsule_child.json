@@ -1,24 +1,24 @@
 {
   "stage": "F1-capsule-lifecycle",
   "schema_version": "QMX-F1-CAPSULE-0.1",
-  "created_by_run_id": "nsl-f1-local-20260628181517",
-  "created_at": "2026-06-28T18:15:58.732868+00:00",
-  "updated_at": "2026-06-28T18:16:04.896653+00:00",
-  "generation": 1,
+  "created_by_run_id": "nsl-f1-workflow_dispatch-28331564625-attempt-1",
+  "created_at": "2026-06-28T18:18:16.672674+00:00",
+  "updated_at": "2026-06-28T18:18:16.672688+00:00",
+  "generation": 2,
   "role": "repair_capsule_child",
   "path": "states/f1-capsules/repair_capsule_child.json",
   "core": {
     "role": "repair_capsule_child",
     "kind": "repair_child",
-    "generation": 1,
+    "generation": 2,
     "capsule_id": "f1cap-repair_capsule_child",
     "path": "states/f1-capsules/repair_capsule_child.json",
     "duty": "child repair capsule produced by split event",
     "parent": {
       "role": "repair_capsule",
       "path": "states/f1-capsules/repair_capsule.json",
-      "core_hash": "cff1a61b5646c625",
-      "capsule_hash": "86b6278bbb82e099"
+      "core_hash": "0d2ff61abc42264c",
+      "capsule_hash": "d57f1366ded35093"
     },
     "network_language": {
       "family": "QMX-F1-CAPSULE-LIFECYCLE",
@@ -41,38 +41,38 @@
       "state_machine": "born -> awake/sleeping -> peer_checked -> repaired/split -> decayed -> retired"
     }
   },
-  "core_hash": "3db21c55d5206cdb",
+  "core_hash": "eeb91f6a231e41aa",
   "peer_manifest": {
     "roles": [
       {
         "role": "identity_capsule",
         "path": "states/f1-capsules/identity_capsule.json",
         "capsule_id": "f1cap-identity_capsule",
-        "expected_core_hash": "34672cf9ff4149c1"
+        "expected_core_hash": "d450787a1fb210fe"
       },
       {
         "role": "memory_capsule",
         "path": "states/f1-capsules/memory_capsule.json",
         "capsule_id": "f1cap-memory_capsule",
-        "expected_core_hash": "1b5453122761cf65"
+        "expected_core_hash": "74eca51a00aab6a6"
       },
       {
         "role": "rule_capsule",
         "path": "states/f1-capsules/rule_capsule.json",
         "capsule_id": "f1cap-rule_capsule",
-        "expected_core_hash": "e3cb714e24603747"
+        "expected_core_hash": "4638a99987337cdc"
       },
       {
         "role": "peer_capsule",
         "path": "states/f1-capsules/peer_capsule.json",
         "capsule_id": "f1cap-peer_capsule",
-        "expected_core_hash": "1fe5b899f161342d"
+        "expected_core_hash": "0ce8faaa1f315846"
       },
       {
         "role": "repair_capsule",
         "path": "states/f1-capsules/repair_capsule.json",
         "capsule_id": "f1cap-repair_capsule",
-        "expected_core_hash": "cff1a61b5646c625"
+        "expected_core_hash": "0d2ff61abc42264c"
       }
     ],
     "quorum_threshold": 3,
@@ -80,21 +80,21 @@
     "vote_basis": "alive capsules witness expected_core_hash for the missing role"
   },
   "lifecycle": {
-    "state": "retired",
-    "birth_run_id": "nsl-f1-local-20260628181517",
+    "state": "split_child",
+    "birth_run_id": "nsl-f1-workflow_dispatch-28331564625-attempt-1",
     "wake_count": 0,
     "sleep_count": 0,
     "peer_check_count": 0,
     "repair_count": 0,
     "split_count": 0,
-    "decay_count": 1,
-    "retired": true,
-    "vitality": 0,
-    "age_ticks": 3,
+    "decay_count": 0,
+    "retired": false,
+    "vitality": 65,
+    "age_ticks": 1,
     "parent_role": "repair_capsule",
-    "parent_capsule_hash": "86b6278bbb82e099",
-    "last_event": "retire",
-    "last_event_at": "2026-06-28T18:16:04.896636+00:00"
+    "parent_capsule_hash": "d57f1366ded35093",
+    "last_event": "split",
+    "last_event_at": "2026-06-28T18:18:16.672776+00:00"
   },
   "safety": {
     "direct_body_execution": false,
@@ -105,6 +105,5 @@
     ]
   },
   "truth_boundary": "The split child is a remote state child capsule, not an independent self-executing process.",
-  "capsule_hash": "6f641225a27879d5",
-  "updated_by_run_id": "nsl-f1-local-20260628181517"
+  "capsule_hash": "6e1105f995391098"
 }
