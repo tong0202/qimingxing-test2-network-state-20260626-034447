@@ -220,7 +220,16 @@ def derive_vitals(samples: list[dict[str, Any]]) -> dict[str, Any]:
     e4_loop_ok = bool(e4.get("cycles_ok") and e4.get("all_network_language_pulses"))
     e5_loop_ok = bool(e5_loop.get("cycles_ok") and e5_loop.get("all_network_language_pulses"))
     e5_last_ok = bool(e5_last.get("ok") and e5_last.get("cycles_ok") and int(e5_last.get("cycles_completed") or 0) >= 3)
-    e5_schedule_observed = bool(e5_owner.get("event_name") == "schedule")
+    e5_schedule_history = [
+        item
+        for item in (e5_loop.get("history") or [])
+        if str(item.get("run_id") or "").startswith("nsl-e5-schedule-") and item.get("cycles_ok") is True
+    ]
+    e5_schedule_observed = bool(
+        e5_owner.get("event_name") == "schedule"
+        or str(e5_loop.get("run_id") or "").startswith("nsl-e5-schedule-")
+        or e5_schedule_history
+    )
     l12_window_ok = bool(l12_last.get("window_ok") or l12_last.get("ok"))
     global_lock_released = bool(lock and lock.get("locked") is False and lock.get("release_ok") is True)
     logic_ready = bool(logic and (logic.get("minimum_logic_ready") is not False))
@@ -242,6 +251,7 @@ def derive_vitals(samples: list[dict[str, Any]]) -> dict[str, Any]:
         "e5_loop_ok": e5_loop_ok,
         "e5_last_run_ok": e5_last_ok,
         "e5_schedule_observed": e5_schedule_observed,
+        "e5_schedule_success_history_count": len(e5_schedule_history),
         "l12_window_ok": l12_window_ok,
         "global_lock_released": global_lock_released,
         "logic_ready": logic_ready,
