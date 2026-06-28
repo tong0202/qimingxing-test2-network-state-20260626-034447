@@ -579,3 +579,100 @@ It is not CPU-free computation.
 It is not tamper-proof storage.
 It is not autonomous digital life.
 ```
+
+## 2026-06-29 F1 capsule lifecycle layer
+
+Goal:
+```text
+Turn the F0 rebuild proof into a capsule lifecycle layer.
+```
+
+Implemented:
+```text
+script=scripts/nsl_f1_capsule_lifecycle.py
+workflow=.github/workflows/nsl-f1-capsule-lifecycle.yml
+doc=F1_CAPSULE_LIFECYCLE.md
+capsules=states/f1-capsules/<role>.json
+child=states/f1-capsules/repair_capsule_child.json
+registry=states/f1-lifecycle-registry.json
+state=states/f1-lifecycle-state.json
+ledger=states/f1-lifecycle-ledger.json
+last_run=states/f1-last-run.json
+last_report=states/f1-last-report.json
+```
+
+Lifecycle events:
+```text
+birth
+sleep
+wake
+peer_check
+repair
+split
+decay
+retire
+```
+
+Local control run:
+```text
+run_id=nsl-f1-local-20260628182013
+ok=true
+repair_ok=true
+split_ok=true
+decay_ok=true
+retire_ok=true
+final_child_state=retired
+final_child_retired=true
+final_child_vitality=0
+state_hash=d335925a2a39f6de
+ledger_hash=54c0b3b39c7a55b8
+```
+
+Remote GitHub Actions run:
+```text
+workflow=F1 Capsule Lifecycle
+run=28331684924
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-f1-workflow_dispatch-28331684924-attempt-1
+repair_ok=true
+split_ok=true
+decay_ok=true
+retire_ok=true
+final_child_state=retired
+final_child_retired=true
+final_child_vitality=0
+state_hash=1bace43c838cbde1
+ledger_hash=16b7dfb94e2d49ec
+```
+
+Hash verification:
+```text
+last_run_hash=1cbddd4683028f85 verified=true
+report_hash=3b55864b657482ab verified=true
+state_hash=1bace43c838cbde1 verified=true
+ledger_hash=16b7dfb94e2d49ec verified=true
+registry_hash=d44a0ac3e0432961 verified=true
+retired_child_hash=2285be267c4541ad verified=true
+```
+
+Engineering correction:
+```text
+The first remote F1 run failed because GitHub main-branch reads lagged immediately after writes.
+The script was fixed to wait for each critical hash before judging an event.
+```
+
+Truth meaning:
+```text
+F1 upgrades capsules from rebuildable remote files into lifecycle-bearing remote state units.
+The capsule set can now record birth, sleep, wake, peer-check, repair, split, decay, and retire.
+```
+
+Truth boundary:
+```text
+F1 is still lifecycle over mutable remote anchors.
+It is not endpoint-free existence.
+It is not CPU-free computation.
+It is not self-executing capsules.
+It is not autonomous digital life.
+```
