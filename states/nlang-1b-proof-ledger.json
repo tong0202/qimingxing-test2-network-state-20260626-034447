@@ -1,0 +1,150 @@
+{
+  "stage": "NLANG-1B-proof-ledger",
+  "schema_version": "QMX-NLANG-1B-LEDGER-0.1",
+  "updated_at": "2026-06-28T20:24:59.314895+00:00",
+  "entry_count": 1,
+  "latest_run_id": "nlang_1b_local-20260628202419",
+  "entries": [
+    {
+      "stage": "NLANG-1B-proof-entry",
+      "created_at": "2026-06-28T20:24:58.748207+00:00",
+      "run_id": "nlang_1b_local-20260628202419",
+      "remote_f3_state_hash_before": "5deb8244675edcf6",
+      "remote_f3_state_hash_ok": true,
+      "compiled_ok": true,
+      "selected_rule": {
+        "index": 1,
+        "source": "WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count >= f3.lifecycle_cycle_count THEN split",
+        "action": "split",
+        "matched": true,
+        "risk_level": "low",
+        "predicates": [
+          {
+            "ok": true,
+            "left": "f3.child.retired",
+            "op": "==",
+            "right": true,
+            "right_source": "literal",
+            "observed": true,
+            "error": ""
+          },
+          {
+            "ok": true,
+            "left": "f3.last_peer_check_cycle_count",
+            "op": ">=",
+            "right": 3,
+            "right_source": "f3.lifecycle_cycle_count",
+            "observed": 3,
+            "error": ""
+          }
+        ]
+      },
+      "action_plan": {
+        "selected": true,
+        "action": "split",
+        "risk_level": "low",
+        "required_reads": [
+          "network_state"
+        ],
+        "required_writes": [
+          "scoped_state",
+          "ledger"
+        ],
+        "proof_required": true
+      },
+      "materialized_action": "split",
+      "execution": {
+        "ok": true,
+        "action": "split",
+        "write": {
+          "path": "states/f2-capsules/scheduler_child.json",
+          "existing_status": 200,
+          "ok": true,
+          "status": 200,
+          "error": "",
+          "commit_hash": "a962458d955920726259247f5fb79b3983559c5e",
+          "content_sha": "ba3b34db05887733db1b4493b2af793bb932eb6e"
+        },
+        "verify": {
+          "path": "states/f2-capsules/scheduler_child.json",
+          "ok": true,
+          "status": 200,
+          "hash_field": "capsule_hash",
+          "expected": "0783b869bf3e35e9",
+          "declared": "0783b869bf3e35e9",
+          "computed": "0783b869bf3e35e9",
+          "attempt_count": 1,
+          "observations": [
+            {
+              "status": 200,
+              "ok": true,
+              "declared": "0783b869bf3e35e9",
+              "computed": "0783b869bf3e35e9",
+              "error": ""
+            }
+          ]
+        },
+        "child_hash": "0783b869bf3e35e9"
+      },
+      "before_scheduler_state": {
+        "scheduler_generation": 10,
+        "created_by_run_id": "nsl-f3-local-20260628190050",
+        "source_f1_state_hash": "1bace43c838cbde1",
+        "source_f1_event_order": [
+          "birth",
+          "sleep",
+          "wake",
+          "peer_check",
+          "repair",
+          "split",
+          "decay",
+          "retire"
+        ],
+        "memory_shadow_state": "awake",
+        "child": {
+          "exists": true,
+          "state": "retired",
+          "retired": true,
+          "vitality": 0,
+          "capsule_hash": "8f2584b54ec860b7"
+        },
+        "last_peer_check_hash": "1bace43c838cbde1",
+        "total_scheduler_ticks": 19,
+        "last_selected_action": "peer_check",
+        "last_peer_check_cycle_count": 3
+      },
+      "after_scheduler_state": {
+        "scheduler_generation": 10,
+        "created_by_run_id": "nsl-f3-local-20260628190050",
+        "source_f1_state_hash": "1bace43c838cbde1",
+        "source_f1_event_order": [
+          "birth",
+          "sleep",
+          "wake",
+          "peer_check",
+          "repair",
+          "split",
+          "decay",
+          "retire"
+        ],
+        "memory_shadow_state": "awake",
+        "child": {
+          "exists": true,
+          "state": "split_child",
+          "retired": false,
+          "vitality": 65,
+          "capsule_hash": "0783b869bf3e35e9"
+        },
+        "last_peer_check_hash": "1bace43c838cbde1",
+        "total_scheduler_ticks": 20,
+        "last_selected_action": "split",
+        "last_peer_check_cycle_count": 3
+      },
+      "f2_state_hash": "74c9ab59d59c4fee",
+      "f3_state_hash": "853eac1c8ae2b1dc",
+      "entry_hash": "f344f8e44fc01d9b"
+    }
+  ],
+  "truth_boundary": "This ledger proves materialization of compiled NLANG action plans. It is mutable remote state, not tamper-proof storage.",
+  "ledger_hash": "5030a04f24a3ef11"
+}
