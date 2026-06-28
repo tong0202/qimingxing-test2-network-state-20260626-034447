@@ -45,6 +45,59 @@ ledger: append run entry with ledger_hash
 last-run/report: write final evidence
 ```
 
+## Latest evidence
+
+Local control run:
+
+```text
+run_id=nsl-f1-local-20260628182013
+ok=true
+event_order=birth,sleep,wake,peer_check,repair,split,decay,retire
+repair_ok=true
+split_ok=true
+decay_ok=true
+retire_ok=true
+final_child_state=retired
+final_child_retired=true
+final_child_vitality=0
+state_hash=d335925a2a39f6de
+ledger_hash=54c0b3b39c7a55b8
+last_run_hash=c9837d8943c4b4f1
+report_hash=99647ff868dd0b90
+```
+
+Remote GitHub Actions run:
+
+```text
+workflow=F1 Capsule Lifecycle
+run=28331684924
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-f1-workflow_dispatch-28331684924-attempt-1
+event_order=birth,sleep,wake,peer_check,repair,split,decay,retire
+repair_ok=true
+split_ok=true
+decay_ok=true
+retire_ok=true
+final_child_state=retired
+final_child_retired=true
+final_child_vitality=0
+state_hash=1bace43c838cbde1
+ledger_hash=16b7dfb94e2d49ec
+last_run_hash=1cbddd4683028f85 verified=true
+report_hash=3b55864b657482ab verified=true
+registry_hash=d44a0ac3e0432961 verified=true
+retired_child_hash=2285be267c4541ad verified=true
+```
+
+Engineering note:
+
+```text
+The first remote F1 run failed because GitHub main-branch reads lagged immediately after writes.
+The fix was to wait for each critical hash to appear before judging the lifecycle event.
+This is a real network-anchor constraint, not a conceptual failure.
+```
+
 ## What F1 proves
 
 ```text
