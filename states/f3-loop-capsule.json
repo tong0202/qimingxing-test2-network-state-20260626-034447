@@ -1,0 +1,49 @@
+{
+  "stage": "F3-lowfreq-self-scheduler-loop",
+  "schema_version": "QMX-F3-LOOP-CAPSULE-0.1",
+  "created_by_run_id": "nsl-f3-local-20260628190050",
+  "created_at": "2026-06-28T19:01:00.015956+00:00",
+  "updated_at": "2026-06-28T19:01:00.015967+00:00",
+  "role": "low_frequency_lifecycle_loop",
+  "path": "states/f3-loop-capsule.json",
+  "core": {
+    "role": "low_frequency_lifecycle_loop",
+    "kind": "mainline_scheduler_loop",
+    "capsule_id": "f3cap-lowfreq-self-scheduler-loop",
+    "path": "states/f3-loop-capsule.json",
+    "source_f1_state_hash": "1bace43c838cbde1",
+    "mainline": "F-series capsule lifecycle and self-scheduling",
+    "auxiliary_layers": {
+      "L": "network state language, controlled interpreter, low-frequency maintenance base",
+      "E": "external wake, post-wake check, ledger and status evidence"
+    },
+    "rule": "Each low-frequency wake window executes one low-risk lifecycle scheduler step, then persists state for the next wake.",
+    "allowed_actions": [
+      "decay",
+      "observe",
+      "peer_check",
+      "retire",
+      "split"
+    ],
+    "direct_body_execution": false,
+    "arbitrary_code_execution": false
+  },
+  "core_hash": "1fe4708dc7e0233b",
+  "safety": {
+    "direct_body_execution": false,
+    "arbitrary_code_execution": false,
+    "allowed_write_prefixes": [
+      "states/f2-",
+      "states/f3-"
+    ],
+    "allowed_actions": [
+      "decay",
+      "observe",
+      "peer_check",
+      "retire",
+      "split"
+    ]
+  },
+  "truth_boundary": "F3 coordinates low-risk scheduler windows over remote anchors; it is not endpoint-free or CPU-free execution.",
+  "capsule_hash": "f86ea501a369eebf"
+}
