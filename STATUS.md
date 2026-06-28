@@ -1736,7 +1736,636 @@ It proves lifecycle transitions over mutable remote anchors.
 Next step:
 
 ```text
-F2: lifecycle-driven self-scheduling.
-Goal: let the capsule lifecycle choose its next low-risk event from state, instead of always running a fixed event chain.
+F2 completed.
+Next: F3 low-frequency multi-run self-scheduling loop.
 ```
 <!-- F1_STATUS_END -->
+
+<!-- F2_STATUS_START -->
+## F2 lifecycle self-scheduler layer
+
+Status: completed V0.
+
+Plain name:
+
+```text
+Lifecycle-driven self-scheduling over remote capsule state.
+```
+
+What this stage did:
+
+```text
+F2 reads F1 lifecycle state from the remote anchor,
+scores allowed low-risk lifecycle events,
+chooses one event per tick,
+executes selected events,
+and records the decisions in scheduler state and ledger files.
+
+This is a step from fixed lifecycle replay toward state-driven behavior.
+```
+
+Remote paths:
+
+```text
+states/f2-scheduler-capsule.json
+states/f2-capsules/scheduler_child.json
+states/f2-scheduler-state.json
+states/f2-scheduler-ledger.json
+states/f2-last-run.json
+states/f2-last-report.json
+```
+
+Local control evidence:
+
+```text
+run_id=nsl-f2-local-20260628183914
+ok=true
+selected_actions=split,decay,retire,peer_check
+decision_count=4
+all_decisions_ok=true
+source_f1_state_hash=1bace43c838cbde1
+state_hash=a279361bee5d9b56
+ledger_hash=96dc20b599a635a6
+raw_state_check_ok=true
+```
+
+Remote GitHub Actions evidence:
+
+```text
+workflow=F2 Lifecycle Self Scheduler
+workflow_run_id=28332198894
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-f2-workflow_dispatch-28332198894-attempt-1
+selected_actions=split,decay,retire,peer_check
+decision_count=4
+all_decisions_ok=true
+state_hash=83bdb00e756407f6
+ledger_hash=8e42d25709056206
+ledger_entry_count=2
+```
+
+Hash verification:
+
+```text
+last_run_hash=b24229f7d1adaf19 verified=true
+report_hash=6c9c43c0e9b2fbd5 verified=true
+state_hash=83bdb00e756407f6 verified=true
+ledger_hash=8e42d25709056206 verified=true
+scheduler_capsule_hash=51ae8572144cea5d verified=true
+scheduler_capsule_core_hash=bf42d2534b374897 verified=true
+scheduler_child_hash=7a056362f7e86f9c verified=true
+scheduler_child_core_hash=2b9862fc700f0239 verified=true
+```
+
+What F2 proves:
+
+```text
+The capsule lifecycle can select low-risk next events from current remote state and policy.
+The selected actions changed as state changed: split -> decay -> retire -> peer_check.
+The scheduler state, ledger, last-run, last-report, scheduler capsule, and scheduler child all hash-verify.
+```
+
+What F2 does not prove:
+
+```text
+It does not prove endpoint-free existence.
+It does not prove CPU-free network computation.
+It does not prove self-executing capsules.
+It does not prove fully autonomous digital life.
+It does not prove unreviewed high-risk self-mutation.
+It proves state-driven scheduling over mutable remote anchors.
+```
+
+Next step:
+
+```text
+F3: low-frequency multi-run self-scheduling loop.
+Goal: run the F2 scheduler across multiple low-frequency windows and prove continuity across runs.
+```
+<!-- F2_STATUS_END -->
+
+<!-- MAINLINE_CONTRACT_START -->
+## Active mainline contract
+
+Status: active after F3.
+
+```text
+F series is now the mainline.
+L series is auxiliary infrastructure.
+E series is auxiliary infrastructure.
+```
+
+Meaning:
+
+```text
+F owns the product direction:
+capsule lifecycle, self-scheduling, self-repair, and controlled self-regeneration.
+
+L supports F with:
+network-state language, controlled interpreter, and low-frequency base infrastructure.
+
+E supports F with:
+external wake, post-wake self-check, ledger, and status evidence infrastructure.
+```
+
+Routing rule:
+
+```text
+New work should advance F-series unless a specific F stage requires L/E support.
+Do not expand L/E as the main story unless it directly unblocks the current F stage.
+```
+<!-- MAINLINE_CONTRACT_END -->
+
+<!-- F3_STATUS_START -->
+## F3 low-frequency multi-run self-scheduler loop
+
+Status: completed V0.
+
+Plain name:
+
+```text
+F-mainline low-frequency self-scheduling loop.
+```
+
+What this stage did:
+
+```text
+F3 made F the active mainline.
+Each wake window executes one low-risk scheduler action.
+The next wake reads the previous remote state and chooses the next action from that state.
+L and E are now support layers, not the active product direction.
+```
+
+Remote paths:
+
+```text
+states/f3-loop-capsule.json
+states/f3-loop-state.json
+states/f3-loop-ledger.json
+states/f3-last-run.json
+states/f3-last-report.json
+states/f2-scheduler-state.json
+states/f2-scheduler-ledger.json
+states/f2-capsules/scheduler_child.json
+```
+
+Remote wake evidence:
+
+```text
+28332753245 -> split      window_count=5  lifecycle_cycle_count=1
+28332772614 -> decay      window_count=6  lifecycle_cycle_count=1
+28332794329 -> retire     window_count=7  lifecycle_cycle_count=2
+28332816490 -> split      window_count=8  lifecycle_cycle_count=2
+28332895658 -> retire     window_count=10 lifecycle_cycle_count=3
+28332909221 -> peer_check window_count=11 lifecycle_cycle_count=3 last_peer_check_cycle_count=3
+```
+
+Latest remote evidence:
+
+```text
+workflow=F3 Low Frequency Self Scheduler Loop
+workflow_run_id=28332909221
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-f3-workflow_dispatch-28332909221-attempt-1
+selected_actions=peer_check
+window_count=11
+lifecycle_cycle_count=3
+last_peer_check_cycle_count=3
+f3_state_hash=5deb8244675edcf6
+f3_ledger_hash=ac724939ff7593ad
+```
+
+Hash verification:
+
+```text
+last_run_hash=1f41f72f190ec76a verified=true
+report_hash=ea0a66731e6b0399 verified=true
+f3_state_hash=5deb8244675edcf6 verified=true
+f3_ledger_hash=ac724939ff7593ad verified=true
+f3_capsule_hash=6b1137757b7f05f6 verified=true
+f3_capsule_core_hash=1fe4708dc7e0233b verified=true
+f2_state_hash=f009d59fa0932b1f verified=true
+f2_ledger_hash=fac5d6cb37a6f76a verified=true
+f2_child_hash=8f2584b54ec860b7 verified=true
+```
+
+What F3 proves:
+
+```text
+F2 self-scheduling can continue across multiple wake windows.
+Later windows choose different actions because earlier windows changed remote state.
+F is now the active mainline, while L/E are supporting infrastructure.
+Each completed lifecycle cycle can require its own peer_check before the next clean cycle.
+```
+
+What F3 does not prove:
+
+```text
+It does not prove endpoint-free existence.
+It does not prove CPU-free network computation.
+It does not prove self-executing capsules without an external runner.
+It does not prove fully autonomous digital life.
+It does not prove unreviewed high-risk self-mutation.
+It does not yet prove natural scheduled F3 wake; current proof is workflow_dispatch.
+```
+
+Next step:
+
+```text
+F4: controlled capsule self-maintenance and regeneration loop.
+Goal: use F3 ledger evidence to choose low-risk repair/regeneration work under review gates.
+```
+<!-- F3_STATUS_END -->
+
+<!-- DUAL_FOUNDATION_NLANG_FIELD_START -->
+## Dual foundation: NLANG and FIELD
+
+Status: created, not complete.
+
+Why this matters:
+
+```text
+F0-F3 proved a controlled remote capsule lifecycle.
+That is not enough for the original ghost-network goal.
+
+Before F4 or any stronger claim, two foundations must be proven separately:
+NLANG and FIELD.
+```
+
+Track split:
+
+```text
+NLANG = network language, formal grammar, compiler, proof-driven action plan.
+FIELD = network tide/state drive signal, controls, and spontaneous compute feasibility.
+```
+
+File separation rule:
+
+```text
+NLANG files stay under nlang/.
+FIELD files stay under field/.
+F stage files must not become monoliths.
+Do not mix compiler logic and field-signal experiments in one large file.
+```
+
+Created files:
+
+```text
+DUAL_FOUNDATION_NLANG_FIELD.md
+nlang/README.md
+nlang/NLANG_1_SPEC.md
+nlang/sample_rules.nlang
+nlang/sample_state.json
+nlang/nlang_compiler_v0.py
+field/README.md
+field/FIELD_1_PROTOCOL.md
+field/targets.json
+field/field_signal_probe_v0.py
+```
+
+NLANG smoke evidence:
+
+```text
+run_path=runs/latest_nlang_1_compiler_result.json
+ok=true
+selected_action=peer_check
+risk_level=low
+right_side_state_path_resolution=true
+meaning=sample network-language rules compiled into a proof-driven action_plan
+```
+
+FIELD smoke evidence:
+
+```text
+run_path=runs/latest_field_1_signal_probe_result.json
+ok=true
+sample_count=4
+network_bits=1,1,1,1
+controls=fixed_bits,prng_bits
+meaning=real network requests were sampled and encoded into a comparable drive signal
+```
+
+What this proves:
+
+```text
+The project now has two separated foundation tracks.
+NLANG can parse sample rules and compile one low-risk action_plan from sample state.
+FIELD can sample real network signal and generate fixed/PRNG controls for comparison.
+```
+
+What this does not prove:
+
+```text
+It does not prove NLANG drives real remote capsule actions yet.
+It does not prove the runner is only a thin materializer yet.
+It does not prove network tide provides useful spontaneous compute.
+It does not prove network signal beats fixed or PRNG controls.
+It does not prove the foundation is ready for F4 or ghost-computer claims.
+```
+
+Routing rule:
+
+```text
+Do not continue to F4 as if the foundation is complete.
+Next work must prove NLANG-1 and FIELD-1 separately, then let F consume only proven outputs.
+```
+<!-- DUAL_FOUNDATION_NLANG_FIELD_END -->
+
+<!-- NLANG_FIELD_1A_START -->
+## NLANG-1A and FIELD-1A experiments
+
+Status: completed V0, foundation still not complete.
+
+NLANG-1A:
+
+```text
+Goal: read real remote F3 state and compile the next action from NLANG rules.
+run_path=runs/latest_nlang_1a_remote_f3_compile_result.json
+ok=true
+remote_state_hash=5deb8244675edcf6
+remote_state_hash_ok=true
+remote_run_id=nsl-f3-workflow_dispatch-28332909221-attempt-1
+selected_action=split
+risk_level=low
+selected_rule=WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count >= f3.lifecycle_cycle_count THEN split
+```
+
+NLANG-1A proves:
+
+```text
+The compiler can read real remote F3 state.
+The compiler can select a low-risk action_plan from formal NLANG rules.
+```
+
+NLANG-1A does not prove:
+
+```text
+The action_plan was executed.
+The runner is already a pure thin materializer.
+Network language has fully replaced material decision logic.
+```
+
+FIELD-1A:
+
+```text
+Goal: run repeated network tide sampling and compare with fixed/PRNG controls.
+run_path=runs/latest_field_1a_repeated_control_result.json
+ok=true
+rounds=8
+batches=3
+sample_count=48
+verdict=repeated_metric_beats_fixed_only
+beats_fixed_batches=3/3
+beats_prng_batches=0/3
+signal_batches=3/3
+```
+
+Aggregate FIELD metrics:
+
+```text
+network_entropy=0.995
+network_transition_rate=0.5319
+network_coverage=17
+fixed_entropy=0.0
+fixed_coverage=8
+prng_entropy=1.0
+prng_coverage=15
+```
+
+FIELD-1A proves:
+
+```text
+There is a measurable repeated network drive signal under the current metric.
+The signal beats fixed control.
+```
+
+FIELD-1A does not prove:
+
+```text
+The signal beats PRNG control.
+The signal is useful spontaneous compute.
+CPU-free computation.
+Network supercompute.
+```
+
+Next:
+
+```text
+NLANG-1B: materialize compiled action_plan with a thin runner and proof ledger.
+FIELD-1B: stronger independent field metrics with more targets and non-latency-derived tasks.
+```
+<!-- NLANG_FIELD_1A_END -->
+
+<!-- NLANG_FIELD_1B_START -->
+## NLANG-1B and FIELD-1B experiments
+
+Status: completed V0.
+
+NLANG-1B:
+
+```text
+Goal: execute the NLANG-compiled split action_plan with a thin materializer.
+run_path=runs/latest_nlang_1b_materialize_result.json
+ok=true
+run_id=nlang_1b_local-20260628202419
+remote_f3_state_hash_before=5deb8244675edcf6
+compiled_selected_action=split
+proof_ledger_hash=5030a04f24a3ef11
+```
+
+Materialized transition:
+
+```text
+before_child.state=retired
+before_child.retired=true
+before_child.vitality=0
+
+after_child.state=split_child
+after_child.retired=false
+after_child.vitality=65
+after_child.capsule_hash=0783b869bf3e35e9
+```
+
+Remote hash evidence:
+
+```text
+f2_state_hash=74c9ab59d59c4fee verified=true
+f3_state_hash=853eac1c8ae2b1dc verified=true
+f2_child_hash=0783b869bf3e35e9 verified=true
+proof_ledger_hash=5030a04f24a3ef11 verified=true
+```
+
+NLANG-1B proves:
+
+```text
+A low-risk action selected by NLANG rules can be materialized into real remote F2/F3 state.
+The materializer wrote proof evidence instead of silently mutating state.
+```
+
+NLANG-1B does not prove:
+
+```text
+Endpoint-free execution.
+CPU-free execution.
+Fully autonomous language runtime.
+```
+
+FIELD-1B:
+
+```text
+Goal: test stronger multi-target field metrics, including non-latency streams.
+run_path=runs/latest_field_1b_stronger_metrics_result.json
+ok=true
+rounds=5
+batches=3
+target_count=4
+sample_count=60
+verdict=field_signal_present_no_prng_advantage
+```
+
+FIELD-1B aggregate metrics:
+
+```text
+latency_entropy=1.0
+latency_coverage=24
+non_latency_entropy=0.9968
+non_latency_coverage=27
+mixed_entropy=0.9871
+mixed_coverage=25
+```
+
+Control comparison:
+
+```text
+beats_fixed:
+latency=3/3
+non_latency=3/3
+mixed=3/3
+
+beats_prng:
+latency=2/3
+non_latency=1/3
+mixed=1/3
+```
+
+FIELD-1B proves:
+
+```text
+Multi-target network field signal is measurable under stronger metrics.
+Latency, non-latency, and mixed streams all beat fixed control.
+```
+
+FIELD-1B does not prove:
+
+```text
+Strong advantage over PRNG.
+Stable spontaneous compute.
+CPU-free computation.
+Network supercompute.
+```
+
+Next:
+
+```text
+NLANG-1C: run the thin materializer through a remote workflow, not only local trigger.
+FIELD-1C: test task-level usefulness, not only entropy/coverage metrics.
+```
+<!-- NLANG_FIELD_1B_END -->
+
+<!-- NLANG_FIELD_1C_START -->
+## NLANG-1C and FIELD-1C experiments
+
+Status: completed V0 on 2026-06-29.
+
+NLANG-1C:
+
+```text
+Goal: run the thin NLANG materializer inside GitHub Actions, not as a local Python materialization.
+workflow=https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447/actions/runs/28335410602
+ok=True
+run_id=nlang_1c_remote_external-20260628204412
+compiled_selected_action=decay
+remote_f3_state_hash_before=853eac1c8ae2b1dc
+f3_state_hash_after=8b3648b4b8593d09
+f2_state_hash_after=9e9b59807bb83147
+proof_ledger_hash=ef59ffc0d73482e5
+```
+
+Materialized transition:
+
+```text
+before_child.state=split_child
+before_child.retired=False
+before_child.vitality=65
+
+after_child.state=decayed
+after_child.retired=False
+after_child.vitality=30
+after_child.capsule_hash=54646a1e6559df75
+```
+
+NLANG-1C proves:
+
+```text
+The compiled NLANG action_plan can be materialized by a remote GitHub Actions workflow.
+The F2/F3 state, child capsule, and NLANG-1C proof ledger hashes verify after writeback.
+```
+
+NLANG-1C does not prove:
+
+```text
+Endpoint-free execution.
+CPU-free execution.
+Spontaneous network compute.
+A finished ghost computer.
+```
+
+FIELD-1C:
+
+```text
+Goal: task-level utility test, not only entropy/coverage.
+Task: current network field signal chooses the next network read target; score uses next-round real target quality.
+run_path=runs/latest_field_1c_task_utility_result.json
+ok=True
+run_id=field_1c_task_utility-20260628204404
+rounds=8
+batches=3
+target_count=4
+verdict=no_task_utility
+```
+
+FIELD-1C aggregate:
+
+```text
+latency_score=32.585094
+non_latency_score=0.832095
+mixed_score=24.4514
+fixed_best=27.225039
+prng_mean_total=33.693668
+```
+
+FIELD-1C proves:
+
+```text
+A real task-level benchmark now exists and writes remote evidence.
+This run is a negative result for task-level utility advantage.
+```
+
+FIELD-1C does not prove:
+
+```text
+Network field signal improves this routing task.
+Strong PRNG advantage.
+CPU-free computation.
+Network supercompute.
+```
+
+Next:
+
+```text
+Do not claim ghost-computer compute from FIELD-1C.
+Either build FIELD-2 with better task families and rate-limit-safe targets, or connect NLANG-1C to a controlled multi-wake remote loop.
+```
+<!-- NLANG_FIELD_1C_END -->

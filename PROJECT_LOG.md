@@ -676,3 +676,338 @@ It is not CPU-free computation.
 It is not self-executing capsules.
 It is not autonomous digital life.
 ```
+
+## F2 lifecycle-driven self-scheduler
+
+Status: completed V0.
+
+Purpose:
+```text
+Move from fixed lifecycle replay to state-driven low-risk scheduling.
+F2 reads the current F1 lifecycle state, scores candidate lifecycle events,
+selects one event per tick, executes it, and records decision evidence.
+```
+
+Local control run:
+```text
+run_id=nsl-f2-local-20260628183914
+ok=true
+selected_actions=split,decay,retire,peer_check
+decision_count=4
+state_hash=a279361bee5d9b56
+ledger_hash=96dc20b599a635a6
+raw_state_check_ok=true
+```
+
+Remote GitHub Actions run:
+```text
+workflow=F2 Lifecycle Self Scheduler
+run=28332198894
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-f2-workflow_dispatch-28332198894-attempt-1
+selected_actions=split,decay,retire,peer_check
+decision_count=4
+state_hash=83bdb00e756407f6
+ledger_hash=8e42d25709056206
+ledger_entry_count=2
+```
+
+Hash verification:
+```text
+last_run_hash=b24229f7d1adaf19 verified=true
+report_hash=6c9c43c0e9b2fbd5 verified=true
+state_hash=83bdb00e756407f6 verified=true
+ledger_hash=8e42d25709056206 verified=true
+scheduler_capsule_hash=51ae8572144cea5d verified=true
+scheduler_child_hash=7a056362f7e86f9c verified=true
+```
+
+Truth meaning:
+```text
+F2 proves the remote capsule layer can choose next low-risk lifecycle events from state.
+The run did not simply replay F1. It selected split, then decay, then retire, then peer_check
+because the scheduler state changed after each tick.
+```
+
+Truth boundary:
+```text
+F2 is still scheduling over mutable remote anchors with an external runner.
+It is not endpoint-free existence.
+It is not CPU-free computation.
+It is not self-executing capsules.
+It is not autonomous digital life.
+```
+
+## F3 low-frequency multi-run self-scheduler loop
+
+Status: completed V0.
+
+Mainline decision:
+```text
+F series is now the mainline.
+L series is auxiliary infrastructure.
+E series is auxiliary infrastructure.
+```
+
+Purpose:
+```text
+F3 proves that F2 self-scheduling can continue across wake windows.
+Each wake runs one low-risk lifecycle action, writes state, and leaves the next wake
+to choose from the new remote state.
+```
+
+Remote wake sequence:
+```text
+28332753245 -> split      window_count=5  lifecycle_cycle_count=1
+28332772614 -> decay      window_count=6  lifecycle_cycle_count=1
+28332794329 -> retire     window_count=7  lifecycle_cycle_count=2
+28332816490 -> split      window_count=8  lifecycle_cycle_count=2
+28332895658 -> retire     window_count=10 lifecycle_cycle_count=3
+28332909221 -> peer_check window_count=11 lifecycle_cycle_count=3 last_peer_check_cycle_count=3
+```
+
+Latest remote run:
+```text
+workflow=F3 Low Frequency Self Scheduler Loop
+run=28332909221
+event=workflow_dispatch
+conclusion=success
+run_id=nsl-f3-workflow_dispatch-28332909221-attempt-1
+selected_actions=peer_check
+f3_state_hash=5deb8244675edcf6
+f3_ledger_hash=ac724939ff7593ad
+```
+
+Hash verification:
+```text
+last_run_hash=1f41f72f190ec76a verified=true
+report_hash=ea0a66731e6b0399 verified=true
+f3_state_hash=5deb8244675edcf6 verified=true
+f3_ledger_hash=ac724939ff7593ad verified=true
+f3_capsule_hash=6b1137757b7f05f6 verified=true
+f2_state_hash=f009d59fa0932b1f verified=true
+f2_ledger_hash=fac5d6cb37a6f76a verified=true
+```
+
+Engineering correction:
+```text
+Initial remote continuity was valid, but peer_check was tied only to F1 hash change.
+F3 was tightened with last_peer_check_cycle_count, so each completed lifecycle cycle
+can require its own peer_check before cleanly opening the next cycle.
+The correction was verified by remote retire -> peer_check.
+```
+
+Truth meaning:
+```text
+F3 turns the capsule scheduler into a low-frequency, state-continuous loop.
+It is a real step toward a controlled network-resident lifecycle body.
+```
+
+Truth boundary:
+```text
+F3 still uses GitHub Actions or local CPU as the external runner.
+It is not endpoint-free.
+It is not CPU-free.
+It is not a fully autonomous digital life.
+It is not unreviewed high-risk self-mutation.
+```
+
+## Dual foundation: NLANG and FIELD
+
+Status: created, not complete.
+
+Reason:
+```text
+The project cannot walk on one leg.
+NLANG is needed so network language becomes a real compiler input.
+FIELD is needed so network tide/state can be tested as a drive signal.
+Both must be separated and proven before stronger ghost-computer claims.
+```
+
+Separation:
+```text
+nlang/ contains language, grammar, compiler, and action_plan proof logic.
+field/ contains network tide sampling, bitstream encoding, controls, and feasibility probes.
+F stage files must not absorb both tracks into a large monolith.
+```
+
+Created files:
+```text
+DUAL_FOUNDATION_NLANG_FIELD.md
+nlang/NLANG_1_SPEC.md
+nlang/nlang_compiler_v0.py
+nlang/sample_rules.nlang
+nlang/sample_state.json
+field/FIELD_1_PROTOCOL.md
+field/field_signal_probe_v0.py
+field/targets.json
+```
+
+NLANG smoke:
+```text
+run_path=runs/latest_nlang_1_compiler_result.json
+ok=true
+selected_action=peer_check
+risk_level=low
+fix=right-side state path resolution was added after the first smoke exposed a semantic bug
+```
+
+FIELD smoke:
+```text
+run_path=runs/latest_field_1_signal_probe_result.json
+ok=true
+sample_count=4
+network_bits=1,1,1,1
+controls=fixed_bits,prng_bits
+```
+
+Truth meaning:
+```text
+The two-track foundation is now explicit and separated.
+The smoke tests prove the files are executable and the first minimal signals exist.
+```
+
+Truth boundary:
+```text
+This does not prove the dual foundation is complete.
+NLANG has not yet driven real remote capsule actions.
+FIELD has not yet shown useful spontaneous compute or advantage over controls.
+F4 must wait or consume only the parts that are actually proven.
+```
+
+## NLANG-1A and FIELD-1A
+
+Status: completed V0, foundation still not complete.
+
+NLANG-1A:
+```text
+run_path=runs/latest_nlang_1a_remote_f3_compile_result.json
+ok=true
+remote_state_hash=5deb8244675edcf6
+remote_state_hash_ok=true
+remote_run_id=nsl-f3-workflow_dispatch-28332909221-attempt-1
+selected_action=split
+selected_rule=WHEN f3.child.retired == true AND f3.last_peer_check_cycle_count >= f3.lifecycle_cycle_count THEN split
+```
+
+Meaning:
+```text
+NLANG-1A connected the compiler to real remote F3 state.
+The selected action came from network-language rules, not sample state.
+It did not execute the action yet.
+```
+
+FIELD-1A:
+```text
+run_path=runs/latest_field_1a_repeated_control_result.json
+ok=true
+rounds=8
+batches=3
+sample_count=48
+verdict=repeated_metric_beats_fixed_only
+beats_fixed_batches=3/3
+beats_prng_batches=0/3
+signal_batches=3/3
+```
+
+Meaning:
+```text
+FIELD-1A found repeated metric-bound network drive signal.
+It beats fixed control but does not beat PRNG control.
+This is evidence for signal, not proof of spontaneous useful compute.
+```
+
+Truth boundary:
+```text
+NLANG-1A has not materialized the action_plan.
+FIELD-1A has not proven PRNG advantage, CPU-free computation, or network supercompute.
+Next work should be NLANG-1B and FIELD-1B, not F4 yet.
+```
+
+## NLANG-1B and FIELD-1B
+
+Status: completed V0.
+
+NLANG-1B:
+```text
+run_path=runs/latest_nlang_1b_materialize_result.json
+ok=true
+run_id=nlang_1b_local-20260628202419
+compiled_selected_action=split
+proof_ledger_hash=5030a04f24a3ef11
+```
+
+Materialized transition:
+```text
+before_child=retired vitality=0
+after_child=split_child retired=false vitality=65
+after_child_hash=0783b869bf3e35e9
+f2_state_hash=74c9ab59d59c4fee
+f3_state_hash=853eac1c8ae2b1dc
+```
+
+Meaning:
+```text
+NLANG-1B is the first proof that NLANG compiler output can be materialized into real remote F2/F3 state.
+The runner still exists, but it followed the compiled action_plan instead of choosing the action itself.
+```
+
+FIELD-1B:
+```text
+run_path=runs/latest_field_1b_stronger_metrics_result.json
+ok=true
+rounds=5
+batches=3
+target_count=4
+sample_count=60
+verdict=field_signal_present_no_prng_advantage
+```
+
+Meaning:
+```text
+FIELD-1B strengthened the signal test with more targets and non-latency streams.
+The signal beats fixed control across latency, non-latency, and mixed streams.
+It still does not prove strong PRNG advantage.
+```
+
+Truth boundary:
+```text
+NLANG-1B does not prove endpoint-free or CPU-free execution.
+FIELD-1B does not prove spontaneous compute or network supercompute.
+Next work should be NLANG-1C remote workflow materializer and FIELD-1C task-level utility.
+```
+
+
+## 2026-06-29 NLANG-1C / FIELD-1C
+
+NLANG-1C completed by remote GitHub Actions workflow.
+
+```text
+workflow=https://github.com/tong0202/qimingxing-test2-network-state-20260626-034447/actions/runs/28335410602
+run_id=nlang_1c_remote_external-20260628204412
+action=decay
+before_child=split_child vitality=65
+after_child=decayed vitality=30
+f3_state_hash=8b3648b4b8593d09
+proof_ledger_hash=ef59ffc0d73482e5
+```
+
+FIELD-1C completed a task-level utility benchmark.
+
+```text
+run_id=field_1c_task_utility-20260628204404
+verdict=no_task_utility
+mixed_score=24.4514
+fixed_best=27.225039
+prng_mean_total=33.693668
+remote_state_hash=3247a781feae12e6
+```
+
+Truth boundary:
+
+```text
+NLANG-1C proves remote workflow materialization over mutable anchors.
+FIELD-1C produced a negative task-utility result.
+Neither result proves endpoint-free execution, CPU-free computation, or network supercompute.
+```
