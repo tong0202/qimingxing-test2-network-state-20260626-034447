@@ -1,0 +1,201 @@
+{
+  "stage": "E7-maintenance-plan",
+  "schema_version": "QMX-E7-PLAN-0.1",
+  "created_at": "2026-06-28T06:37:09.454739+00:00",
+  "run_id": "nsl-e7-local-20260628063704",
+  "generation": 1,
+  "owner": {
+    "mode": "local",
+    "workflow": null,
+    "run_id": null,
+    "run_attempt": null,
+    "event_name": null,
+    "actor": null,
+    "repository": null,
+    "sha": null,
+    "local": true
+  },
+  "source_summary": [
+    {
+      "id": "e6_last_run",
+      "path": "states/e6-last-run.json",
+      "read_ok": true,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "last_run_hash",
+        "expected": "77f87afe0dadbea2",
+        "observed": "77f87afe0dadbea2"
+      },
+      "summary": {
+        "run_id": "nsl-e6-schedule-28312093673-attempt-1",
+        "ok": true,
+        "event_name": "schedule",
+        "generation": 4,
+        "state_hash": "d359e51fa94b35e1",
+        "bus_ok": true,
+        "e5_schedule_observed": true,
+        "global_lock_released": true
+      }
+    },
+    {
+      "id": "e6_last_report",
+      "path": "states/e6-last-report.json",
+      "read_ok": true,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "report_hash",
+        "expected": "fe4379a9eb0d084d",
+        "observed": "fe4379a9eb0d084d"
+      },
+      "summary": {
+        "run_id": "nsl-e6-schedule-28312093673-attempt-1",
+        "ok": true,
+        "generation": 4,
+        "source_count": 8,
+        "bus_ok": true,
+        "report_hash": "fe4379a9eb0d084d"
+      }
+    },
+    {
+      "id": "e6_bus_state",
+      "path": "states/e6-lowfreq-vitals-bus-state.json",
+      "read_ok": true,
+      "hash_verify": {
+        "required": true,
+        "ok": true,
+        "field": "state_hash",
+        "expected": "d359e51fa94b35e1",
+        "observed": "d359e51fa94b35e1"
+      },
+      "summary": {
+        "run_id": "nsl-e6-schedule-28312093673-attempt-1",
+        "generation": 4,
+        "state_hash": "d359e51fa94b35e1",
+        "bus_ok": true
+      }
+    },
+    {
+      "id": "e7_previous_state",
+      "path": "states/e7-controlled-self-maintenance-state.json",
+      "read_ok": false,
+      "hash_verify": {
+        "required": true,
+        "ok": false,
+        "field": "state_hash",
+        "expected": "",
+        "observed": ""
+      },
+      "summary": {}
+    }
+  ],
+  "health": {
+    "required_reads_ok": true,
+    "required_hashes_ok": true,
+    "truth_boundaries_ok": true,
+    "e6_last_ok": true,
+    "e6_report_ok": true,
+    "e6_bus_state_ok": true,
+    "e6_schedule_observed": true,
+    "e5_schedule_observed": true,
+    "global_lock_released": true,
+    "logic_ready": true,
+    "maintenance_ready": true,
+    "signals": {
+      "CONTROLLED_SELF_MAINTENANCE_READY": true,
+      "E6_VITALS_HEALTHY": true,
+      "NATURAL_WAKE_CHAIN_OBSERVED": true,
+      "NO_CORE_MUTATION_ALLOWED": true,
+      "ONLY_LOW_RISK_ACTIONS_EXECUTABLE": true
+    }
+  },
+  "policy": {
+    "low_risk_allowlist": [
+      "record_next_wakeup_hint",
+      "record_noop_repair",
+      "record_vitals_health",
+      "refresh_vitals_snapshot"
+    ],
+    "medium_risk_review_required": [
+      "refresh_missing_remote_evidence",
+      "request_e5_rerun",
+      "request_e6_rerun"
+    ],
+    "high_risk_blocked": [
+      "change_permissions",
+      "change_workflow_schedule",
+      "delete_remote_state",
+      "modify_core_capsule"
+    ],
+    "direct_core_mutation_allowed": false,
+    "direct_workflow_mutation_allowed": false,
+    "direct_permission_mutation_allowed": false
+  },
+  "actions": [
+    {
+      "id": "e7-low-001",
+      "action": "record_vitals_health",
+      "risk": "low",
+      "auto_execute": true,
+      "reason": "E6 vitals bus is healthy and hash-verified.",
+      "allowed_by": "LOW_RISK_ALLOWLIST"
+    },
+    {
+      "id": "e7-low-002",
+      "action": "refresh_vitals_snapshot",
+      "risk": "low",
+      "auto_execute": true,
+      "reason": "Write an auditable E7 snapshot so future wakeups can read one maintenance state.",
+      "allowed_by": "LOW_RISK_ALLOWLIST"
+    },
+    {
+      "id": "e7-low-003",
+      "action": "record_noop_repair",
+      "risk": "low",
+      "auto_execute": true,
+      "reason": "No repair is required; record a no-op repair receipt instead of changing core state.",
+      "allowed_by": "LOW_RISK_ALLOWLIST"
+    },
+    {
+      "id": "e7-low-004",
+      "action": "record_next_wakeup_hint",
+      "risk": "low",
+      "auto_execute": true,
+      "reason": "Record that the next E7 window may continue from the latest E6 generation.",
+      "allowed_by": "LOW_RISK_ALLOWLIST"
+    }
+  ],
+  "blocked_actions": [
+    {
+      "action": "change_permissions",
+      "risk": "high",
+      "auto_execute": false,
+      "reason": "E7 is not allowed to modify core capsules, schedules, permissions, or delete remote state."
+    },
+    {
+      "action": "change_workflow_schedule",
+      "risk": "high",
+      "auto_execute": false,
+      "reason": "E7 is not allowed to modify core capsules, schedules, permissions, or delete remote state."
+    },
+    {
+      "action": "delete_remote_state",
+      "risk": "high",
+      "auto_execute": false,
+      "reason": "E7 is not allowed to modify core capsules, schedules, permissions, or delete remote state."
+    },
+    {
+      "action": "modify_core_capsule",
+      "risk": "high",
+      "auto_execute": false,
+      "reason": "E7 is not allowed to modify core capsules, schedules, permissions, or delete remote state."
+    }
+  ],
+  "low_risk_auto_count": 4,
+  "medium_review_count": 0,
+  "high_risk_blocked_count": 4,
+  "plan_ok": true,
+  "truth_boundary": "E7 plans only controlled low-risk maintenance from E6 vitals. It does not modify core capsules, code, schedules, permissions, or prove CPU-free network self-execution.",
+  "plan_hash": "e791e22dadab243c"
+}
