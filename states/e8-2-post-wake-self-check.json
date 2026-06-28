@@ -1,0 +1,173 @@
+{
+  "stage": "E8.2-post-wake-self-check",
+  "schema_version": "QMX-E8.2-SELF-CHECK-0.1",
+  "created_at": "2026-06-28T15:40:08.873388+00:00",
+  "run_id": "nsl-e8-2-local-20260628154001",
+  "owner": {
+    "mode": "local",
+    "workflow": null,
+    "run_id": null,
+    "run_attempt": null,
+    "event_name": null,
+    "actor": null,
+    "repository": null,
+    "sha": null,
+    "local": true
+  },
+  "generation": 1,
+  "health": {
+    "required_reads_ok": true,
+    "required_hashes_ok": true,
+    "truth_boundaries_ok": true,
+    "bridge_chain_ok": true,
+    "e7_writeback_ok": false,
+    "e7_report_ok": true,
+    "network_body_ok": true,
+    "lowfreq_vitals_context_ok": true,
+    "external_clock_pending": true,
+    "post_wake_ready": false,
+    "signals": {
+      "POST_WAKE_SELF_CHECK_READY": false,
+      "HTTP_BRIDGE_WAKE_CHAIN_HEALTHY": true,
+      "E7_REPOSITORY_DISPATCH_WRITEBACK_OK": false,
+      "NETWORK_BODY_PROTOCOL_PRESENT": true,
+      "THIRD_PARTY_CLOCK_STILL_PENDING": true,
+      "NO_SECRET_IN_REPO_REQUIRED": true,
+      "NO_CORE_MUTATION_ALLOWED": true
+    }
+  },
+  "sources": [
+    {
+      "id": "e7_2_last_run",
+      "path": "states/e7-2-last-run.json",
+      "source": "branch_raw",
+      "read_ok": true,
+      "hash_ok": true,
+      "truth_boundary_present": true,
+      "summary": {
+        "run_id": "nsl-e7-2-repository_dispatch-28323063883-attempt-1",
+        "ok": true,
+        "event_name": "repository_dispatch",
+        "validation_ok": true,
+        "dispatch_ok": true,
+        "receiver_ok": true,
+        "receiver_event": "repository_dispatch",
+        "receiver_conclusion": "success"
+      }
+    },
+    {
+      "id": "e7_2_bridge_state",
+      "path": "states/e7-2-wake-bridge-state.json",
+      "source": "branch_raw",
+      "read_ok": true,
+      "hash_ok": true,
+      "truth_boundary_present": true,
+      "summary": {
+        "run_id": "nsl-e7-2-repository_dispatch-28323063883-attempt-1",
+        "bridge_ok": true,
+        "event_name": "repository_dispatch",
+        "validation_ok": true,
+        "dispatch_ok": true,
+        "receiver_ok": true,
+        "receiver_workflow_run_id": 28323069603
+      }
+    },
+    {
+      "id": "e7_last_run",
+      "path": "states/e7-last-run.json",
+      "source": "branch_raw",
+      "read_ok": true,
+      "hash_ok": true,
+      "truth_boundary_present": true,
+      "summary": {
+        "run_id": "nsl-e7-schedule-28325120630-attempt-1",
+        "ok": true,
+        "event_name": "schedule",
+        "generation": 11,
+        "maintenance_ok": true,
+        "executed_count": 4,
+        "blocked_count": 4,
+        "state_hash": "14e128b2397f6dbc"
+      }
+    },
+    {
+      "id": "e7_last_report",
+      "path": "states/e7-last-report.json",
+      "source": "branch_raw",
+      "read_ok": true,
+      "hash_ok": true,
+      "truth_boundary_present": true,
+      "summary": {
+        "run_id": "nsl-e7-schedule-28325120630-attempt-1",
+        "ok": true,
+        "event_name": "",
+        "generation": 11,
+        "maintenance_ok": null,
+        "executed_count": null,
+        "blocked_count": null,
+        "state_hash": null
+      }
+    },
+    {
+      "id": "e8_last_run",
+      "path": "states/e8-last-run.json",
+      "source": "branch_raw",
+      "read_ok": true,
+      "hash_ok": true,
+      "truth_boundary_present": true,
+      "summary": {
+        "run_id": "nsl-e8-schedule-28324866022-attempt-1",
+        "ok": true,
+        "generation": 5,
+        "network_body_ready": true,
+        "protocol_hash": "b99714de60632398",
+        "state_hash": null
+      }
+    },
+    {
+      "id": "e8_protocol",
+      "path": "states/e8-network-body-protocol.json",
+      "source": "branch_raw",
+      "read_ok": true,
+      "hash_ok": true,
+      "truth_boundary_present": true,
+      "summary": {
+        "run_id": "nsl-e8-schedule-28324866022-attempt-1",
+        "ok": null,
+        "generation": 5,
+        "network_body_ready": true,
+        "protocol_hash": "b99714de60632398",
+        "state_hash": null
+      }
+    },
+    {
+      "id": "e6_last_run",
+      "path": "states/e6-last-run.json",
+      "source": "branch_raw",
+      "read_ok": true,
+      "hash_ok": true,
+      "truth_boundary_present": true,
+      "summary": {
+        "run_id": "nsl-e6-schedule-28325291046-attempt-1",
+        "ok": true,
+        "event_name": "schedule",
+        "generation": 8,
+        "bus_ok": true,
+        "e5_schedule_observed": true,
+        "logic_ready": true
+      }
+    },
+    {
+      "id": "previous_e8_2_state",
+      "path": "states/e8-2-post-wake-state.json",
+      "source": "branch_raw",
+      "read_ok": false,
+      "hash_ok": false,
+      "truth_boundary_present": false,
+      "summary": {}
+    }
+  ],
+  "plain_chinese_meaning": "外部唤醒后，系统自动读取桥接器、E7 自维护和 E8 网络体协议证据，确认唤醒链、写回链和真实边界是否健康。",
+  "truth_boundary": "E8.2 is a post-wake self-check and controlled maintenance receipt. It does not perform core mutation, does not store secrets, and does not prove CPU-free self-wakefulness.",
+  "self_check_hash": "ecd056ccfd7f089b"
+}
