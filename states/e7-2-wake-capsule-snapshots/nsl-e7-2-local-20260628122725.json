@@ -1,0 +1,63 @@
+{
+  "stage": "E7.2-wake-capsule-snapshot",
+  "schema_version": "QMX-E7.2-SNAPSHOT-0.1",
+  "created_at": "2026-06-28T12:27:44.546064+00:00",
+  "run_id": "nsl-e7-2-local-20260628122725",
+  "capsule": {
+    "stage": "E7.2-wake-capsule",
+    "schema_version": "QMX-E7.2-WAKE-CAPSULE-0.1",
+    "created_at": "2026-06-28T12:27:25.368783+00:00",
+    "run_id": "nsl-e7-2-local-20260628122725",
+    "owner": {
+      "mode": "local",
+      "workflow": null,
+      "run_id": null,
+      "run_attempt": null,
+      "event_name": null,
+      "actor": null,
+      "repository": null,
+      "sha": null,
+      "local": true
+    },
+    "capsule_id": "e72cap-aa83c4df774265a2",
+    "capsule_type": "qmx_network_wake_intent",
+    "target": "E7-controlled-low-risk-self-maintenance",
+    "target_repo": "tong0202/qimingxing-test2-network-state-20260626-034447",
+    "event_type": "qmx_e7_wake_capsule",
+    "receiver_workflow": ".github/workflows/nsl-e7-2-wake-capsule-dispatch.yml",
+    "wake_after": "2026-06-28T12:27:20.368823+00:00",
+    "expires_at": "2026-06-28T12:42:25.368837+00:00",
+    "ttl_seconds": 900,
+    "risk_level": "low",
+    "allowed_action": "run_e7_controlled_self_maintenance",
+    "nonce": "e72-3bf47914fd224dddaa83c4df774265a2",
+    "one_time": true,
+    "direct_body_execution": false,
+    "client_payload": {
+      "capsule_path": "states/e7-2-wake-capsule.json",
+      "requested_stage": "E7.2",
+      "intent": "wake_e7_from_network_capsule"
+    },
+    "policy": {
+      "allowed_event_types": [
+        "qmx_e7_wake_capsule"
+      ],
+      "allowed_targets": [
+        "E7-controlled-low-risk-self-maintenance"
+      ],
+      "allowed_actions": [
+        "run_e7_controlled_self_maintenance"
+      ],
+      "blocked_actions": [
+        "modify_core_code",
+        "change_permissions",
+        "delete_remote_state",
+        "execute_capsule_body_directly"
+      ]
+    },
+    "conclusion": "This capsule is a network-resident wake intent. A bridge may validate it and trigger GitHub repository_dispatch.",
+    "truth_boundary": "The wake capsule does not execute by itself. It becomes active only when an external bridge reads, validates, and dispatches it to GitHub.",
+    "capsule_hash": "3e607c4a36bfc3ba"
+  },
+  "snapshot_hash": "548e91551353fd5c"
+}
