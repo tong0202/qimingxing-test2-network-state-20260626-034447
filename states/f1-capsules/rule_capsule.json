@@ -1,0 +1,103 @@
+{
+  "stage": "F1-capsule-lifecycle",
+  "schema_version": "QMX-F1-CAPSULE-0.1",
+  "created_by_run_id": "nsl-f1-local-20260628182013",
+  "created_at": "2026-06-28T18:20:14.641886+00:00",
+  "updated_at": "2026-06-28T18:20:50.479647+00:00",
+  "generation": 3,
+  "role": "rule_capsule",
+  "path": "states/f1-capsules/rule_capsule.json",
+  "core": {
+    "role": "rule_capsule",
+    "kind": "rules",
+    "generation": 3,
+    "capsule_id": "f1cap-rule_capsule",
+    "path": "states/f1-capsules/rule_capsule.json",
+    "duty": "hold the low-risk allowed action and rebuild policy",
+    "network_language": {
+      "family": "QMX-F1-CAPSULE-LIFECYCLE",
+      "rule": "WHEN quorum confirms a missing capsule THEN allow deterministic rebuild",
+      "allowed_action": "hold_rebuild_policy",
+      "direct_body_execution": false,
+      "arbitrary_code_execution": false
+    },
+    "lifecycle_contract": {
+      "allowed_events": [
+        "birth",
+        "sleep",
+        "wake",
+        "peer_check",
+        "repair",
+        "split",
+        "decay",
+        "retire"
+      ],
+      "state_machine": "born -> awake/sleeping -> peer_checked -> repaired/split -> decayed -> retired"
+    }
+  },
+  "core_hash": "4d7b33093f6a0d5c",
+  "peer_manifest": {
+    "roles": [
+      {
+        "role": "identity_capsule",
+        "path": "states/f1-capsules/identity_capsule.json",
+        "capsule_id": "f1cap-identity_capsule",
+        "expected_core_hash": "390b9cd631ff3027"
+      },
+      {
+        "role": "memory_capsule",
+        "path": "states/f1-capsules/memory_capsule.json",
+        "capsule_id": "f1cap-memory_capsule",
+        "expected_core_hash": "d7b13214bbc12658"
+      },
+      {
+        "role": "rule_capsule",
+        "path": "states/f1-capsules/rule_capsule.json",
+        "capsule_id": "f1cap-rule_capsule",
+        "expected_core_hash": "4d7b33093f6a0d5c"
+      },
+      {
+        "role": "peer_capsule",
+        "path": "states/f1-capsules/peer_capsule.json",
+        "capsule_id": "f1cap-peer_capsule",
+        "expected_core_hash": "f8ef453f4498a772"
+      },
+      {
+        "role": "repair_capsule",
+        "path": "states/f1-capsules/repair_capsule.json",
+        "capsule_id": "f1cap-repair_capsule",
+        "expected_core_hash": "8dc2aac5d11cfbb9"
+      }
+    ],
+    "quorum_threshold": 3,
+    "total_capsules": 5,
+    "vote_basis": "alive capsules witness expected_core_hash for the missing role"
+  },
+  "lifecycle": {
+    "state": "repaired",
+    "birth_run_id": "nsl-f1-local-20260628182013",
+    "wake_count": 0,
+    "sleep_count": 0,
+    "peer_check_count": 0,
+    "repair_count": 1,
+    "split_count": 0,
+    "decay_count": 0,
+    "retired": false,
+    "vitality": 100,
+    "age_ticks": 1,
+    "last_event": "repair",
+    "last_event_at": "2026-06-28T18:20:50.479628+00:00",
+    "repaired_from": "registry_blueprint"
+  },
+  "safety": {
+    "direct_body_execution": false,
+    "arbitrary_code_execution": false,
+    "allowed_write_prefixes": [
+      "states/f1-capsules",
+      "states/f1-"
+    ]
+  },
+  "truth_boundary": "F1 capsules have lifecycle state stored in a remote anchor. They still require an external runner to be read, changed, and written.",
+  "capsule_hash": "3d9c2af4be96ce99",
+  "updated_by_run_id": "nsl-f1-local-20260628182013"
+}
