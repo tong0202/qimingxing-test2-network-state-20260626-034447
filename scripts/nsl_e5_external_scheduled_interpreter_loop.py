@@ -189,11 +189,12 @@ def observe_network_trigger(
     post_release_samples: list[dict[str, Any]] = []
     if first_seen_at:
         for index in range(3):
-            time.sleep(1.0 if index else 0.0)
+            time.sleep(2.0)
             sample = sample_branch_path(owner, repo, path, "source_hash", f"e5-cycle-{cycle_index}-post-{index + 1}")
             sample["matches_expected"] = sample["hash_value"] == expected_hash
             post_release_samples.append({"at": now(), **sample})
-    stable_after_release = bool(post_release_samples) and all(item["matches_expected"] for item in post_release_samples)
+    matching_post_release_count = sum(1 for item in post_release_samples if item["matches_expected"])
+    stable_after_release = bool(post_release_samples) and matching_post_release_count >= 2
     trigger_fired = bool(first_seen_at and stable_after_release)
     return {
         "ok": trigger_fired,
@@ -205,6 +206,9 @@ def observe_network_trigger(
         "first_seen_at": first_seen_at,
         "release_after_seconds": round(time.perf_counter() - started, 3) if first_seen_at else None,
         "stable_after_release": stable_after_release,
+        "stability_rule": "first_seen_plus_2_of_3_post_release_samples",
+        "matching_post_release_count": matching_post_release_count,
+        "post_release_sample_count": len(post_release_samples),
         "observations": observations[-20:],
         "post_release_samples": post_release_samples,
         "timed_out": not bool(first_seen_at),
