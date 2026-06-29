@@ -1,0 +1,50 @@
+{
+  "stage": "NSC-3-last-run",
+  "schema_version": "QMX-NSC-3-LAST-RUN-0.1",
+  "created_at": "2026-06-29T05:14:15.080663+00:00",
+  "ok": true,
+  "run_id": "nsc_3_operator_discovery-20260629051156",
+  "result_hash": "3ec07a95b963bd27",
+  "operator_hash": "264a0ee006617177",
+  "operator_locked_before_test": true,
+  "verdict": {
+    "verdict": "nsc_3_no_discovered_operator_advantage",
+    "test_batch_count": 2,
+    "win_count": 1,
+    "win_rate": 0.5,
+    "mean_test_gain": -0.004618,
+    "mean_test_gain_rate": -0.14275,
+    "stdev_test_gain_rate": 0.388662,
+    "strong_advantage_threshold_gain_rate": 0.05,
+    "control_names": [
+      "fixed_open",
+      "fixed_closed",
+      "prng_gate",
+      "inverse_locked_operator",
+      "shuffled_label_operator"
+    ],
+    "truth_boundary": "NSC-3 tests train-to-test operator generalization. It does not prove CPU-free or endpoint-free computation."
+  },
+  "test_batch_summaries": [
+    {
+      "batch": 3,
+      "locked_operator_work": 0.020914,
+      "best_control_name": "fixed_open",
+      "best_control_work": 0.044632,
+      "test_gain": -0.023718,
+      "test_gain_rate": -0.531412,
+      "wins_best_control": false
+    },
+    {
+      "batch": 4,
+      "locked_operator_work": 0.073373,
+      "best_control_name": "shuffled_label_operator",
+      "best_control_work": 0.058891,
+      "test_gain": 0.014482,
+      "test_gain_rate": 0.245912,
+      "wins_best_control": true
+    }
+  ],
+  "truth_boundary": "NSC-3 still uses a material CPU for sampling, operator discovery, evaluation, and remote writing. It tests train-to-test generalization only and does not prove endpoint-free execution, CPU-free computation, faster-than-CPU compute, network supercompute, or a finished ghost computer.",
+  "state_hash": "f3f3fdfa96847b82"
+}
