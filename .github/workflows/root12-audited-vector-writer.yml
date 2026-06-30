@@ -1,0 +1,66 @@
+name: ROOT12 Audited Vector Writer
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "ROOT-12 audit run id"
+        required: true
+      initial_vector:
+        description: "Initial vector"
+        required: false
+        default: "01010"
+      target_vector:
+        description: "Target vector"
+        required: false
+        default: "11001"
+      lane:
+        description: "Lane label"
+        required: false
+        default: "writer"
+      gate_paths_json:
+        description: "JSON object mapping gate id to remote path"
+        required: true
+      audit_path:
+        description: "Remote audit receipt path"
+        required: true
+  repository_dispatch:
+    types: [qmx_root12_audited_vector_writer]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: root12-audited-vector-writer
+  cancel-in-progress: false
+
+jobs:
+  audited-vector-write:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run audited vector writer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_RUN_ID: ${{ github.event.inputs.run_id || github.event.client_payload.run_id || '' }}
+          EVENT_INITIAL_VECTOR: ${{ github.event.inputs.initial_vector || github.event.client_payload.initial_vector || '01010' }}
+          EVENT_TARGET_VECTOR: ${{ github.event.inputs.target_vector || github.event.client_payload.target_vector || '11001' }}
+          EVENT_LANE: ${{ github.event.inputs.lane || github.event.client_payload.lane || 'writer' }}
+          EVENT_GATE_PATHS_JSON: ${{ github.event.inputs.gate_paths_json || github.event.client_payload.gate_paths_json || '{}' }}
+          EVENT_AUDIT_PATH: ${{ github.event.inputs.audit_path || github.event.client_payload.audit_path || 'states/root-12/writer-audit.json' }}
+        run: |
+          python scripts/root_12_audited_vector_writer.py \
+            --run-id "$EVENT_RUN_ID" \
+            --initial-vector "$EVENT_INITIAL_VECTOR" \
+            --target-vector "$EVENT_TARGET_VECTOR" \
+            --lane "$EVENT_LANE" \
+            --gate-paths-json "$EVENT_GATE_PATHS_JSON" \
+            --audit-path "$EVENT_AUDIT_PATH"
