@@ -1,0 +1,48 @@
+name: NC19 Policy Versioned Behavior
+
+on:
+  workflow_dispatch:
+    inputs:
+      cycles:
+        description: "Number of remote policy-versioned behavior cycles"
+        required: false
+        default: "1"
+      policy_mode:
+        description: "Policy mode: use_active, advance_policy, rollback_policy"
+        required: false
+        default: "use_active"
+      run_id:
+        description: "Optional audit run id"
+        required: false
+        default: ""
+  repository_dispatch:
+    types: [qmx_nc19_policy_versioned]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nc19-policy-versioned
+  cancel-in-progress: false
+
+jobs:
+  policy-versioned:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run NC-19 policy-versioned behavior worker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_CYCLES: ${{ github.event.inputs.cycles || github.event.client_payload.cycles || '1' }}
+          EVENT_POLICY_MODE: ${{ github.event.inputs.policy_mode || github.event.client_payload.policy_mode || 'use_active' }}
+          EVENT_RUN_ID: ${{ github.event.inputs.run_id || github.event.client_payload.run_id || '' }}
+        run: |
+          python scripts/nc_19_policy_versioned_worker.py --cycles "$EVENT_CYCLES" --policy-mode "$EVENT_POLICY_MODE" --run-id "$EVENT_RUN_ID"
