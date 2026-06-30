@@ -1,0 +1,75 @@
+{
+  "stage": "L10-multi-capsule-low-frequency-self-loop-signal",
+  "schema_version": "NSL-L10-SIGNAL-0.1",
+  "created_at": "2026-06-30T04:49:30.372707+00:00",
+  "run_id": "nsl-l10-external-28421054938",
+  "cycle_index": 1,
+  "step_index": 4,
+  "role": "intent_router",
+  "path": "states/nsl-l10-signals/nsl-l10-external-28421054938-cycle-001-step-004-intent_router.json",
+  "owner": {
+    "mode": "external",
+    "workflow": "L10 Multi Capsule Self Loop",
+    "run_id": "28421054938",
+    "run_attempt": "1",
+    "event_name": "schedule",
+    "actor": "tong0202",
+    "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
+    "sha": "67a7fb8c7a651387e083acc92e0b7d28fec7f262",
+    "local": false
+  },
+  "capsule_id": "l8cap-intent_router-429500a4d4177727",
+  "capsule_hash": "d1afb3c00a9dbaf7",
+  "network_id": "l8net-935aa73f3dbeafd7",
+  "network_hash": "e2b0f7037648ec33",
+  "inputs_required": [
+    "ADVANCE_AFTER_RELEASE",
+    "RELEASE_WINDOW_OPEN"
+  ],
+  "signals_before": [
+    "ADVANCE_AFTER_RELEASE",
+    "IDENTITY_CONFIRMED",
+    "MEMORY_TRACE_READY",
+    "RELEASE",
+    "RELEASE_WINDOW_OPEN",
+    "RESIDUAL",
+    "RHYTHM",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "signals_out": [
+    "ROUTE_ADVANCE"
+  ],
+  "signals_after": [
+    "ADVANCE_AFTER_RELEASE",
+    "IDENTITY_CONFIRMED",
+    "MEMORY_TRACE_READY",
+    "RELEASE",
+    "RELEASE_WINDOW_OPEN",
+    "RESIDUAL",
+    "RHYTHM",
+    "ROUTE_ADVANCE",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "decision": {
+    "ok": true,
+    "checks": {
+      "role_known": true,
+      "capsule_hash_ok": true,
+      "action_allowlisted": true,
+      "no_forbidden_keys": true,
+      "inputs_available": true,
+      "graph_validation_available": true
+    },
+    "missing_inputs": [],
+    "action": "route_after_release"
+  },
+  "interpreted_action": {
+    "type": "route_after_release",
+    "executed": true,
+    "effect": "emit declarative signal only; no arbitrary capsule body execution"
+  },
+  "signal_hash": "1823a4d20c6795e5",
+  "truth_boundary": "L10 signal is emitted by a controlled low-frequency interpreter loop, not by autonomous network self-execution."
+}
