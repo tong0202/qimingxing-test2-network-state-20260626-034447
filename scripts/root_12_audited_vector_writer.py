@@ -155,12 +155,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("gate_paths_json must be an object")
 
     writes: list[dict[str, Any]] = []
+    skipped_unchanged: list[dict[str, Any]] = []
     changed_gate_ids: list[str] = []
     for index, bit in enumerate(target):
         gate_id = f"gate-{index:02d}"
         path = str(gate_paths[gate_id])
-        if initial[index] != target[index]:
-            changed_gate_ids.append(gate_id)
+        if initial[index] == target[index]:
+            skipped_unchanged.append({"gate_id": gate_id, "path": path, "bit": bit, "reason": "bit_unchanged_no_remote_write"})
+            continue
+        changed_gate_ids.append(gate_id)
         anchor = make_target_anchor(
             run_id=args.run_id,
             lane=args.lane,
@@ -210,6 +213,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "the vector. It must not be interpreted as network-native or CPU-free execution."
         ),
         "writes": writes,
+        "skipped_unchanged_gates": skipped_unchanged,
         "audit_hash": "",
     }
     audit["audit_hash"] = canonical_hash({k: v for k, v in audit.items() if k != "audit_hash"})
