@@ -1,0 +1,87 @@
+{
+  "stage": "NC-13-controlled-transition-readout-preregistration",
+  "schema_version": "QMX-NC-13-PREREG-0.1",
+  "created_at": "2026-06-30T06:08:45.103031+00:00",
+  "run_id": "nc_13_transition_readout_verify",
+  "remote_state_dir": "states/nc-13-transition",
+  "surfaces": [
+    "api_contents",
+    "pages"
+  ],
+  "steps": 6,
+  "body_size": 2048,
+  "timeout": 12.0,
+  "api_wait_seconds": 20.0,
+  "pages_wait_seconds": 60.0,
+  "poll_interval": 5.0,
+  "hold_state_hash": "e7e21bc559b18612",
+  "transition_plan": [
+    {
+      "seq": 0,
+      "op": "seed",
+      "state_hash": "b0d9f0198058c8ac",
+      "prev_state_hash": "genesis",
+      "payload_hash": "0ad071fd3b57e30a"
+    },
+    {
+      "seq": 1,
+      "op": "pulse",
+      "state_hash": "12487fc1fcb8f094",
+      "prev_state_hash": "b0d9f0198058c8ac",
+      "payload_hash": "93315209ca3f639f"
+    },
+    {
+      "seq": 2,
+      "op": "split",
+      "state_hash": "c78fbcef3bcd2022",
+      "prev_state_hash": "12487fc1fcb8f094",
+      "payload_hash": "be52853d4b0647c9"
+    },
+    {
+      "seq": 3,
+      "op": "invert",
+      "state_hash": "27038f93d29ee1cf",
+      "prev_state_hash": "c78fbcef3bcd2022",
+      "payload_hash": "2dba44b8987d9148"
+    },
+    {
+      "seq": 4,
+      "op": "merge",
+      "state_hash": "e5b72b750eca1744",
+      "prev_state_hash": "27038f93d29ee1cf",
+      "payload_hash": "b56e405190b6bb1d"
+    },
+    {
+      "seq": 5,
+      "op": "rest",
+      "state_hash": "6428473243294f69",
+      "prev_state_hash": "e5b72b750eca1744",
+      "payload_hash": "2c42b82514cc5884"
+    }
+  ],
+  "quality_gate": {
+    "api_required_success_rate": 1.0,
+    "pages_required_success_rate": 0.8,
+    "hold_control_must_pass": true,
+    "ordering_violations_allowed": 0
+  },
+  "decision_rules": {
+    "controlled_transition_readout_passed_api_and_pages": [
+      "api active transition success rate >= api_required_success_rate",
+      "pages active transition success rate >= pages_required_success_rate",
+      "api and pages hold controls pass",
+      "no ordering violations on either surface"
+    ],
+    "controlled_transition_readout_passed_api_only": [
+      "api active transition success rate >= api_required_success_rate",
+      "api hold control passes",
+      "no api ordering violations",
+      "pages does not pass the pages gate"
+    ],
+    "controlled_transition_readout_failed": [
+      "api active transition gate fails or api hold control fails"
+    ]
+  },
+  "truth_boundary": "NC-13 tests exact remote state transition readout over API/Pages. It does not prove autonomous network execution, network force, network-native computation, CPU-free execution, endpoint-free execution, ghost computer substrate, or digital life.",
+  "prereg_hash": "743c8143e535acb8"
+}
