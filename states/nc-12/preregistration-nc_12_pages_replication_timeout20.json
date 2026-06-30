@@ -1,0 +1,54 @@
+{
+  "stage": "NC-12-pages-only-replication-preregistration",
+  "schema_version": "QMX-NC-12-PREREG-0.1",
+  "created_at": "2026-06-30T05:43:58.068663+00:00",
+  "run_id": "nc_12_pages_replication_timeout20",
+  "surface": "pages",
+  "remote_anchor_dir": "states/nc-12-shapes",
+  "frequencies_s": [
+    0.2,
+    0.4,
+    0.8
+  ],
+  "rounds_per_freq": 4,
+  "material_size": 4096,
+  "window": 4,
+  "timeout": 20.0,
+  "preflight_wait_seconds": 180.0,
+  "sequence_seed": "nc12-fixed-shuffled-v0",
+  "sequence_hash": "3159824208ced014",
+  "expected_samples_per_shape_per_mode": 12,
+  "expected_samples_per_shape_total": 24,
+  "quality_gate": {
+    "per_mode_min_ok_count": 10,
+    "combined_min_ok_count": 20,
+    "min_ok_rate": 0.85
+  },
+  "decision_rules": {
+    "replicated_pages_shape_drift_candidate": [
+      "fixed and shuffled quality gates both pass",
+      "fixed A/B drift_score ratio >= ratio_threshold",
+      "shuffled A/B drift_score ratio >= ratio_threshold",
+      "fixed and shuffled label permutation p <= permutation_p_threshold",
+      "A drift_score is greater than B in both modes"
+    ],
+    "weak_pages_shape_drift_replication_hint": [
+      "combined quality gate passes",
+      "combined A/B drift_score ratio >= ratio_threshold",
+      "combined label permutation p <= permutation_p_threshold"
+    ],
+    "no_pages_shape_drift_replication": [
+      "combined quality gate passes",
+      "candidate and weak hint rules fail"
+    ],
+    "pages_sampling_insufficient": [
+      "combined quality gate fails"
+    ]
+  },
+  "thresholds": {
+    "ratio_threshold": 1.5,
+    "permutation_p_threshold": 0.25
+  },
+  "truth_boundary": "NC-12 is a Pages-only replication test for a weak shape-drift hint. It does not prove network force, network-native computation, CPU-free execution, endpoint-free execution, ghost computer substrate, or digital life.",
+  "prereg_hash": "f775305832959737"
+}
