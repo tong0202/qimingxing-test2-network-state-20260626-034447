@@ -1,0 +1,48 @@
+name: NC16 Typed Register Bank
+
+on:
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: "Number of register-bank slot transitions to write"
+        required: false
+        default: "4"
+      ops:
+        description: "Comma-separated allowlisted ops"
+        required: false
+        default: "memory_append,control_tick,intent_focus,safety_attest"
+      run_id:
+        description: "Optional audit run id"
+        required: false
+        default: ""
+  repository_dispatch:
+    types: [qmx_nc16_register_bank]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nc16-register-bank
+  cancel-in-progress: false
+
+jobs:
+  register-bank:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run NC-16 typed register bank worker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_STEPS: ${{ github.event.inputs.steps || github.event.client_payload.steps || '4' }}
+          EVENT_OPS: ${{ github.event.inputs.ops || github.event.client_payload.ops || 'memory_append,control_tick,intent_focus,safety_attest' }}
+          EVENT_RUN_ID: ${{ github.event.inputs.run_id || github.event.client_payload.run_id || '' }}
+        run: |
+          python scripts/nc_16_register_bank_worker.py --steps "$EVENT_STEPS" --ops "$EVENT_OPS" --run-id "$EVENT_RUN_ID"
