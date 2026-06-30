@@ -111,6 +111,20 @@ def attach_guarded_state(bank: dict[str, Any], selector_event: dict[str, Any]) -
     return next_bank
 
 
+def ensure_bank_preserving_guard(bank: dict[str, Any] | None, run_id: str, active_state: dict[str, Any] | None) -> dict[str, Any]:
+    preserved_guard: dict[str, Any] = {}
+    if isinstance(bank, dict):
+        slots = bank.get("slots") if isinstance(bank.get("slots"), dict) else {}
+        policy = slots.get("policy") if isinstance(slots.get("policy"), dict) else {}
+        guard = policy.get("guarded_self_selection")
+        if isinstance(guard, dict):
+            preserved_guard = guard
+    current = nc19.ensure_bank(bank, run_id, active_state)
+    if preserved_guard:
+        current.setdefault("slots", {}).setdefault("policy", {})["guarded_self_selection"] = preserved_guard
+    return current
+
+
 def apply_guarded_behavior_op(
     bank: dict[str, Any],
     *,
@@ -218,7 +232,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     run_id = args.run_id or f"nc20-guarded-policy-{os.environ.get('GITHUB_RUN_ID', 'local')}-attempt-{os.environ.get('GITHUB_RUN_ATTEMPT', '1')}"
     active_state, _ = nc19.read_json(owner, repo, ACTIVE_PATH, token_value)
     bank_obj, _ = nc19.read_json(owner, repo, BANK_PATH, token_value)
-    current = nc19.ensure_bank(bank_obj, run_id, active_state)
+    current = ensure_bank_preserving_guard(bank_obj, run_id, active_state)
     selector_event = select_guarded_policy_mode(current, run_id=run_id)
     policy_bank, policy_event = nc19.apply_policy_mode(current, mode=selector_event["selected_policy_mode"], run_id=run_id)
     current = attach_guarded_state(policy_bank, selector_event)
