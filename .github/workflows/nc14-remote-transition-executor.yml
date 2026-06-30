@@ -1,0 +1,50 @@
+name: NC14 Remote Transition Executor
+
+on:
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: "Number of remote active-register transitions to write"
+        required: false
+        default: "1"
+      body_size:
+        description: "Body size for each transition payload"
+        required: false
+        default: "2048"
+      run_id:
+        description: "Optional audit run id"
+        required: false
+        default: ""
+  repository_dispatch:
+    types: [qmx_nc14_remote_transition]
+  schedule:
+    - cron: "23 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nc14-remote-transition-executor
+  cancel-in-progress: false
+
+jobs:
+  remote-transition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run NC-14 remote transition worker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_STEPS: ${{ github.event.inputs.steps || github.event.client_payload.steps || '1' }}
+          EVENT_BODY_SIZE: ${{ github.event.inputs.body_size || github.event.client_payload.body_size || '2048' }}
+          EVENT_RUN_ID: ${{ github.event.inputs.run_id || github.event.client_payload.run_id || '' }}
+        run: |
+          python scripts/nc_14_remote_transition_worker.py --steps "$EVENT_STEPS" --body-size "$EVENT_BODY_SIZE" --run-id "$EVENT_RUN_ID"
