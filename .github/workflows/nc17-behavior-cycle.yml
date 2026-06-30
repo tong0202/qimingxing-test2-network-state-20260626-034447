@@ -1,0 +1,43 @@
+name: NC17 Behavior Cycle
+
+on:
+  workflow_dispatch:
+    inputs:
+      cycles:
+        description: "Number of remote register-bank behavior cycles"
+        required: false
+        default: "3"
+      run_id:
+        description: "Optional audit run id"
+        required: false
+        default: ""
+  repository_dispatch:
+    types: [qmx_nc17_behavior_cycle]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nc17-behavior-cycle
+  cancel-in-progress: false
+
+jobs:
+  behavior-cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run NC-17 behavior cycle worker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_CYCLES: ${{ github.event.inputs.cycles || github.event.client_payload.cycles || '3' }}
+          EVENT_RUN_ID: ${{ github.event.inputs.run_id || github.event.client_payload.run_id || '' }}
+        run: |
+          python scripts/nc_17_behavior_cycle_worker.py --cycles "$EVENT_CYCLES" --run-id "$EVENT_RUN_ID"
