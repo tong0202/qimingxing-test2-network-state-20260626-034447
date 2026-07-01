@@ -1,0 +1,109 @@
+{
+  "stage": "E5-external-scheduled-triggered-interpreter-loop-signal",
+  "schema_version": "QMX-E5-SIGNAL-0.1",
+  "created_at": "2026-07-01T04:51:24.667961+00:00",
+  "run_id": "nsl-e5-schedule-28494230315-attempt-1",
+  "cycle_index": 3,
+  "path": "states/e5-external-trigger-loop-signals/nsl-e5-schedule-28494230315-attempt-1-cycle-003-signal.json",
+  "source_path": "states/e5-external-trigger-loop-sources/nsl-e5-schedule-28494230315-attempt-1-cycle-003-source.json",
+  "source_hash": "aadb897e35ca4595",
+  "gate_path": "states/e5-external-trigger-loop-gates/nsl-e5-schedule-28494230315-attempt-1-cycle-003-gate.json",
+  "gate_hash": "14196b16ea249cbc",
+  "trigger_fired": true,
+  "release_after_seconds": 66.297,
+  "interpreter_step_executed": true,
+  "interpreter_action": "external_controlled_declarative_multi_capsule_interpretation",
+  "network_id": "l8net-935aa73f3dbeafd7",
+  "network_hash": "e2b0f7037648ec33",
+  "index_path": "states/nsl-l8-capsule-network-index.json",
+  "graph_validation_ok": true,
+  "route": [
+    "identity_anchor",
+    "memory_index",
+    "rhythm_gate",
+    "intent_router",
+    "graph_verifier",
+    "behavior_pulse"
+  ],
+  "step_count": 6,
+  "steps": [
+    {
+      "step_index": 1,
+      "role": "identity_anchor",
+      "ok": true,
+      "action": "observe_state_identity",
+      "signals_out": [
+        "IDENTITY_CONFIRMED"
+      ],
+      "signal_hash": "69c5b4f30d280e90"
+    },
+    {
+      "step_index": 2,
+      "role": "memory_index",
+      "ok": true,
+      "action": "index_memory_shadow",
+      "signals_out": [
+        "MEMORY_TRACE_READY"
+      ],
+      "signal_hash": "9648109e1586617a"
+    },
+    {
+      "step_index": 3,
+      "role": "rhythm_gate",
+      "ok": true,
+      "action": "gate_on_release_rhythm",
+      "signals_out": [
+        "RELEASE_WINDOW_OPEN"
+      ],
+      "signal_hash": "f1fcc9ce4fcd34f7"
+    },
+    {
+      "step_index": 4,
+      "role": "intent_router",
+      "ok": true,
+      "action": "route_after_release",
+      "signals_out": [
+        "ROUTE_ADVANCE"
+      ],
+      "signal_hash": "c3f29524bc6c0187"
+    },
+    {
+      "step_index": 5,
+      "role": "graph_verifier",
+      "ok": true,
+      "action": "verify_capsule_graph",
+      "signals_out": [
+        "GRAPH_VALIDATED"
+      ],
+      "signal_hash": "abeffb36954d2f91"
+    },
+    {
+      "step_index": 6,
+      "role": "behavior_pulse",
+      "ok": true,
+      "action": "emit_network_language_pulse",
+      "signals_out": [
+        "NETWORK_LANGUAGE_PULSE"
+      ],
+      "signal_hash": "a9bc95ea1075a2d5"
+    }
+  ],
+  "final_signals": [
+    "ADVANCE_AFTER_RELEASE",
+    "GRAPH_VALIDATED",
+    "IDENTITY_CONFIRMED",
+    "MEMORY_TRACE_READY",
+    "NETWORK_LANGUAGE_PULSE",
+    "RELEASE",
+    "RELEASE_WINDOW_OPEN",
+    "RESIDUAL",
+    "RHYTHM",
+    "ROUTE_ADVANCE",
+    "SHADOW",
+    "STATE_ID"
+  ],
+  "network_language_pulse": true,
+  "context_error": null,
+  "signal_hash": "7e4c9e9528cfdede",
+  "truth_boundary": "E5 signal proves the external runner ran one controlled interpreter step after a network-state trigger. It is not autonomous network self-execution."
+}
