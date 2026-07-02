@@ -1,11 +1,11 @@
 {
   "stage": "E6-last-report",
   "schema_version": "QMX-E6-REPORT-0.1",
-  "created_at": "2026-07-01T20:27:07.121238+00:00",
-  "run_id": "nsl-e6-schedule-28545625382-attempt-1",
-  "ok": true,
-  "evidence_level": "E6-lowfreq-vitals-bus-v0",
-  "generation": 21,
+  "created_at": "2026-07-02T04:44:03.167292+00:00",
+  "run_id": "nsl-e6-schedule-28565995640-attempt-1",
+  "ok": false,
+  "evidence_level": "E6-lowfreq-vitals-bus-partial",
+  "generation": 22,
   "source_count": 8,
   "vitals": {
     "required_reads_ok": true,
@@ -16,27 +16,27 @@
     "e5_schedule_observed": true,
     "e5_schedule_success_history_count": 10,
     "l12_window_ok": true,
-    "global_lock_released": true,
+    "global_lock_released": false,
     "logic_ready": true,
-    "bus_ok": true,
+    "bus_ok": false,
     "signals": {
-      "LOWFREQ_VITALS_BUS_READY": true,
+      "LOWFREQ_VITALS_BUS_READY": false,
       "E4_INTERPRETER_LOOP_HEALTHY": true,
       "E5_EXTERNAL_TAKEOVER_HEALTHY": true,
       "E5_NATURAL_SCHEDULE_OBSERVED": true,
       "L12_SELF_MAINTENANCE_HEALTHY": true,
-      "GLOBAL_RUNTIME_LOCK_RELEASED": true
+      "GLOBAL_RUNTIME_LOCK_RELEASED": false
     }
   },
   "remote_paths": {
     "workflow": ".github/workflows/nsl-e6-lowfreq-vitals-bus.yml",
     "runner": "scripts/nsl_e6_lowfreq_vitals_bus.py",
     "bus_state": "states/e6-lowfreq-vitals-bus-state.json",
-    "snapshot": "states/e6-vitals-bus-snapshots/nsl-e6-schedule-28545625382-attempt-1.json",
+    "snapshot": "states/e6-vitals-bus-snapshots/nsl-e6-schedule-28565995640-attempt-1.json",
     "last_run": "states/e6-last-run.json",
     "last_report": "states/e6-last-report.json"
   },
-  "conclusion": "E6 proved a low-frequency external vitals bus can aggregate E4/E5/L12/global-lock/logic evidence and write one auditable state back to the remote receiver.",
+  "conclusion": "E6 ran, but one or more source reads, hash checks, vitals checks, writebacks, or Raw release checks did not pass.",
   "truth_boundary": "E6 is a monitoring and coordination bus executed by local or GitHub Actions CPU. It does not prove CPU-free network execution, autonomous digital life, or a self-executing network computer.",
-  "report_hash": "3e299bf95507f53f"
+  "report_hash": "990ba1591f3fc0e9"
 }
