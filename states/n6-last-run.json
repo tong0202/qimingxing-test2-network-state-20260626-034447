@@ -1,25 +1,21 @@
 {
   "ok": false,
-  "stage": "N7-lock-acquire-failed",
-  "started_at": "2026-07-04T18:39:35.023891+00:00",
-  "finished_at": "2026-07-04T18:39:36.252045+00:00",
-  "lock_read": {
+  "stage": "N7-state-write-failed",
+  "started_at": "2026-07-04T19:52:06.193429+00:00",
+  "finished_at": "2026-07-04T19:52:08.607827+00:00",
+  "previous_generation": 110,
+  "next_generation": 111,
+  "write": {
+    "ok": false,
+    "status": 409,
+    "elapsed_ms": 613.48,
+    "payload": "{\"message\":\"is at 3fa9179f4e406ea9cf53c1c93f0d044a814471c5 but expected 6174446b88410512cecb385a978714a474d98c80\",\"documentation_url\":\"https://docs.github.com/rest/repos/contents#create-or-update-file-contents\",\"status\":\"409\"}",
+    "error": "HTTPError: 409"
+  },
+  "lock_update": {
     "ok": true,
     "status": 200,
     "error": ""
   },
-  "lock_write": {
-    "ok": false,
-    "status": 409,
-    "elapsed_ms": 732.37,
-    "payload": "{\"message\":\"is at 76e856d91762360650c832e069966992c51b6f3c but expected 41d3d361213db0319057500a3f27224a5fd9184e\",\"documentation_url\":\"https://docs.github.com/rest/repos/contents#create-or-update-file-contents\",\"status\":\"409\"}",
-    "error": "HTTPError: 409"
-  },
-  "state": {
-    "generation": 110,
-    "phase": "active",
-    "state_signature": "6639d9df612a52be",
-    "content_sha": "5cf8f3adc6a6aac435ecf655297b57c77b31b5fb"
-  },
-  "truth_boundary": "N7 refused to mutate the riverbed state because the lock write failed."
+  "truth_boundary": "The external runner acquired the N7 lock but refused to continue after the state write failed."
 }
