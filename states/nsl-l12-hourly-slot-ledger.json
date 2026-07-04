@@ -1,37 +1,30 @@
 {
   "stage": "L12.2-anti-missed-schedule-slot-ledger",
   "schema_version": "QMX-L12-SLOT-LEDGER-0.1",
-  "updated_at": "2026-07-04T12:19:33.993499+00:00",
-  "run_id": "nsl-l12-schedule-28705992166-attempt-1",
+  "updated_at": "2026-07-04T14:11:11.203628+00:00",
+  "run_id": "nsl-l12-schedule-28708807826-attempt-1",
   "owner": {
     "mode": "external",
     "workflow": "L12 Hourly Self Maintenance",
-    "run_id": "28705992166",
+    "run_id": "28708807826",
     "run_attempt": "1",
     "event_name": "schedule",
     "actor": "tong0202",
     "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
-    "sha": "7aa88a7ee66428d8bdd59ffc1d88750e1954c5a4",
+    "sha": "7d735bcca53e54abe3ed6026a2f25f6cfc739d90",
     "local": false
   },
   "schedule_cron": "17,37,57 * * * *",
-  "current_slot_id": "2026-07-04T12:00:00Z",
-  "slot_plan_hash": "89a266c67cd0bd68",
+  "current_slot_id": "2026-07-04T14:00:00Z",
+  "slot_plan_hash": "d3c084fd3c059b59",
   "duplicate_slot": false,
-  "gap_exceeded": false,
-  "missed_slots_total_estimate": 0,
-  "catchup_slots_recorded": [],
-  "last_state_hash": "e9f54ad8c9076557",
+  "gap_exceeded": true,
+  "missed_slots_total_estimate": 1,
+  "catchup_slots_recorded": [
+    "2026-07-04T13:00:00Z"
+  ],
+  "last_state_hash": "7c5e51433506cd8a",
   "history": [
-    {
-      "slot_id": "2026-07-01T04:00:00Z",
-      "run_id": "nsl-l12-schedule-28494480454-attempt-1",
-      "status": "completed",
-      "event_name": "schedule",
-      "state_hash": "0e73480c39dfbac1",
-      "window_hash": "77ebd406e3eb9536",
-      "created_at": "2026-07-01T04:55:05.612161+00:00"
-    },
     {
       "slot_id": "2026-07-01T01:00:00Z",
       "run_id": "nsl-l12-schedule-28494480454-attempt-1",
@@ -659,8 +652,24 @@
       "state_hash": "e9f54ad8c9076557",
       "window_hash": "92212a268a79543f",
       "created_at": "2026-07-04T12:19:33.993484+00:00"
+    },
+    {
+      "slot_id": "2026-07-04T14:00:00Z",
+      "run_id": "nsl-l12-schedule-28708807826-attempt-1",
+      "status": "completed",
+      "event_name": "schedule",
+      "state_hash": "7c5e51433506cd8a",
+      "window_hash": "6a9e18223ccf6f3f",
+      "created_at": "2026-07-04T14:11:11.203608+00:00"
+    },
+    {
+      "slot_id": "2026-07-04T13:00:00Z",
+      "run_id": "nsl-l12-schedule-28708807826-attempt-1",
+      "status": "missed_recorded",
+      "state_hash": "7c5e51433506cd8a",
+      "created_at": "2026-07-04T14:11:11.203623+00:00"
     }
   ],
-  "ledger_hash": "8b90554b7a27264e",
+  "ledger_hash": "91e321746cafa06f",
   "truth_boundary": "L12.2 slot ledger records dedupe and missed-window evidence. It improves schedule reliability but does not make GitHub cron hard real-time."
 }
