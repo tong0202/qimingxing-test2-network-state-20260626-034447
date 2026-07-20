@@ -1,19 +1,19 @@
 {
-  "run_id": "nsl-l10-external-29752832371",
+  "run_id": "nsl-l10-external-29775070125",
   "stage": "L10-multi-capsule-low-frequency-self-loop",
-  "created_at": "2026-07-20T14:56:00.188453+00:00",
-  "ok": true,
-  "evidence_level": "L10-multi-capsule-low-frequency-self-loop",
+  "created_at": "2026-07-20T20:11:41.590060+00:00",
+  "ok": false,
+  "evidence_level": "L10-multi-capsule-self-loop-partial",
   "mode": "external",
   "owner": {
     "mode": "external",
     "workflow": "L10 Multi Capsule Self Loop",
-    "run_id": "29752832371",
+    "run_id": "29775070125",
     "run_attempt": "1",
     "event_name": "schedule",
     "actor": "tong0202",
     "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
-    "sha": "628d2fdd2fe862c198add893bbb002555ba271fe",
+    "sha": "3a285e4ce229fe6f04fdab1449646fa941ddf7ad",
     "local": false
   },
   "external_takeover": true,
@@ -21,26 +21,26 @@
   "cycles": [
     {
       "cycle_index": 1,
-      "ok": true,
+      "ok": false,
       "network_language_pulse": true,
-      "cycle_state_path": "states/nsl-l10-cycles/nsl-l10-external-29752832371-cycle-001.json",
+      "cycle_state_path": "states/nsl-l10-cycles/nsl-l10-external-29775070125-cycle-001.json",
       "signal_paths": [
-        "states/nsl-l10-signals/nsl-l10-external-29752832371-cycle-001-step-001-identity_anchor.json",
-        "states/nsl-l10-signals/nsl-l10-external-29752832371-cycle-001-step-002-memory_index.json",
-        "states/nsl-l10-signals/nsl-l10-external-29752832371-cycle-001-step-003-rhythm_gate.json",
-        "states/nsl-l10-signals/nsl-l10-external-29752832371-cycle-001-step-004-intent_router.json",
-        "states/nsl-l10-signals/nsl-l10-external-29752832371-cycle-001-step-005-graph_verifier.json",
-        "states/nsl-l10-signals/nsl-l10-external-29752832371-cycle-001-step-006-behavior_pulse.json"
+        "states/nsl-l10-signals/nsl-l10-external-29775070125-cycle-001-step-001-identity_anchor.json",
+        "states/nsl-l10-signals/nsl-l10-external-29775070125-cycle-001-step-002-memory_index.json",
+        "states/nsl-l10-signals/nsl-l10-external-29775070125-cycle-001-step-003-rhythm_gate.json",
+        "states/nsl-l10-signals/nsl-l10-external-29775070125-cycle-001-step-004-intent_router.json",
+        "states/nsl-l10-signals/nsl-l10-external-29775070125-cycle-001-step-005-graph_verifier.json",
+        "states/nsl-l10-signals/nsl-l10-external-29775070125-cycle-001-step-006-behavior_pulse.json"
       ]
     }
   ],
   "aggregate": {
     "cycle_count": 1,
-    "cycles_ok": 1,
-    "all_cycles_ok": true,
+    "cycles_ok": 0,
+    "all_cycles_ok": false,
     "all_pulses": true,
     "all_branch_raw_release_ok": true
   },
-  "conclusion": "L10 外层接管成立：GitHub Actions 已在本机之外运行多胶囊低频自循环，并写回可恢复 loop state。",
+  "conclusion": "L10 部分成立：多胶囊低频循环已尝试运行，但至少一个 cycle、状态写回或 Raw 释放校验未通过。",
   "truth_boundary": "L10 proves controlled low-frequency looping and, in external mode, external runner takeover of the multi-capsule interpreter. It does not prove CPU-free network computation, autonomous digital life, or digital supercomputing."
 }
