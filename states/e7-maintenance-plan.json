@@ -1,18 +1,18 @@
 {
   "stage": "E7-maintenance-plan",
   "schema_version": "QMX-E7-PLAN-0.1",
-  "created_at": "2026-08-05T19:52:10.181386+00:00",
-  "run_id": "nsl-e7-schedule-31041392111-attempt-1",
-  "generation": 1010,
+  "created_at": "2026-08-05T20:13:34.367891+00:00",
+  "run_id": "nsl-e7-schedule-31043056801-attempt-1",
+  "generation": 1011,
   "owner": {
     "mode": "external",
-    "workflow": "E7.1 External Wake Timer",
-    "run_id": "31041392111",
+    "workflow": "E7 Controlled Vitals Self Maintenance",
+    "run_id": "31043056801",
     "run_attempt": "1",
     "event_name": "schedule",
     "actor": "tong0202",
     "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
-    "sha": "dab5703ae5c249a6c0df5473d49b0f9ab81d2147",
+    "sha": "71cfa3ea3ebcc22756fd15e8fa9e4d4a1833c9c3",
     "local": false
   },
   "source_summary": [
@@ -24,18 +24,18 @@
         "required": true,
         "ok": true,
         "field": "last_run_hash",
-        "expected": "2dda6c657d5500c7",
-        "observed": "2dda6c657d5500c7"
+        "expected": "d541100c65183d18",
+        "observed": "d541100c65183d18"
       },
       "summary": {
-        "run_id": "nsl-e6-schedule-31017891136-attempt-1",
-        "ok": true,
+        "run_id": "nsl-e6-schedule-31042921784-attempt-1",
+        "ok": false,
         "event_name": "schedule",
-        "generation": 156,
-        "state_hash": "38da019f67f357dc",
-        "bus_ok": true,
+        "generation": 157,
+        "state_hash": "042eff8ecf19e11c",
+        "bus_ok": false,
         "e5_schedule_observed": true,
-        "global_lock_released": true
+        "global_lock_released": false
       }
     },
     {
@@ -46,16 +46,16 @@
         "required": true,
         "ok": true,
         "field": "report_hash",
-        "expected": "97e8eab2e2702435",
-        "observed": "97e8eab2e2702435"
+        "expected": "d7eeb555655f8e81",
+        "observed": "d7eeb555655f8e81"
       },
       "summary": {
-        "run_id": "nsl-e6-schedule-31017891136-attempt-1",
-        "ok": true,
-        "generation": 156,
+        "run_id": "nsl-e6-schedule-31042921784-attempt-1",
+        "ok": false,
+        "generation": 157,
         "source_count": 8,
-        "bus_ok": true,
-        "report_hash": "97e8eab2e2702435"
+        "bus_ok": false,
+        "report_hash": "d7eeb555655f8e81"
       }
     },
     {
@@ -66,14 +66,14 @@
         "required": true,
         "ok": true,
         "field": "state_hash",
-        "expected": "38da019f67f357dc",
-        "observed": "38da019f67f357dc"
+        "expected": "042eff8ecf19e11c",
+        "observed": "042eff8ecf19e11c"
       },
       "summary": {
-        "run_id": "nsl-e6-schedule-31017891136-attempt-1",
-        "generation": 156,
-        "state_hash": "38da019f67f357dc",
-        "bus_ok": true
+        "run_id": "nsl-e6-schedule-31042921784-attempt-1",
+        "generation": 157,
+        "state_hash": "042eff8ecf19e11c",
+        "bus_ok": false
       }
     },
     {
@@ -84,13 +84,13 @@
         "required": true,
         "ok": true,
         "field": "state_hash",
-        "expected": "4971cf41cd18444c",
-        "observed": "4971cf41cd18444c"
+        "expected": "c500cb1c088b5805",
+        "observed": "c500cb1c088b5805"
       },
       "summary": {
-        "run_id": "nsl-e7-schedule-31035914000-attempt-1",
-        "generation": 1009,
-        "state_hash": "4971cf41cd18444c",
+        "run_id": "nsl-e7-schedule-31041392111-attempt-1",
+        "generation": 1010,
+        "state_hash": "c500cb1c088b5805",
         "maintenance_ok": true
       }
     }
@@ -99,17 +99,17 @@
     "required_reads_ok": true,
     "required_hashes_ok": true,
     "truth_boundaries_ok": true,
-    "e6_last_ok": true,
-    "e6_report_ok": true,
-    "e6_bus_state_ok": true,
+    "e6_last_ok": false,
+    "e6_report_ok": false,
+    "e6_bus_state_ok": false,
     "e6_schedule_observed": true,
     "e5_schedule_observed": true,
-    "global_lock_released": true,
+    "global_lock_released": false,
     "logic_ready": true,
-    "maintenance_ready": true,
+    "maintenance_ready": false,
     "signals": {
-      "CONTROLLED_SELF_MAINTENANCE_READY": true,
-      "E6_VITALS_HEALTHY": true,
+      "CONTROLLED_SELF_MAINTENANCE_READY": false,
+      "E6_VITALS_HEALTHY": false,
       "NATURAL_WAKE_CHAIN_OBSERVED": true,
       "NO_CORE_MUTATION_ALLOWED": true,
       "ONLY_LOW_RISK_ACTIONS_EXECUTABLE": true
@@ -139,36 +139,12 @@
   },
   "actions": [
     {
-      "id": "e7-low-001",
-      "action": "record_vitals_health",
-      "risk": "low",
-      "auto_execute": true,
-      "reason": "E6 vitals bus is healthy and hash-verified.",
-      "allowed_by": "LOW_RISK_ALLOWLIST"
-    },
-    {
-      "id": "e7-low-002",
-      "action": "refresh_vitals_snapshot",
-      "risk": "low",
-      "auto_execute": true,
-      "reason": "Write an auditable E7 snapshot so future wakeups can read one maintenance state.",
-      "allowed_by": "LOW_RISK_ALLOWLIST"
-    },
-    {
-      "id": "e7-low-003",
-      "action": "record_noop_repair",
-      "risk": "low",
-      "auto_execute": true,
-      "reason": "No repair is required; record a no-op repair receipt instead of changing core state.",
-      "allowed_by": "LOW_RISK_ALLOWLIST"
-    },
-    {
-      "id": "e7-low-004",
-      "action": "record_next_wakeup_hint",
-      "risk": "low",
-      "auto_execute": true,
-      "reason": "Record that the next E7 window may continue from the latest E6 generation.",
-      "allowed_by": "LOW_RISK_ALLOWLIST"
+      "id": "e7-medium-001",
+      "action": "request_e6_rerun",
+      "risk": "medium",
+      "auto_execute": false,
+      "reason": "E6 vitals are not fully healthy; request a controlled rerun proposal instead of mutating state.",
+      "allowed_by": "MEDIUM_RISK_REVIEW_REQUIRED"
     }
   ],
   "blocked_actions": [
@@ -197,10 +173,10 @@
       "reason": "E7 is not allowed to modify core capsules, schedules, permissions, or delete remote state."
     }
   ],
-  "low_risk_auto_count": 4,
-  "medium_review_count": 0,
+  "low_risk_auto_count": 0,
+  "medium_review_count": 1,
   "high_risk_blocked_count": 4,
-  "plan_ok": true,
+  "plan_ok": false,
   "truth_boundary": "E7 plans only controlled low-risk maintenance from E6 vitals. It does not modify core capsules, code, schedules, permissions, or prove CPU-free network self-execution.",
-  "plan_hash": "302dd30cc202fe2b"
+  "plan_hash": "cc74b32479e3f29c"
 }
