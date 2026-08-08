@@ -1,21 +1,21 @@
 {
   "ok": true,
   "stage": "N7-external-breakpoint-recovery-and-anti-reentry",
-  "started_at": "2026-08-08T16:02:23.373361+00:00",
-  "finished_at": "2026-08-08T16:02:29.716550+00:00",
-  "previous_generation": 520,
-  "next_generation": 521,
+  "started_at": "2026-08-08T16:49:52.841857+00:00",
+  "finished_at": "2026-08-08T16:50:00.212175+00:00",
+  "previous_generation": 521,
+  "next_generation": 522,
   "decision": {
-    "phase": "repair",
-    "event": "slow_release",
-    "reason": "previous branch shadow exceeded budget"
+    "phase": "active",
+    "event": "fast_release",
+    "reason": "previous branch shadow released quickly"
   },
   "stale_lock_clear": null,
   "lock": {
     "acquire": {
       "ok": true,
       "status": 200,
-      "content_sha": "a069831274bd078f5806c1a3ecb8605e841d66b8"
+      "content_sha": "2c292268c53e3bc55f4ffa07566c59eb53bc1652"
     },
     "state_written_checkpoint": {
       "ok": true,
@@ -33,54 +33,54 @@
   "write": {
     "ok": true,
     "status": 200,
-    "commit_hash": "77f90ba75bd1b982d6460fff4bf915c729b83406",
-    "content_sha": "dbbf2fc947e5cd65f6aa9b890d5cb8a6e26fd0c3"
+    "commit_hash": "a84172451ef7952b131fd60d1767ad0224d42056",
+    "content_sha": "bfc6036a3e3fcb41a55ce69c11219ec1cb09cd07"
   },
   "commit_verify": {
     "ok": true,
     "generations": [
-      521,
-      521,
-      521
+      522,
+      522,
+      522
     ],
     "x_cache": [
       "MISS",
       "HIT",
-      "HIT"
+      "MISS"
     ],
     "samples": [
       {
         "ok": true,
         "status": 200,
-        "elapsed_ms": 96.45,
-        "generation": 521,
-        "phase": "repair",
-        "state_signature": "5e4a5f6a34f59da3",
-        "body_sha16": "499add652a97ece2",
-        "canonical_sha16": "2f84160dcec8d789",
+        "elapsed_ms": 161.06,
+        "generation": 522,
+        "phase": "active",
+        "state_signature": "8e437873609b436b",
+        "body_sha16": "b66160e7fec5dff0",
+        "canonical_sha16": "2663ed43c6fd35cd",
         "payload": {
           "stage": "N7-externalized-ghost-state-machine-with-lock",
-          "created_at": "2026-08-08T16:02:24.626511+00:00",
-          "generation": 521,
-          "cycle_index": 513,
-          "phase": "repair",
-          "event": "slow_release",
-          "decision_reason": "previous branch shadow exceeded budget",
+          "created_at": "2026-08-08T16:49:54.431027+00:00",
+          "generation": 522,
+          "cycle_index": 514,
+          "phase": "active",
+          "event": "fast_release",
+          "decision_reason": "previous branch shadow released quickly",
           "previous": {
-            "generation": 520,
-            "phase": "active",
-            "state_signature": "c5d4b40ae609278a"
+            "generation": 521,
+            "phase": "repair",
+            "state_signature": "22aac8fcec27c881"
           },
           "release_memory": {
-            "count": 519,
-            "latest_seconds": 3330.66,
-            "mean_seconds": 282.252,
+            "count": 520,
+            "latest_seconds": 0.11,
+            "mean_seconds": 281.709,
             "pending_current_release": true
           },
           "executor": {
             "layer": "github_actions",
             "workflow": "N6 External Ghost Runner",
-            "run_id": "31265961354",
+            "run_id": "31267897516",
             "run_attempt": "1",
             "actor": "tong0202",
             "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
@@ -89,53 +89,53 @@
           "network_role": {
             "N7": "GitHub Actions reads, claims a state lock, decides, writes back, waits for Raw release, finalizes, and prevents duplicate external mutation"
           },
-          "state_signature": "5e4a5f6a34f59da3",
+          "state_signature": "8e437873609b436b",
           "truth_boundary": "N7 is externalized execution on GitHub Actions with checkpoint recovery and anti-reentry. It is still physical cloud CPU, not network-only computation."
         },
         "headers": {
           "cache-control": "max-age=300",
-          "etag": "\"c558c30aee7f940d5a91120f2583e5d92135f6798613f71a6b5fcf8157441f63\"",
+          "etag": "\"f72b217c439a905bb28ef62347ab3fd58d216dfba1435ce64da39bf8382b277d\"",
           "x-cache": "MISS",
-          "x-served-by": "cache-iad-kiad7000028-IAD",
+          "x-served-by": "cache-pao-kpao1770077-PAO",
           "via": "1.1 varnish",
-          "expires": "Sat, 08 Aug 2026 16:07:26 GMT"
+          "expires": "Sat, 08 Aug 2026 16:54:56 GMT"
         },
         "error": "",
         "index": 1,
-        "sampled_at": "2026-08-08T16:02:26.129975+00:00"
+        "sampled_at": "2026-08-08T16:49:56.261294+00:00"
       },
       {
         "ok": true,
         "status": 200,
-        "elapsed_ms": 22.78,
-        "generation": 521,
-        "phase": "repair",
-        "state_signature": "5e4a5f6a34f59da3",
-        "body_sha16": "499add652a97ece2",
-        "canonical_sha16": "2f84160dcec8d789",
+        "elapsed_ms": 7.51,
+        "generation": 522,
+        "phase": "active",
+        "state_signature": "8e437873609b436b",
+        "body_sha16": "b66160e7fec5dff0",
+        "canonical_sha16": "2663ed43c6fd35cd",
         "payload": {
           "stage": "N7-externalized-ghost-state-machine-with-lock",
-          "created_at": "2026-08-08T16:02:24.626511+00:00",
-          "generation": 521,
-          "cycle_index": 513,
-          "phase": "repair",
-          "event": "slow_release",
-          "decision_reason": "previous branch shadow exceeded budget",
+          "created_at": "2026-08-08T16:49:54.431027+00:00",
+          "generation": 522,
+          "cycle_index": 514,
+          "phase": "active",
+          "event": "fast_release",
+          "decision_reason": "previous branch shadow released quickly",
           "previous": {
-            "generation": 520,
-            "phase": "active",
-            "state_signature": "c5d4b40ae609278a"
+            "generation": 521,
+            "phase": "repair",
+            "state_signature": "22aac8fcec27c881"
           },
           "release_memory": {
-            "count": 519,
-            "latest_seconds": 3330.66,
-            "mean_seconds": 282.252,
+            "count": 520,
+            "latest_seconds": 0.11,
+            "mean_seconds": 281.709,
             "pending_current_release": true
           },
           "executor": {
             "layer": "github_actions",
             "workflow": "N6 External Ghost Runner",
-            "run_id": "31265961354",
+            "run_id": "31267897516",
             "run_attempt": "1",
             "actor": "tong0202",
             "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
@@ -144,53 +144,53 @@
           "network_role": {
             "N7": "GitHub Actions reads, claims a state lock, decides, writes back, waits for Raw release, finalizes, and prevents duplicate external mutation"
           },
-          "state_signature": "5e4a5f6a34f59da3",
+          "state_signature": "8e437873609b436b",
           "truth_boundary": "N7 is externalized execution on GitHub Actions with checkpoint recovery and anti-reentry. It is still physical cloud CPU, not network-only computation."
         },
         "headers": {
           "cache-control": "max-age=300",
-          "etag": "\"c558c30aee7f940d5a91120f2583e5d92135f6798613f71a6b5fcf8157441f63\"",
+          "etag": "\"f72b217c439a905bb28ef62347ab3fd58d216dfba1435ce64da39bf8382b277d\"",
           "x-cache": "HIT",
-          "x-served-by": "cache-iad-kcgs7200115-IAD",
+          "x-served-by": "cache-pao-kpao1770065-PAO",
           "via": "1.1 varnish",
-          "expires": "Sat, 08 Aug 2026 16:07:27 GMT"
+          "expires": "Sat, 08 Aug 2026 16:54:57 GMT"
         },
         "error": "",
         "index": 2,
-        "sampled_at": "2026-08-08T16:02:27.153088+00:00"
+        "sampled_at": "2026-08-08T16:49:57.269156+00:00"
       },
       {
         "ok": true,
         "status": 200,
-        "elapsed_ms": 21.33,
-        "generation": 521,
-        "phase": "repair",
-        "state_signature": "5e4a5f6a34f59da3",
-        "body_sha16": "499add652a97ece2",
-        "canonical_sha16": "2f84160dcec8d789",
+        "elapsed_ms": 104.24,
+        "generation": 522,
+        "phase": "active",
+        "state_signature": "8e437873609b436b",
+        "body_sha16": "b66160e7fec5dff0",
+        "canonical_sha16": "2663ed43c6fd35cd",
         "payload": {
           "stage": "N7-externalized-ghost-state-machine-with-lock",
-          "created_at": "2026-08-08T16:02:24.626511+00:00",
-          "generation": 521,
-          "cycle_index": 513,
-          "phase": "repair",
-          "event": "slow_release",
-          "decision_reason": "previous branch shadow exceeded budget",
+          "created_at": "2026-08-08T16:49:54.431027+00:00",
+          "generation": 522,
+          "cycle_index": 514,
+          "phase": "active",
+          "event": "fast_release",
+          "decision_reason": "previous branch shadow released quickly",
           "previous": {
-            "generation": 520,
-            "phase": "active",
-            "state_signature": "c5d4b40ae609278a"
+            "generation": 521,
+            "phase": "repair",
+            "state_signature": "22aac8fcec27c881"
           },
           "release_memory": {
-            "count": 519,
-            "latest_seconds": 3330.66,
-            "mean_seconds": 282.252,
+            "count": 520,
+            "latest_seconds": 0.11,
+            "mean_seconds": 281.709,
             "pending_current_release": true
           },
           "executor": {
             "layer": "github_actions",
             "workflow": "N6 External Ghost Runner",
-            "run_id": "31265961354",
+            "run_id": "31267897516",
             "run_attempt": "1",
             "actor": "tong0202",
             "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
@@ -199,31 +199,31 @@
           "network_role": {
             "N7": "GitHub Actions reads, claims a state lock, decides, writes back, waits for Raw release, finalizes, and prevents duplicate external mutation"
           },
-          "state_signature": "5e4a5f6a34f59da3",
+          "state_signature": "8e437873609b436b",
           "truth_boundary": "N7 is externalized execution on GitHub Actions with checkpoint recovery and anti-reentry. It is still physical cloud CPU, not network-only computation."
         },
         "headers": {
           "cache-control": "max-age=300",
-          "etag": "\"c558c30aee7f940d5a91120f2583e5d92135f6798613f71a6b5fcf8157441f63\"",
-          "x-cache": "HIT",
-          "x-served-by": "cache-iad-kiad7000086-IAD",
+          "etag": "\"f72b217c439a905bb28ef62347ab3fd58d216dfba1435ce64da39bf8382b277d\"",
+          "x-cache": "MISS",
+          "x-served-by": "cache-sjc1000121-SJC",
           "via": "1.1 varnish",
-          "expires": "Sat, 08 Aug 2026 16:07:28 GMT"
+          "expires": "Sat, 08 Aug 2026 16:54:58 GMT"
         },
         "error": "",
         "index": 3,
-        "sampled_at": "2026-08-08T16:02:28.174742+00:00"
+        "sampled_at": "2026-08-08T16:49:58.373719+00:00"
       }
     ]
   },
   "branch_release": {
     "released": true,
-    "release_after_seconds": 0.11,
+    "release_after_seconds": 0.18,
     "branch_generations": [
-      521
+      522
     ],
     "branch_signatures": [
-      "5e4a5f6a34f59da3"
+      "8e437873609b436b"
     ],
     "branch_x_cache": [
       "MISS"
@@ -231,40 +231,40 @@
     "samples": [
       {
         "index": 1,
-        "sampled_at": "2026-08-08T16:02:28.280547+00:00",
-        "elapsed_since_write": 0.11,
+        "sampled_at": "2026-08-08T16:49:58.553726+00:00",
+        "elapsed_since_write": 0.18,
         "branch": {
           "ok": true,
           "status": 200,
-          "elapsed_ms": 105.6,
-          "generation": 521,
-          "phase": "repair",
-          "state_signature": "5e4a5f6a34f59da3",
-          "body_sha16": "499add652a97ece2",
-          "canonical_sha16": "2f84160dcec8d789",
+          "elapsed_ms": 179.82,
+          "generation": 522,
+          "phase": "active",
+          "state_signature": "8e437873609b436b",
+          "body_sha16": "b66160e7fec5dff0",
+          "canonical_sha16": "2663ed43c6fd35cd",
           "payload": {
             "stage": "N7-externalized-ghost-state-machine-with-lock",
-            "created_at": "2026-08-08T16:02:24.626511+00:00",
-            "generation": 521,
-            "cycle_index": 513,
-            "phase": "repair",
-            "event": "slow_release",
-            "decision_reason": "previous branch shadow exceeded budget",
+            "created_at": "2026-08-08T16:49:54.431027+00:00",
+            "generation": 522,
+            "cycle_index": 514,
+            "phase": "active",
+            "event": "fast_release",
+            "decision_reason": "previous branch shadow released quickly",
             "previous": {
-              "generation": 520,
-              "phase": "active",
-              "state_signature": "c5d4b40ae609278a"
+              "generation": 521,
+              "phase": "repair",
+              "state_signature": "22aac8fcec27c881"
             },
             "release_memory": {
-              "count": 519,
-              "latest_seconds": 3330.66,
-              "mean_seconds": 282.252,
+              "count": 520,
+              "latest_seconds": 0.11,
+              "mean_seconds": 281.709,
               "pending_current_release": true
             },
             "executor": {
               "layer": "github_actions",
               "workflow": "N6 External Ghost Runner",
-              "run_id": "31265961354",
+              "run_id": "31267897516",
               "run_attempt": "1",
               "actor": "tong0202",
               "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
@@ -273,16 +273,16 @@
             "network_role": {
               "N7": "GitHub Actions reads, claims a state lock, decides, writes back, waits for Raw release, finalizes, and prevents duplicate external mutation"
             },
-            "state_signature": "5e4a5f6a34f59da3",
+            "state_signature": "8e437873609b436b",
             "truth_boundary": "N7 is externalized execution on GitHub Actions with checkpoint recovery and anti-reentry. It is still physical cloud CPU, not network-only computation."
           },
           "headers": {
             "cache-control": "max-age=300",
-            "etag": "\"c558c30aee7f940d5a91120f2583e5d92135f6798613f71a6b5fcf8157441f63\"",
+            "etag": "\"f72b217c439a905bb28ef62347ab3fd58d216dfba1435ce64da39bf8382b277d\"",
             "x-cache": "MISS",
-            "x-served-by": "cache-iad-kiad7000150-IAD",
+            "x-served-by": "cache-pao-kpao1770074-PAO",
             "via": "1.1 varnish",
-            "expires": "Sat, 08 Aug 2026 16:07:28 GMT"
+            "expires": "Sat, 08 Aug 2026 16:54:58 GMT"
           },
           "error": ""
         },
@@ -297,27 +297,27 @@
   },
   "final_state": {
     "stage": "N7-externalized-ghost-state-machine-with-lock",
-    "created_at": "2026-08-08T16:02:24.626511+00:00",
-    "generation": 521,
-    "cycle_index": 513,
-    "phase": "repair",
-    "event": "slow_release",
-    "decision_reason": "previous branch shadow exceeded budget",
+    "created_at": "2026-08-08T16:49:54.431027+00:00",
+    "generation": 522,
+    "cycle_index": 514,
+    "phase": "active",
+    "event": "fast_release",
+    "decision_reason": "previous branch shadow released quickly",
     "previous": {
-      "generation": 520,
-      "phase": "active",
-      "state_signature": "c5d4b40ae609278a"
+      "generation": 521,
+      "phase": "repair",
+      "state_signature": "22aac8fcec27c881"
     },
     "release_memory": {
-      "count": 520,
-      "latest_seconds": 0.11,
-      "mean_seconds": 281.709,
+      "count": 521,
+      "latest_seconds": 0.18,
+      "mean_seconds": 281.169,
       "pending_current_release": false
     },
     "executor": {
       "layer": "github_actions",
       "workflow": "N6 External Ghost Runner",
-      "run_id": "31265961354",
+      "run_id": "31267897516",
       "run_attempt": "1",
       "actor": "tong0202",
       "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
@@ -326,11 +326,11 @@
     "network_role": {
       "N7": "GitHub Actions reads, claims a state lock, decides, writes back, waits for Raw release, finalizes, and prevents duplicate external mutation"
     },
-    "state_signature": "22aac8fcec27c881",
+    "state_signature": "44595f4ff3f30bc1",
     "truth_boundary": "N7 is externalized execution on GitHub Actions with checkpoint recovery and anti-reentry. It is still physical cloud CPU, not network-only computation.",
     "self_release": {
-      "release_after_seconds": 0.11,
-      "observed_at": "2026-08-08T16:02:28.281399+00:00"
+      "release_after_seconds": 0.18,
+      "observed_at": "2026-08-08T16:49:58.554743+00:00"
     }
   },
   "truth_boundary": "N7 proves external checkpointing and anti-reentry on GitHub Actions. It still uses GitHub cloud CPU and does not prove hardware-free network computation."
