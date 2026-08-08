@@ -1,17 +1,17 @@
 {
   "stage": "F2-lifecycle-self-scheduler-state",
   "schema_version": "QMX-F2-STATE-0.1",
-  "created_at": "2026-08-07T19:15:08.406280+00:00",
-  "run_id": "nsl-f3-schedule-31210629656-attempt-1",
+  "created_at": "2026-08-08T02:21:00.085489+00:00",
+  "run_id": "nsl-f3-schedule-31234754419-attempt-1",
   "owner": {
     "mode": "external",
     "workflow": "F3 Low Frequency Self Scheduler Loop",
-    "run_id": "31210629656",
+    "run_id": "31234754419",
     "run_attempt": "1",
     "event_name": "schedule",
     "actor": "tong0202",
     "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
-    "sha": "a7b33937ee07f2cf1726a20296ad7e6c2cfe44a2",
+    "sha": "e17201d26203cebd41bd7085cc7256f5cc717f01",
     "local": false
   },
   "source": {
@@ -28,30 +28,30 @@
       "retire"
     ]
   },
-  "scheduler_capsule_hash": "9ff4d9b4daad4ee8",
-  "scheduler_generation": 170,
+  "scheduler_capsule_hash": "dc3ce855050404cb",
+  "scheduler_generation": 171,
   "memory_shadow_state": "awake",
   "child": {
     "exists": true,
-    "state": "decayed",
-    "retired": false,
-    "vitality": 30,
-    "capsule_hash": "5fbcfa2c7661c238"
+    "state": "retired",
+    "retired": true,
+    "vitality": 0,
+    "capsule_hash": "d5014cd6cf480fad"
   },
-  "total_scheduler_ticks": 181,
+  "total_scheduler_ticks": 182,
   "selected_actions": [
-    "decay"
+    "retire"
   ],
   "decision_count": 1,
   "decisions": [
     {
       "tick": 1,
-      "created_at": "2026-08-07T19:15:08.406155+00:00",
+      "created_at": "2026-08-08T02:21:00.085324+00:00",
       "candidates": [
         {
-          "action": "decay",
-          "score": 90,
-          "reason": "active scheduler child vitality is above decay threshold",
+          "action": "retire",
+          "score": 92,
+          "reason": "active scheduler child vitality reached retirement threshold",
           "allowed": true
         },
         {
@@ -61,59 +61,59 @@
           "allowed": true
         }
       ],
-      "selected_action": "decay",
-      "selected_score": 90,
-      "selected_reason": "active scheduler child vitality is above decay threshold",
+      "selected_action": "retire",
+      "selected_score": 92,
+      "selected_reason": "active scheduler child vitality reached retirement threshold",
       "execution_ok": true,
       "execution": {
         "ok": true,
-        "action": "decay",
+        "action": "retire",
         "write": {
           "path": "states/f2-capsules/scheduler_child.json",
           "existing_status": 200,
           "ok": true,
           "status": 200,
           "error": "",
-          "commit_hash": "5b1ceda85bf79b2469bc2e50ca11e1d944794c15",
-          "content_sha": "d94ed0460ab1690c02095eaec712cdcbd233256b"
+          "commit_hash": "6030b9be8d71cd7e36bf3e272eaabacc67dc7911",
+          "content_sha": "db0f14818e6bcf51424b167648a7bda39fd02f27"
         },
         "verify": {
           "path": "states/f2-capsules/scheduler_child.json",
           "ok": true,
           "status": 200,
           "hash_field": "capsule_hash",
-          "expected": "5fbcfa2c7661c238",
-          "declared": "5fbcfa2c7661c238",
-          "computed": "5fbcfa2c7661c238",
+          "expected": "d5014cd6cf480fad",
+          "declared": "d5014cd6cf480fad",
+          "computed": "d5014cd6cf480fad",
           "attempt_count": 1,
           "observations": [
             {
               "status": 200,
               "ok": true,
-              "declared": "5fbcfa2c7661c238",
-              "computed": "5fbcfa2c7661c238",
+              "declared": "d5014cd6cf480fad",
+              "computed": "d5014cd6cf480fad",
               "error": ""
             }
           ]
         },
-        "child_hash": "5fbcfa2c7661c238"
+        "child_hash": "d5014cd6cf480fad"
       },
-      "decision_hash": "dfa91138730fc061",
+      "decision_hash": "cd0fea4c160d9c57",
       "window_after": {
-        "window_count": 173,
-        "lifecycle_cycle_count": 43,
+        "window_count": 174,
+        "lifecycle_cycle_count": 44,
         "last_peer_check_cycle_count": 43,
         "scheduler_child": {
           "exists": true,
-          "state": "decayed",
-          "retired": false,
-          "vitality": 30,
-          "capsule_hash": "5fbcfa2c7661c238"
+          "state": "retired",
+          "retired": true,
+          "vitality": 0,
+          "capsule_hash": "d5014cd6cf480fad"
         },
         "last_peer_check_hash": "1bace43c838cbde1"
       }
     }
   ],
   "truth_boundary": "F2 chooses low-risk lifecycle events from remote state; it is not self-executing without an external runner.",
-  "state_hash": "c6588403c8356317"
+  "state_hash": "81e5c32d0d017926"
 }
