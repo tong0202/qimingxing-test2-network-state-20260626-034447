@@ -1,7 +1,7 @@
 {
   "stage": "L7-natural-cron-soak-lock",
-  "locked": true,
-  "checkpoint": "running",
+  "locked": false,
+  "checkpoint": "failed",
   "run_id": "nsl-l7-schedule-31915959843-attempt-1",
   "owner": {
     "workflow": "L7 Natural Cron Soak",
@@ -14,25 +14,10 @@
     "sha": "6cf13e3de56fde13d311d97326997f0fe1578ed3"
   },
   "created_at": "2026-08-15T23:55:31.161867+00:00",
-  "updated_at": "2026-08-15T23:55:31.161870+00:00",
+  "updated_at": "2026-08-15T23:55:34.435474+00:00",
   "expires_at": "2026-08-16T00:10:31.161873+00:00",
   "ttl_seconds": 900,
   "events": [
-    {
-      "at": "2026-08-15T20:54:37.690282+00:00",
-      "event": "lock_acquired",
-      "run_id": "nsl-l7-schedule-31907965706-attempt-1",
-      "owner": {
-        "workflow": "L7 Natural Cron Soak",
-        "run_id": "31907965706",
-        "run_attempt": "1",
-        "event_name": "schedule",
-        "actor": "tong0202",
-        "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
-        "server_url": "https://github.com",
-        "sha": "dc4157609b5fd932635d025989cdc0966918a603"
-      }
-    },
     {
       "at": "2026-08-15T20:54:40.842863+00:00",
       "event": "lock_released",
@@ -262,8 +247,17 @@
         "server_url": "https://github.com",
         "sha": "6cf13e3de56fde13d311d97326997f0fe1578ed3"
       }
+    },
+    {
+      "at": "2026-08-15T23:55:34.435462+00:00",
+      "event": "lock_released",
+      "checkpoint": "failed",
+      "details": {
+        "ok": false
+      }
     }
   ],
   "truth_boundary": "This lock prevents overlapping GitHub Actions cron executions. It is not CPU-free network computation.",
-  "stale_lock_recovered": false
+  "stale_lock_recovered": false,
+  "released_at": "2026-08-15T23:55:34.435477+00:00"
 }
