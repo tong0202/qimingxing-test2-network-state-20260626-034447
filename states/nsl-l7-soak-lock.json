@@ -1,7 +1,7 @@
 {
   "stage": "L7-natural-cron-soak-lock",
-  "locked": true,
-  "checkpoint": "running",
+  "locked": false,
+  "checkpoint": "completed",
   "run_id": "nsl-l7-schedule-32166357794-attempt-1",
   "owner": {
     "workflow": "L7 Natural Cron Soak",
@@ -14,18 +14,10 @@
     "sha": "36dca8dd38a46f3de7245f1945fd3883f9e4b8c4"
   },
   "created_at": "2026-08-18T17:35:02.679526+00:00",
-  "updated_at": "2026-08-18T17:35:02.679530+00:00",
+  "updated_at": "2026-08-18T17:35:06.944866+00:00",
   "expires_at": "2026-08-18T17:50:02.679533+00:00",
   "ttl_seconds": 900,
   "events": [
-    {
-      "at": "2026-08-18T11:34:38.403096+00:00",
-      "event": "lock_released",
-      "checkpoint": "failed",
-      "details": {
-        "ok": false
-      }
-    },
     {
       "at": "2026-08-18T11:55:05.038249+00:00",
       "event": "lock_acquired",
@@ -262,8 +254,17 @@
         "server_url": "https://github.com",
         "sha": "36dca8dd38a46f3de7245f1945fd3883f9e4b8c4"
       }
+    },
+    {
+      "at": "2026-08-18T17:35:06.944851+00:00",
+      "event": "lock_released",
+      "checkpoint": "completed",
+      "details": {
+        "ok": true
+      }
     }
   ],
   "truth_boundary": "This lock prevents overlapping GitHub Actions cron executions. It is not CPU-free network computation.",
-  "stale_lock_recovered": false
+  "stale_lock_recovered": false,
+  "released_at": "2026-08-18T17:35:06.944869+00:00"
 }
