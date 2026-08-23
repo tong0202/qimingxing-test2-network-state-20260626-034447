@@ -1,26 +1,26 @@
 {
   "stage": "N7-externalized-ghost-state-machine-with-lock",
-  "created_at": "2026-08-23T17:32:36.171246+00:00",
-  "generation": 891,
-  "cycle_index": 883,
-  "phase": "active",
-  "event": "fast_release",
-  "decision_reason": "previous branch shadow released quickly",
+  "created_at": "2026-08-23T19:04:02.867224+00:00",
+  "generation": 892,
+  "cycle_index": 884,
+  "phase": "repair",
+  "event": "slow_release",
+  "decision_reason": "previous branch shadow exceeded budget",
   "previous": {
-    "generation": 890,
-    "phase": "repair",
-    "state_signature": "ff465bd62a8e5c0b"
+    "generation": 891,
+    "phase": "active",
+    "state_signature": "7be8068fb6c4b518"
   },
   "release_memory": {
     "count": 890,
     "latest_seconds": 4412.676,
     "mean_seconds": 282.404,
-    "pending_current_release": false
+    "pending_current_release": true
   },
   "executor": {
     "layer": "github_actions",
     "workflow": "N6 External Ghost Runner",
-    "run_id": "32655162907",
+    "run_id": "32660041850",
     "run_attempt": "1",
     "actor": "tong0202",
     "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
@@ -29,17 +29,6 @@
   "network_role": {
     "N7": "GitHub Actions reads, claims a state lock, decides, writes back, waits for Raw release, finalizes, and prevents duplicate external mutation"
   },
-  "state_signature": "7be8068fb6c4b518",
-  "truth_boundary": "N7 is externalized execution on GitHub Actions with checkpoint recovery and anti-reentry. It is still physical cloud CPU, not network-only computation.",
-  "n7_recovery": {
-    "recovered_from_lock": true,
-    "previous_lock_created_at": "2026-08-23T17:32:35.317878+00:00",
-    "previous_lock_expires_at": "2026-08-23T17:37:40.902050+00:00",
-    "observed_release_seconds": 4412.676,
-    "recovered_at": "2026-08-23T18:46:07.994318+00:00"
-  },
-  "self_release": {
-    "release_after_seconds": 4412.676,
-    "observed_at": "2026-08-23T18:46:07.995374+00:00"
-  }
+  "state_signature": "62ce16995312b952",
+  "truth_boundary": "N7 is externalized execution on GitHub Actions with checkpoint recovery and anti-reentry. It is still physical cloud CPU, not network-only computation."
 }
