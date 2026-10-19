@@ -1,17 +1,17 @@
 {
   "stage": "F3-lowfreq-self-scheduler-loop-state",
   "schema_version": "QMX-F3-STATE-0.1",
-  "created_at": "2026-10-19T13:15:28.364961+00:00",
-  "run_id": "nsl-f3-schedule-39258565046-attempt-1",
+  "created_at": "2026-10-19T22:21:15.067601+00:00",
+  "run_id": "nsl-f3-schedule-39334294461-attempt-1",
   "owner": {
     "mode": "external",
     "workflow": "F3 Low Frequency Self Scheduler Loop",
-    "run_id": "39258565046",
+    "run_id": "39334294461",
     "run_attempt": "1",
     "event_name": "schedule",
     "actor": "tong0202",
     "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
-    "sha": "d50fc6d3a30c2f157db9a5ae7443399c77c68ff4",
+    "sha": "24b8774b4d732092fc0da9be5a9e3266c2774bdf",
     "local": false
   },
   "mainline_contract": {
@@ -22,22 +22,22 @@
     },
     "rule": "F stages define the current product direction; L and E are supporting infrastructure unless a later F stage explicitly depends on them."
   },
-  "previous_state_hash": "d4cf87345cfdc578",
+  "previous_state_hash": "70e775cb6e45710a",
   "source_f1_state_hash": "1bace43c838cbde1",
-  "f2_state_hash": "69b5a09db47f712d",
-  "f2_ledger_hash": "6ae2b2311b7abe2a",
-  "f3_capsule_hash": "c114e570d96b8b23",
-  "window_count": 437,
+  "f2_state_hash": "b60ef99cdaf401bb",
+  "f2_ledger_hash": "b5d75f695ecad30a",
+  "f3_capsule_hash": "3594874e626ef10c",
+  "window_count": 438,
   "windows_executed_this_run": 1,
-  "lifecycle_cycle_count": 109,
+  "lifecycle_cycle_count": 110,
   "last_peer_check_cycle_count": 109,
   "selected_actions": [
-    "decay"
+    "retire"
   ],
   "decision_count": 1,
   "all_decisions_ok": true,
   "scheduler_state": {
-    "scheduler_generation": 434,
+    "scheduler_generation": 435,
     "created_by_run_id": "nsl-f3-local-20260628190050",
     "source_f1_state_hash": "1bace43c838cbde1",
     "source_f1_event_order": [
@@ -53,25 +53,25 @@
     "memory_shadow_state": "awake",
     "child": {
       "exists": true,
-      "state": "decayed",
-      "retired": false,
-      "vitality": 30,
-      "capsule_hash": "82ece279cf429472"
+      "state": "retired",
+      "retired": true,
+      "vitality": 0,
+      "capsule_hash": "171ed43822932791"
     },
     "last_peer_check_hash": "1bace43c838cbde1",
-    "total_scheduler_ticks": 445,
-    "last_selected_action": "decay",
+    "total_scheduler_ticks": 446,
+    "last_selected_action": "retire",
     "last_peer_check_cycle_count": 109
   },
   "decisions": [
     {
       "tick": 1,
-      "created_at": "2026-10-19T13:15:24.922947+00:00",
+      "created_at": "2026-10-19T22:21:10.884633+00:00",
       "candidates": [
         {
-          "action": "decay",
-          "score": 90,
-          "reason": "active scheduler child vitality is above decay threshold",
+          "action": "retire",
+          "score": 92,
+          "reason": "active scheduler child vitality reached retirement threshold",
           "allowed": true
         },
         {
@@ -81,59 +81,59 @@
           "allowed": true
         }
       ],
-      "selected_action": "decay",
-      "selected_score": 90,
-      "selected_reason": "active scheduler child vitality is above decay threshold",
+      "selected_action": "retire",
+      "selected_score": 92,
+      "selected_reason": "active scheduler child vitality reached retirement threshold",
       "execution_ok": true,
       "execution": {
         "ok": true,
-        "action": "decay",
+        "action": "retire",
         "write": {
           "path": "states/f2-capsules/scheduler_child.json",
           "existing_status": 200,
           "ok": true,
           "status": 200,
           "error": "",
-          "commit_hash": "50e9ad0da0ec70d850cf266e8221ad24774078bc",
-          "content_sha": "29091347fee2f2410f7972df51eaa4c5de6b9f30"
+          "commit_hash": "0acefe93193dc62bc285eb04d0853aa0bc518418",
+          "content_sha": "3caec515e772357d16e74a967ad4fad8500d1955"
         },
         "verify": {
           "path": "states/f2-capsules/scheduler_child.json",
           "ok": true,
           "status": 200,
           "hash_field": "capsule_hash",
-          "expected": "82ece279cf429472",
-          "declared": "82ece279cf429472",
-          "computed": "82ece279cf429472",
+          "expected": "171ed43822932791",
+          "declared": "171ed43822932791",
+          "computed": "171ed43822932791",
           "attempt_count": 1,
           "observations": [
             {
               "status": 200,
               "ok": true,
-              "declared": "82ece279cf429472",
-              "computed": "82ece279cf429472",
+              "declared": "171ed43822932791",
+              "computed": "171ed43822932791",
               "error": ""
             }
           ]
         },
-        "child_hash": "82ece279cf429472"
+        "child_hash": "171ed43822932791"
       },
-      "decision_hash": "5949c87a8a21495f",
+      "decision_hash": "2f4137fc5e23e5e8",
       "window_after": {
-        "window_count": 437,
-        "lifecycle_cycle_count": 109,
+        "window_count": 438,
+        "lifecycle_cycle_count": 110,
         "last_peer_check_cycle_count": 109,
         "scheduler_child": {
           "exists": true,
-          "state": "decayed",
-          "retired": false,
-          "vitality": 30,
-          "capsule_hash": "82ece279cf429472"
+          "state": "retired",
+          "retired": true,
+          "vitality": 0,
+          "capsule_hash": "171ed43822932791"
         },
         "last_peer_check_hash": "1bace43c838cbde1"
       }
     }
   ],
   "truth_boundary": "F3 proves state continuity across scheduler wake windows over mutable remote anchors; it is not endpoint-free or CPU-free execution.",
-  "state_hash": "70e775cb6e45710a"
+  "state_hash": "b8c2e83f4e1b2242"
 }
