@@ -1,17 +1,17 @@
 {
   "stage": "F2-lifecycle-self-scheduler-state",
   "schema_version": "QMX-F2-STATE-0.1",
-  "created_at": "2026-10-19T22:21:10.884812+00:00",
-  "run_id": "nsl-f3-schedule-39334294461-attempt-1",
+  "created_at": "2026-10-20T04:51:10.611280+00:00",
+  "run_id": "nsl-f3-schedule-39371738090-attempt-1",
   "owner": {
     "mode": "external",
     "workflow": "F3 Low Frequency Self Scheduler Loop",
-    "run_id": "39334294461",
+    "run_id": "39371738090",
     "run_attempt": "1",
     "event_name": "schedule",
     "actor": "tong0202",
     "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
-    "sha": "24b8774b4d732092fc0da9be5a9e3266c2774bdf",
+    "sha": "e5d7150cab5701bcac0b09e470fcf159458c55ff",
     "local": false
   },
   "source": {
@@ -28,8 +28,8 @@
       "retire"
     ]
   },
-  "scheduler_capsule_hash": "51328b4843bf4166",
-  "scheduler_generation": 435,
+  "scheduler_capsule_hash": "2f213fd0136e6be3",
+  "scheduler_generation": 436,
   "memory_shadow_state": "awake",
   "child": {
     "exists": true,
@@ -38,20 +38,20 @@
     "vitality": 0,
     "capsule_hash": "171ed43822932791"
   },
-  "total_scheduler_ticks": 446,
+  "total_scheduler_ticks": 447,
   "selected_actions": [
-    "retire"
+    "peer_check"
   ],
   "decision_count": 1,
   "decisions": [
     {
       "tick": 1,
-      "created_at": "2026-10-19T22:21:10.884633+00:00",
+      "created_at": "2026-10-20T04:51:10.611165+00:00",
       "candidates": [
         {
-          "action": "retire",
-          "score": 92,
-          "reason": "active scheduler child vitality reached retirement threshold",
+          "action": "peer_check",
+          "score": 96,
+          "reason": "a lifecycle cycle ended and has not been peer-checked in F3",
           "allowed": true
         },
         {
@@ -61,48 +61,22 @@
           "allowed": true
         }
       ],
-      "selected_action": "retire",
-      "selected_score": 92,
-      "selected_reason": "active scheduler child vitality reached retirement threshold",
+      "selected_action": "peer_check",
+      "selected_score": 96,
+      "selected_reason": "a lifecycle cycle ended and has not been peer-checked in F3",
       "execution_ok": true,
       "execution": {
         "ok": true,
-        "action": "retire",
-        "write": {
-          "path": "states/f2-capsules/scheduler_child.json",
-          "existing_status": 200,
-          "ok": true,
-          "status": 200,
-          "error": "",
-          "commit_hash": "0acefe93193dc62bc285eb04d0853aa0bc518418",
-          "content_sha": "3caec515e772357d16e74a967ad4fad8500d1955"
-        },
-        "verify": {
-          "path": "states/f2-capsules/scheduler_child.json",
-          "ok": true,
-          "status": 200,
-          "hash_field": "capsule_hash",
-          "expected": "171ed43822932791",
-          "declared": "171ed43822932791",
-          "computed": "171ed43822932791",
-          "attempt_count": 1,
-          "observations": [
-            {
-              "status": 200,
-              "ok": true,
-              "declared": "171ed43822932791",
-              "computed": "171ed43822932791",
-              "error": ""
-            }
-          ]
-        },
-        "child_hash": "171ed43822932791"
+        "action": "peer_check",
+        "state_hash_ok": true,
+        "registry_hash_ok": true,
+        "child_hash_ok": true
       },
-      "decision_hash": "2f4137fc5e23e5e8",
+      "decision_hash": "ed4b54ae1ce142f9",
       "window_after": {
-        "window_count": 438,
+        "window_count": 439,
         "lifecycle_cycle_count": 110,
-        "last_peer_check_cycle_count": 109,
+        "last_peer_check_cycle_count": 110,
         "scheduler_child": {
           "exists": true,
           "state": "retired",
@@ -115,5 +89,5 @@
     }
   ],
   "truth_boundary": "F2 chooses low-risk lifecycle events from remote state; it is not self-executing without an external runner.",
-  "state_hash": "b60ef99cdaf401bb"
+  "state_hash": "cb48c30b44c5c3fe"
 }
