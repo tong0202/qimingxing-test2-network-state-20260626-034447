@@ -1,69 +1,39 @@
 {
   "stage": "E7-maintenance-actions",
   "schema_version": "QMX-E7-ACTIONS-0.1",
-  "created_at": "2026-10-23T11:59:03.088461+00:00",
-  "run_id": "nsl-e7-schedule-39949927035-attempt-1",
+  "created_at": "2026-10-23T15:08:08.714902+00:00",
+  "run_id": "nsl-e7-schedule-39975623941-attempt-1",
   "owner": {
     "mode": "external",
-    "workflow": "E7.1 External Wake Timer",
-    "run_id": "39949927035",
+    "workflow": "E7 Controlled Vitals Self Maintenance",
+    "run_id": "39975623941",
     "run_attempt": "1",
     "event_name": "schedule",
     "actor": "tong0202",
     "repository": "tong0202/qimingxing-test2-network-state-20260626-034447",
-    "sha": "2bfd01b52e71938d0abcf98a8d8a6666b8dad6a6",
+    "sha": "c56f7fc4d8b1122112c533f7e88987b3327f18ba",
     "local": false
   },
-  "plan_hash": "cb9946a02eb8d2d0",
+  "plan_hash": "3594b16219ca8b39",
   "receipts": [
     {
-      "action_id": "e7-low-001",
-      "action": "record_vitals_health",
-      "risk": "low",
-      "auto_execute": true,
-      "executed": true,
-      "result": "executed_low_risk_record_only",
-      "reason": "E6 vitals bus is healthy and hash-verified.",
-      "created_at": "2026-10-23T11:59:03.088442+00:00"
-    },
-    {
-      "action_id": "e7-low-002",
-      "action": "refresh_vitals_snapshot",
-      "risk": "low",
-      "auto_execute": true,
-      "executed": true,
-      "result": "executed_low_risk_record_only",
-      "reason": "Write an auditable E7 snapshot so future wakeups can read one maintenance state.",
-      "created_at": "2026-10-23T11:59:03.088452+00:00"
-    },
-    {
-      "action_id": "e7-low-003",
-      "action": "record_noop_repair",
-      "risk": "low",
-      "auto_execute": true,
-      "executed": true,
-      "result": "executed_low_risk_record_only",
-      "reason": "No repair is required; record a no-op repair receipt instead of changing core state.",
-      "created_at": "2026-10-23T11:59:03.088456+00:00"
-    },
-    {
-      "action_id": "e7-low-004",
-      "action": "record_next_wakeup_hint",
-      "risk": "low",
-      "auto_execute": true,
-      "executed": true,
-      "result": "executed_low_risk_record_only",
-      "reason": "Record that the next E7 window may continue from the latest E6 generation.",
-      "created_at": "2026-10-23T11:59:03.088459+00:00"
+      "action_id": "e7-medium-001",
+      "action": "request_e6_rerun",
+      "risk": "medium",
+      "auto_execute": false,
+      "executed": false,
+      "result": "not_executed",
+      "reason": "E6 vitals are not fully healthy; request a controlled rerun proposal instead of mutating state.",
+      "created_at": "2026-10-23T15:08:08.714895+00:00"
     }
   ],
-  "executed_count": 4,
+  "executed_count": 0,
   "blocked_count": 4,
-  "medium_review_count": 0,
+  "medium_review_count": 1,
   "all_executed_actions_low_risk": true,
   "core_mutation_performed": false,
   "workflow_mutation_performed": false,
   "permission_mutation_performed": false,
   "truth_boundary": "E7 action execution is record-only low-risk maintenance. It writes health receipts and no-op repair records, not core code or permission changes.",
-  "actions_hash": "c47caf885242cf5e"
+  "actions_hash": "6469fe6fdef00ea4"
 }
